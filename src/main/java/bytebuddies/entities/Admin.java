@@ -1,4 +1,4 @@
 package bytebuddies.entities;
 
-public class fillthisin {
+public class Admin {
 }
