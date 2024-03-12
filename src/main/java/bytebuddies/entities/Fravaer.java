@@ -17,12 +17,12 @@ public class Fravaer {
     private Ansatt ansattId;
     @ManyToOne
     @JoinColumn(name = "typeId")
-    private FravaersType typeId;
+    private Fravaerstype typeId;
     private String forklaring;
     private LocalDate startdato;
     private LocalDate sluttdato;
 
-    public Fravaer(Ansatt ansattId, FravaersType typeId, String forklaring, LocalDate startdato, LocalDate sluttdato) {
+    public Fravaer(Ansatt ansattId, Fravaerstype typeId, String forklaring, LocalDate startdato, LocalDate sluttdato) {
         this.ansattId = ansattId;
         this.typeId = typeId;
         this.forklaring = forklaring;
@@ -48,11 +48,11 @@ public class Fravaer {
         this.ansattId = ansattId;
     }
 
-    public FravaersType getTypeId() {
+    public Fravaerstype getTypeId() {
         return typeId;
     }
 
-    public void setTypeId(FravaersType typeId) {
+    public void setTypeId(Fravaerstype typeId) {
         this.typeId = typeId;
     }
 

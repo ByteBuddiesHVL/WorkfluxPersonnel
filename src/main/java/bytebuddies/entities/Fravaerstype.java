@@ -6,17 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class FravaersType {
+public class Fravaerstype {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer typeId;
     private String navn;
 
-    public FravaersType(String navn) {
+    public Fravaerstype(String navn) {
         this.navn = navn;
     }
 
-    public FravaersType() {
+    public Fravaerstype() {
     }
 
     public Integer getTypeId() {
