@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Bedrift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bedriftId;
+    private Integer bedriftId;
     private String navn;
     private String forkortelse;
 
