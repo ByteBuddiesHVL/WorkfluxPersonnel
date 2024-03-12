@@ -15,6 +15,14 @@ public class AnsattId implements Serializable {
     private Bedrift bedriftId;
     private String ansattId;
 
+    public AnsattId(Bedrift bedriftId, String ansattId) {
+        this.bedriftId = bedriftId;
+        this.ansattId = ansattId;
+    }
+
+    public AnsattId() {
+    }
+
     public Bedrift getBedriftId() {
         return bedriftId;
     }
