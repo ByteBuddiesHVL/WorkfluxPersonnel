@@ -1,41 +1,33 @@
 package bytebuddies.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-public class Admin {
+@Entity
+public class Dev {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer adminId;
-    @ManyToOne
-    @JoinColumn(name = "bedriftId")
-    private Bedrift bedriftId;
+    private Integer devId;
     private String brukernavn;
     private String hash;
     private String salt;
 
-    public Admin(Bedrift bedriftId, String brukernavn, String hash, String salt) {
-        this.bedriftId = bedriftId;
+    public Dev(String brukernavn, String hash, String salt) {
         this.brukernavn = brukernavn;
         this.hash = hash;
         this.salt = salt;
     }
 
-    public Admin() {}
+    public Dev() {}
 
-    public Integer getAdminId() {
-        return adminId;
+    public Integer getDevId() {
+        return devId;
     }
 
-    public void setAdminId(Integer adminId) {
-        this.adminId = adminId;
-    }
-
-    public Bedrift getBedriftId() {
-        return bedriftId;
-    }
-
-    public void setBedriftId(Bedrift bedriftId) {
-        this.bedriftId = bedriftId;
+    public void setDevId(Integer devId) {
+        this.devId = devId;
     }
 
     public String getBrukernavn() {

@@ -3,40 +3,41 @@ package bytebuddies.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Tidsplan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int timeplanId;
+    private int tidsplanId;
+
+    @ManyToOne
+    @JoinColumn(name = "ansattId")
+    private Ansatt ansattId;
 
     private LocalDateTime starttid;
     private LocalDateTime sluttid;
 
-    @OneToMany(mappedBy="ansatt")
-    private List<Ansatt> ansattId;
-
-
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bedriftId")
-    private Bedrift bedriftId;
-
-    public Tidsplan(){}
-    public Tidsplan(int timeplanId, LocalDateTime starttid, LocalDateTime sluttid, List<Ansatt> ansattId, Bedrift bedriftId) {
-        this.timeplanId = timeplanId;
+    public Tidsplan(Ansatt ansattId, LocalDateTime starttid, LocalDateTime sluttid) {
+        this.ansattId = ansattId;
         this.starttid = starttid;
         this.sluttid = sluttid;
+    }
+
+    public Tidsplan() {}
+
+    public int getTidsplanId() {
+        return tidsplanId;
+    }
+
+    public void setTidsplanId(int tidsplanId) {
+        this.tidsplanId = tidsplanId;
+    }
+
+    public Ansatt getAnsattId() {
+        return ansattId;
+    }
+
+    public void setAnsattId(Ansatt ansattId) {
         this.ansattId = ansattId;
-        this.bedriftId = bedriftId;
-    }
-
-    public int getTimeplanId() {
-        return timeplanId;
-    }
-
-    public void setTimeplanId(int timeplan_id) {
-        this.timeplanId = timeplan_id;
     }
 
     public LocalDateTime getStarttid() {
@@ -53,21 +54,5 @@ public class Tidsplan {
 
     public void setSluttid(LocalDateTime sluttid) {
         this.sluttid = sluttid;
-    }
-
-    public List<Ansatt> getAnsattId() {
-        return ansattId;
-    }
-
-    public void setAnsattId(List<Ansatt> ansatt_id) {
-        this.ansattId = ansatt_id;
-    }
-
-    public Bedrift getBedriftId() {
-        return bedriftId;
-    }
-
-    public void setBedriftId(Bedrift bedrift_id) {
-        this.bedriftId = bedrift_id;
     }
 }

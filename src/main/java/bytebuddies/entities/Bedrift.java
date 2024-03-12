@@ -8,13 +8,14 @@ public class Bedrift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bedriftId;
-
     private String navn;
+    private String forkortelse;
 
     public Bedrift(){}
-    public Bedrift(int bedriftId, String navn) {
-        this.bedriftId = bedriftId;
+
+    public Bedrift(String navn, String forkortelse) {
         this.navn = navn;
+        this.forkortelse = forkortelse;
     }
 
     public int getBedriftId() {
@@ -31,6 +32,14 @@ public class Bedrift {
 
     public void setNavn(String navn) {
         this.navn = navn;
+    }
+
+    public String getForkortelse() {
+        return forkortelse;
+    }
+
+    public void setForkortelse(String forkortelse) {
+        this.forkortelse = forkortelse;
     }
 }
 
