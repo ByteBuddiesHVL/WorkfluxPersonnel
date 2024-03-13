@@ -2,6 +2,8 @@ package bytebuddies.entities;
 
 import jakarta.persistence.*;
 
+@Entity
+@Table(schema = "Workflux")
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

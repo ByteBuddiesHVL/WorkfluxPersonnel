@@ -2,8 +2,10 @@ package bytebuddies.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(schema = "Workflux")
 public class Postnummer {
     @Id
     private String postnummer;

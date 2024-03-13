@@ -3,6 +3,7 @@ package bytebuddies.entities;
 import jakarta.persistence.*;
 
 @Entity
+@Table(schema = "Workflux")
 public class Dev {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

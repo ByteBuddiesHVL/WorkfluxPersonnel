@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(schema = "Workflux")
 public class Tidsplan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(schema = "Workflux")
 public class SlippHistorikk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
