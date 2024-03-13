@@ -9,6 +9,7 @@ public class Bedrift {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer bedriftId;
     private String navn;
+    @Column(unique = true)
     private String forkortelse;
 
     public Bedrift(){}

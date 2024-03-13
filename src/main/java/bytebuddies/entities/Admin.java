@@ -9,6 +9,7 @@ public class Admin {
     @ManyToOne
     @JoinColumn(name = "bedriftId")
     private Bedrift bedriftId;
+    @Column(unique = true)
     private String brukernavn;
     private String hash;
     private String salt;
