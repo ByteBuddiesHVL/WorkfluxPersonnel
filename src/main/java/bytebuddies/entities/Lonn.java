@@ -17,8 +17,8 @@ public class Lonn {
     })
     private Ansatt ansattId;
 
-    private float timelonn;
-    private float arslonn;
+    private float timelonn; //kan være null (da er arslonn ikke null)
+    private float arslonn; //kan være null (da er timelonn ikke null)
     private LocalDate virkningsdato;
 
     public Lonn(Ansatt ansattId, float timelonn, float arslonn, LocalDate virkningsdato) {
