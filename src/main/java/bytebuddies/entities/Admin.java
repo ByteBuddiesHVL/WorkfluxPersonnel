@@ -1,5 +1,6 @@
 package bytebuddies.entities;
 
+import bytebuddies.embeddable.Passord;
 import jakarta.persistence.*;
 
 @Entity
@@ -13,14 +14,13 @@ public class Admin {
     private Bedrift bedriftId;
     @Column(unique = true)
     private String brukernavn;
-    private String hash;
-    private String salt;
+    @Embedded
+    private Passord passord;
 
-    public Admin(Bedrift bedriftId, String brukernavn, String hash, String salt) {
+    public Admin(Bedrift bedriftId, String brukernavn, Passord passord) {
         this.bedriftId = bedriftId;
         this.brukernavn = brukernavn;
-        this.hash = hash;
-        this.salt = salt;
+        this.passord = passord;
     }
 
     public Admin() {}
@@ -49,19 +49,11 @@ public class Admin {
         this.brukernavn = brukernavn;
     }
 
-    public String getHash() {
-        return hash;
+    public Passord getPassord() {
+        return passord;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setPassord(Passord passord) {
+        this.passord = passord;
     }
 }

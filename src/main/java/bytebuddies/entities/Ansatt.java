@@ -1,6 +1,7 @@
 package bytebuddies.entities;
 
 import bytebuddies.embeddable.AnsattId;
+import bytebuddies.embeddable.Passord;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,9 +9,8 @@ import jakarta.persistence.*;
 public class Ansatt {
     @EmbeddedId
     private AnsattId ansattId;
-
-    private String hash;
-    private String salt;
+    @Embedded
+    private Passord passord;
     private String fornavn;
     private String etternavn;
     private String telefonnummer;
@@ -22,10 +22,9 @@ public class Ansatt {
     private float stillingsprosent;
     private String stillingstype;
 
-    public Ansatt(AnsattId ansattId, String hash, String salt, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, float stillingsprosent, String stillingstype) {
+    public Ansatt(AnsattId ansattId, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, float stillingsprosent, String stillingstype) {
         this.ansattId = ansattId;
-        this.hash = hash;
-        this.salt = salt;
+        this.passord = passord;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
         this.telefonnummer = telefonnummer;
@@ -46,20 +45,12 @@ public class Ansatt {
         this.ansattId = ansattId;
     }
 
-    public String getHash() {
-        return hash;
+    public Passord getPassord() {
+        return passord;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setPassord(Passord passord) {
+        this.passord = passord;
     }
 
     public String getFornavn() {
