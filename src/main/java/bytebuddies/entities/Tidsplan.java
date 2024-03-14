@@ -12,7 +12,10 @@ public class Tidsplan {
     private int tidsplanId;
 
     @ManyToOne
-    @JoinColumn(name = "ansattId")
+    @JoinColumns({
+            @JoinColumn(name = "bedriftId",referencedColumnName = "bedriftId"),
+            @JoinColumn(name = "ansattId",referencedColumnName = "ansattId")
+    })
     private Ansatt ansattId;
 
     private LocalDateTime starttid;
