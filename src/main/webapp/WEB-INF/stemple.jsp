@@ -36,5 +36,6 @@
             </form>
         </div>
     </section>
+<script src="js/test.ts"></script>
 </body>
 </html>
