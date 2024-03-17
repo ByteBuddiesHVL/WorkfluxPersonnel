@@ -1,8 +1,6 @@
 package bytebuddies.services;
 
-import bytebuddies.embeddable.AnsattId;
 import bytebuddies.entities.Ansatt;
-import bytebuddies.entities.Bedrift;
 import bytebuddies.repositories.AnsattRepository;
 import bytebuddies.repositories.BedriftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +18,18 @@ public class AnsattService {
     @Autowired
     private BedriftRepository bedriftRepository;
 
-    public Optional<Ansatt> getAnsattById(Integer bedriftId, String ansattId) {
-        Bedrift b = bedriftRepository.findById(bedriftId).orElseGet(null);
-        if (b != null) return ansattRepository.findAnsattByAnsattId_BedriftIdAndAnsattId_AnsattId(b,ansattId);
-        return null;
-    }
-
-    public Optional<Ansatt> getAnsattById(AnsattId ansattId) {
-        return ansattRepository.findById(ansattId);
+    public Optional<Ansatt> getAnsattByBrukernavn(String brukernavn) {
+        return ansattRepository.findAnsattByBrukernavn(brukernavn);
     }
 
     public List<Ansatt> getAllAnsatte() {
         return ansattRepository.findAll();
     }
 
-    public Ansatt saveAnsatt(Ansatt ansatt) {
-        return ansattRepository.save(ansatt);
+    public Ansatt saveAnsatt(Ansatt ansatt, String forkortelse) {
+        Ansatt a = ansattRepository.save(ansatt);
+        a.setBrukernavn(forkortelse + String.format("%06d",a.getAnsattId()));
+        ansattRepository.save(a);
+        return a;
     }
 }

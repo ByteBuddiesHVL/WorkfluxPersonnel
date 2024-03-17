@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 public class Dev {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "dev_id")
     private Integer devId;
     @Column(unique = true)
     private String brukernavn;

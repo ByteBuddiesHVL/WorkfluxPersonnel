@@ -8,9 +8,10 @@ import jakarta.persistence.*;
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "admin_id")
     private Integer adminId;
     @ManyToOne
-    @JoinColumn(name = "bedriftId")
+    @JoinColumn(name = "bedrift_id")
     private Bedrift bedriftId;
     @Column(unique = true)
     private String brukernavn;

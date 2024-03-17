@@ -1,9 +1,12 @@
 package bytebuddies.services;
 
+import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Tidsplan;
 import bytebuddies.repositories.TidsplanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +24,7 @@ public class TidsplanService {
      *
      * @return en liste av {@link Tidsplan}.
      */
-    public List<Tidsplan> hentAlleTidsplaner() {
+    public List<Tidsplan> getALlTidsplaner() {
         return tidsplanRepository.findAll();
     }
 
@@ -31,7 +34,7 @@ public class TidsplanService {
      * @param id ID for den ønskede tidsplanen.
      * @return et {@link Optional} av {@link Tidsplan}.
      */
-    public Optional<Tidsplan> hentTidsplan(int id) {
+    public Optional<Tidsplan> getTidsplan(int id) {
         return tidsplanRepository.findById(id);
     }
 
@@ -41,8 +44,15 @@ public class TidsplanService {
      * @param tidsplan {@link Tidsplan}-objektet som skal lagres.
      * @return det lagrede {@link Tidsplan}-objektet.
      */
-    public Tidsplan lagreTidsplan(Tidsplan tidsplan) {
+    public Tidsplan saveTidsplan(Tidsplan tidsplan) {
         return tidsplanRepository.save(tidsplan);
+    }
+
+    public Tidsplan endTidsplan(Ansatt ansatt, LocalDateTime ldt) {
+        Tidsplan t = tidsplanRepository.getFirstByAnsattIdAndSluttidIsNullAndStarttidIsNotNullOrderByStarttidDesc(ansatt).orElseGet(null);
+        if (t == null) return null;
+        t.setSluttid(ldt);
+        return tidsplanRepository.save(t);
     }
 
     /**
@@ -50,7 +60,7 @@ public class TidsplanService {
      *
      * @param id ID for tidsplanen som skal slettes.
      */
-    public void slettTidsplan(int id) {
+    public void deleteTidsplan(int id) {
         tidsplanRepository.deleteById(id);
     }
 

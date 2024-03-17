@@ -9,15 +9,13 @@ import java.time.LocalDate;
 public class Fravaer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "fravaer_id")
     private Integer fravaerId;
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "bedriftId",referencedColumnName = "bedriftId"),
-            @JoinColumn(name = "ansattId",referencedColumnName = "ansattId")
-    })
+    @JoinColumn(name = "ansatt_id")
     private Ansatt ansattId;
     @ManyToOne
-    @JoinColumn(name = "typeId")
+    @JoinColumn(name = "type_id")
     private Fravaerstype typeId;
     private String forklaring;
     private LocalDate startdato;

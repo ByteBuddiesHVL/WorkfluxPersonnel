@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class Fravaerstype {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "type_id")
     private Integer typeId;
     private String navn;
 

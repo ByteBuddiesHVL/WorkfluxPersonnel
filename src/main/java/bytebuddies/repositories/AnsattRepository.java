@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AnsattRepository extends JpaRepository<Ansatt, AnsattId> {
-    List<Ansatt> findAllByAnsattId_BedriftId(Bedrift bedrift);
-    Optional<Ansatt> findAnsattByAnsattId_BedriftIdAndAnsattId_AnsattId(Bedrift bedrift, String ansattId);
+public interface AnsattRepository extends JpaRepository<Ansatt, Integer> {
+    List<Ansatt> findAllByBedriftId(Bedrift bedriftId);
+    Optional<Ansatt> findAnsattByBrukernavn(String brukernavn);
 }

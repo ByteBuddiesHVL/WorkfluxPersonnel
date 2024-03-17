@@ -9,12 +9,11 @@ import java.time.LocalDate;
 public class SlippHistorikk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lonnsslipp_id")
     private Integer lonnsslippId;
+
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "bedriftId",referencedColumnName = "bedriftId"),
-            @JoinColumn(name = "ansattId",referencedColumnName = "ansattId")
-    })
+    @JoinColumn(name = "ansatt_id")
     private Ansatt ansattId;
     private LocalDate dato;
     private float brutto;

@@ -9,13 +9,11 @@ import java.time.LocalDate;
 public class Lonn {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "lonn_id")
     private Integer lonnId;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "bedriftId",referencedColumnName = "bedriftId"),
-            @JoinColumn(name = "ansattId",referencedColumnName = "ansattId")
-    })
+    @JoinColumn(name = "ansatt_id")
     private Ansatt ansattId;
 
     private float timelonn; //kan være null (da er arslonn ikke null)

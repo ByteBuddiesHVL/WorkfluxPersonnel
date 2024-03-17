@@ -9,12 +9,10 @@ import java.time.LocalDate;
 public class Skatt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "skatt_id")
     private Integer skattId;
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "bedriftId",referencedColumnName = "bedriftId"),
-            @JoinColumn(name = "ansattId",referencedColumnName = "ansattId")
-    })
+    @JoinColumn(name = "ansatt_id")
     private Ansatt ansattId;
     private String tabell; // om ansatt har tabelltrekk
     private float prosent; // om ansatt har prosenttrekk

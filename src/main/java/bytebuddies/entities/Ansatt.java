@@ -7,8 +7,14 @@ import jakarta.persistence.*;
 @Entity
 @Table(schema = "Workflux")
 public class Ansatt {
-    @EmbeddedId
-    private AnsattId ansattId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ansatt_id")
+    private Integer ansattId;
+    private String brukernavn;
+    @ManyToOne
+    @JoinColumn(name = "bedrift_id")
+    private Bedrift bedriftId;
     @Embedded
     private Passord passord;
     private String fornavn;
@@ -16,14 +22,15 @@ public class Ansatt {
     private String telefonnummer;
     private String epost;
     @ManyToOne
-    @JoinColumn(name = "adresseId")
+    @JoinColumn(name = "adresse_id")
     private Adresse adresseId;
+    @Column(name = "is_active")
     private boolean isActive;
     private float stillingsprosent;
     private String stillingstype;
 
-    public Ansatt(AnsattId ansattId, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, float stillingsprosent, String stillingstype) {
-        this.ansattId = ansattId;
+    public Ansatt(Bedrift bedriftId, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, float stillingsprosent, String stillingstype) {
+        this.bedriftId = bedriftId;
         this.passord = passord;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -37,12 +44,28 @@ public class Ansatt {
 
     public Ansatt(){}
 
-    public AnsattId getAnsattId() {
+    public Integer getAnsattId() {
         return ansattId;
     }
 
-    public void setAnsattId(AnsattId ansattId) {
+    public void setAnsattId(Integer ansattId) {
         this.ansattId = ansattId;
+    }
+
+    public String getBrukernavn() {
+        return brukernavn;
+    }
+
+    public void setBrukernavn(String brukernavn) {
+        this.brukernavn = brukernavn;
+    }
+
+    public Bedrift getBedriftId() {
+        return bedriftId;
+    }
+
+    public void setBedriftId(Bedrift bedriftId) {
+        this.bedriftId = bedriftId;
     }
 
     public Passord getPassord() {

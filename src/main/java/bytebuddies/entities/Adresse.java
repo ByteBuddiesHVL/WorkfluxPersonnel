@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(schema = "Workflux")
 public class Adresse {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "adresse_id")
     private Integer adresseId;
     private String gatenavn;
     private String gatenummer;
@@ -15,7 +15,7 @@ public class Adresse {
     @ManyToOne
     @JoinColumn(name = "postnummer")
     private Postnummer postnummer;
-
+    @Column(name = "is_active")
     private boolean isActive;
 
     public Adresse(String gatenavn, String gatenummer, Postnummer postnummer, boolean isActive) {

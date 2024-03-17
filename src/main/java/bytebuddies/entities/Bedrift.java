@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class Bedrift {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bedrift_id")
     private Integer bedriftId;
     private String navn;
     @Column(unique = true)
