@@ -13,6 +13,9 @@
         <img src="images/white_transparent_small_ns.png" alt="">
     </header>
     <section class="inputSection">
+        <c:if test="${error != null}">
+            <p style="color: red;">${error}</p>
+        </c:if>
         <div class="stemple">
             <h2>Klar for en ny arbeidsdag?</h2>
             <div>
