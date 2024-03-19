@@ -10,7 +10,7 @@
 </head>
 <body>
 <header class="header">
-    <img src="images/white_transparent_smal_ns.png" alt="">
+    <img src="images/white_transparent_small_ns.png" alt="">
 </header>
 <section>
     <label>Lagre ny dev</label>
@@ -28,6 +28,17 @@
         <input name="navn" required>
         <label>Forkortelse</label>
         <input name="forkortelse" required>
+        <input type="submit" value="OK">
+    </form>
+
+    <label>Lagre ny admin</label>
+    <form action="/lagreAdmin" method="post">
+        <label>Brukernavn</label>
+        <input name="brukernavn" required>
+        <label>Bedrift forkortelse</label>
+        <input name="forkortelse" required>
+        <label>Passord</label>
+        <input name="passord" required>
         <input type="submit" value="OK">
     </form>
 

@@ -78,7 +78,7 @@ public class StempleController {
 
     public String validerBruker(String brukernavn) {
         if (!Pattern.compile("([a-z]{2})(\\d{6})").matcher(brukernavn).find()) return "Ikke et gyldig brukernavn.";
-        if (!ansattService.getAnsattByBrukernavn(brukernavn).isPresent()) return "Finner ingen ansatt på dette brukernavnet";
+        if (ansattService.getAnsattByBrukernavn(brukernavn).isEmpty()) return "Finner ingen ansatt på dette brukernavnet";
 
         return null;
     }

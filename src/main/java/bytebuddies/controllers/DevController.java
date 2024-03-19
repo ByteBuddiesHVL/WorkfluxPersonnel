@@ -2,10 +2,7 @@ package bytebuddies.controllers;
 
 import bytebuddies.embeddable.AnsattId;
 import bytebuddies.embeddable.Passord;
-import bytebuddies.entities.Adresse;
-import bytebuddies.entities.Ansatt;
-import bytebuddies.entities.Bedrift;
-import bytebuddies.entities.Dev;
+import bytebuddies.entities.*;
 import bytebuddies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +21,9 @@ public class DevController {
 
     @Autowired
     AnsattService ansattService;
+
+    @Autowired
+    AdminService adminService;
 
     @Autowired
     BedriftService bedriftService;
@@ -56,6 +56,21 @@ public class DevController {
             @RequestParam("forkortelse") String forkortelse
     ) {
         bedriftService.saveBedrift(new Bedrift(navn,forkortelse));
+        return "redirect:/dev-tools";
+    }
+
+    @PostMapping("/lagreAdmin")
+    public String lagreAdmin(
+            @RequestParam("brukernavn") String brukernavn,
+            @RequestParam("forkortelse") String bedriftF,
+            @RequestParam("passord") String passord
+    ) {
+        Bedrift bedrift = bedriftService.findBedrift(bedriftF);
+
+        String salt = passordService.genererTilfeldigSalt();
+        String hash = passordService.hashMedSalt(passord, salt);
+
+        adminService.saveAdmin(new Admin(bedrift,brukernavn,new Passord(hash,salt)));
         return "redirect:/dev-tools";
     }
 
