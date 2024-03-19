@@ -18,11 +18,26 @@
     </c:if>
     <section class="suiteWrapper">
         <div class="suiteChooser">
-            <div class="button active">Personal</div>
-            <div class="button">Lønn</div>
-            <div class="button">Rapporter</div>
+            <div class="button active" onclick="setActive(this)">Personal</div>
+            <div class="button" onclick="setActive(this)">Lønn</div>
+            <div class="button" onclick="setActive(this)">Rapporter</div>
         </div>
-        <div class="suite"></div>
+        <div class="suite">
+            <div class="personal"></div>
+            <div class="lonn"></div>
+            <div class="rapporter"></div>
+        </div>
     </section>
+
+
+<script>
+    function setActive(button) {
+        let buttons = document.querySelectorAll('.button');
+        buttons.forEach(function (btn){
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+    }
+</script>
 </body>
 </html>
