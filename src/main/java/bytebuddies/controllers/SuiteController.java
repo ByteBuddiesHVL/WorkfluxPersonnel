@@ -1,12 +1,8 @@
 package bytebuddies.controllers;
 
 import bytebuddies.embeddable.Passord;
-import bytebuddies.entities.Admin;
-import bytebuddies.entities.Adresse;
-import bytebuddies.entities.Ansatt;
-import bytebuddies.entities.Bedrift;
+import bytebuddies.entities.*;
 import bytebuddies.services.*;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Controller
 public class SuiteController {
@@ -41,9 +35,12 @@ public class SuiteController {
     @Autowired
     PostnummerService postnummerService;
 
+    @Autowired
+    ValideringsService valServ;
+
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
-        Admin admin = (Admin) session.getAttribute("loggedin");
+        Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
         return "suite";
     }
@@ -55,21 +52,21 @@ public class SuiteController {
             RedirectAttributes attributes,
             HttpSession session
     ) {
-        String errorMessage = validerAdmin(brukernavn,passord,session);
+        String errorMessage = valServ.validerAdmin(brukernavn,passord,session);
         if (errorMessage != null) attributes.addFlashAttribute("error",errorMessage);
         return "redirect:/suite";
     }
 
-    @GetMapping("/ansattliste")
+    @GetMapping("/personal")
     public String showAnsattListe(Model model, HttpSession session) {
         List<Ansatt> ansattliste = ansattService.getAllAnsatte();
         model.addAttribute("ansatte", ansattliste);
-        return "ansatt-list";
+        // attribute som sier hvilken delside i suite.jsp
+        return "redirect:/suite";
     }
 
     @PostMapping("/nyAnsatt")
-    public String lagreAnsatt(
-            @RequestParam("forkortelse") String bedriftF,
+    public String nyAnsatt(
             @RequestParam("fornavn") String fornavn,
             @RequestParam("etternavn") String etternavn,
             @RequestParam("telefonnummer") String telefonnummer,
@@ -79,41 +76,25 @@ public class SuiteController {
             @RequestParam("postnummer") String postnummer,
             @RequestParam("stillingsprosent") Float stillingsprosent,
             @RequestParam("stillingstype") String stillingstype,
-            @RequestParam("passord") String passord
+            HttpSession session,
+            RedirectAttributes attributes
     ) {
-        Bedrift b = bedriftService.findBedrift(bedriftF);
-        Adresse a = adresseService.saveAdresse(new Adresse(gatenavn, gatenummer, postnummerService.findPostnummer(postnummer), true));
-
-        String salt = passordService.genererTilfeldigSalt();
-        String hash = passordService.hashMedSalt(passord, salt);
-
-        Ansatt ansatt = new Ansatt(b, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, a, true, stillingsprosent, stillingstype);
-        ansattService.saveAnsatt(ansatt,bedriftF);
-        return "redirect:/yalla";
+        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype);
+        if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
+        else {
+            Admin admin = getLoggedInAttr(session);
+            Bedrift bedrift = admin.getBedriftId();
+            if (bedrift == null) {
+                attributes.addFlashAttribute("error", "Du er ikke logget inn!");
+                return "redirect:/personal";
+            }
+            Ansatt ansatt = valServ.lagAnsatt(bedrift,fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype,etternavn);
+            ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
+        }
+        return "redirect:/personal";
     }
 
-
-
-
-    public String validerAdmin(String brukernavn, String passord, HttpSession session) {
-        Admin admin = adminService.getAdminByBrukernavn(brukernavn).orElseGet(null);
-        if (admin == null) return "Feil brukernavn/passord";
-        Passord p = admin.getPassord();
-        if (!passordService.erKorrektPassord(passord,p.getSalt(),p.getHash())) return "Feil brukernavn/passord";
-
-        session.setAttribute("loggedin",admin);
-        return null;
+    public Admin getLoggedInAttr(HttpSession session) {
+        return (Admin) session.getAttribute("loggedin");
     }
-
-    public boolean validerNyAnsatt(Bedrift bedriftId, Passord passord, String fornavn, String etternavn,
-                                String telefonnummer, String epost,
-                                float stillingsprosent, String stillingstype) {
-        return fornavn != null && fornavn.matches("^[A-ZÆØÅ][A-ZÆØÅa-zæøå -]{1,19}$") &&
-                etternavn != null && etternavn.matches("^[A-ZÆØÅ][A-ZÆØÅa-zæøå-]{1,19}$") &&
-                telefonnummer != null && telefonnummer.matches("^\\d{8}$") && epost !=null && epost.matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
-                && stillingstype != null && stillingstype.matches("^[A-ZÆØÅ][A-ZÆØÅa-zæøå -]{1,20}$");
-
-
-    }
-
 }

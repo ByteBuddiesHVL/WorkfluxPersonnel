@@ -89,6 +89,7 @@ public class DevController {
             @RequestParam("passord") String passord
     ) {
         Bedrift b = bedriftService.findBedrift(bedriftF);
+        if (b == null) return ""; //something
         Adresse a = adresseService.saveAdresse(new Adresse(gatenavn, gatenummer, postnummerService.findPostnummer(postnummer), true));
 
         String salt = passordService.genererTilfeldigSalt();
