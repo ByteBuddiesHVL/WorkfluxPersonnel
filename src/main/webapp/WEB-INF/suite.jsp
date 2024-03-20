@@ -10,8 +10,13 @@
 </head>
 <body>
     <header class="header">
-        <img src="images/white_transparent_small_ns.png" alt="">
-        <h3>- Suite</h3>
+        <div class="headerLeftSide">
+            <img src="images/white_transparent_small_ns.png" alt="">
+            <h3>- Suite</h3>
+        </div>
+        <div class="headerRightSide">
+            <h4 class="logout" onclick="location.href='/logout'">Logg ut</h4>
+        </div>
     </header>
     <c:if test="${error != null}">
         <p style="color: red;">${error}</p>

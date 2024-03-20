@@ -10,12 +10,30 @@ header {
     height: 100px;
     box-shadow: 0px 4px 6px 0px grey;
     display: flex;
+    justify-content: space-between;
+    flex-direction: row;
 }
 
-header > h3 {
+.headerLeftSide, .headerRightSide {
+    width: max-content;
+    height: 100%;
+    display: flex;
+    color: white;
+}
+
+.headerRightSide {
+    justify-content: center;
+    align-items: center;
+    margin-right: 1em;
+}
+
+.logout {
+    cursor: pointer;
+}
+
+.headerLeftSide > h3 {
     font-weight: 100;
     font-size: 30px;
-    color: white;
 }
 
 img {
@@ -81,7 +99,7 @@ input[type=submit] {
 
 .stempleSection {
     position: absolute;
-    display: flex;
+    display: none;
     top: 0;
     left: 0;
     width: 100%;
