@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class SuiteController {
@@ -40,9 +41,13 @@ public class SuiteController {
     ValideringsService valServ;
 
     @GetMapping("/suite")
-    public String getSuiteSite(HttpSession session) {
+    public String getSuiteSite(Model model, HttpSession session) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
+        String ansatte = ansattService.getAllAnsatte().stream()
+                .map(Ansatt::toString)
+                .collect(Collectors.joining(",", "[", "]"));
+        model.addAttribute("ansatte", ansatte);
         return "suite";
     }
 
@@ -52,7 +57,7 @@ public class SuiteController {
         return "redirect:/suite";
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public String logIn(
             @RequestParam(name = "brukernavn") String brukernavn,
             @RequestParam(name = "passord") String passord,

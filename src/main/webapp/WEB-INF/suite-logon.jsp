@@ -18,11 +18,11 @@
         </c:if>
         <div class="login">
             <div>
-                <form action="/login" method="get">
+                <form action="/login" method="post">
                     <label for="brukernavn">Brukernavn:</label>
                     <input name="brukernavn" id="brukernavn" required>
                     <label for="passord">Passord:</label>
-                    <input name="passord" id="passord" required>
+                    <input name="passord" id="passord" type="password" required>
                     <input type="submit" value="Login">
                 </form>
             </div>

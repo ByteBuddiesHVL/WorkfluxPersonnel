@@ -139,4 +139,19 @@ public class Ansatt {
     public void setStillingstype(String stillingstype) {
         this.stillingstype = stillingstype;
     }
+
+    public String toString() {
+        Postnummer post = adresseId.getPostnummer();
+        return "[\"" +
+                brukernavn + "\",\"" +
+                etternavn + ", " + fornavn + "\",\"" +
+                telefonnummer + "\",\"" +
+                epost + "\",\"" +
+                adresseId.getGatenavn() + " " +
+                adresseId.getGatenummer() + "\",\"" +
+                post.getPostnummer() + " " +
+                post.getPoststed() + "\"," +
+                String.format("%3.2f", stillingsprosent) + ",\"" +
+                stillingstype + "\"]";
+    }
 }

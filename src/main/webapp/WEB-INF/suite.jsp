@@ -32,7 +32,7 @@
                 <button type="button" id="nyAnsatt">Ny Ansatt</button>
                 <div id="nyAnsattWindow">
                     <h1>Lag ansatt</h1>
-                    <form id="navn">
+                    <form id="navn" method="post" action="/nyAnsatt">
                         <label for="fornavn">Fornavn:</label>
                         <input type="text" id="fornavn" name="fornavn"><br><br>
                         <label for="etternavn">Etternavn:</label>
@@ -62,6 +62,7 @@
 
 
 <script>
+    const ansatte = ${ansatte}
     function setActive(button) {
         let buttons = document.querySelectorAll('.button');
         buttons.forEach(function (btn) {
