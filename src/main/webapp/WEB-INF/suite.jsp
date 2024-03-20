@@ -61,29 +61,8 @@
     </section>
 
 
-<script>
-    const ansatte = ${ansatte}
-    function setActive(button) {
-        let buttons = document.querySelectorAll('.button');
-        buttons.forEach(function (btn) {
-            btn.classList.remove('active');
-        });
-        button.classList.add('active');
-    }
-
-        var popupLink = document.getElementById("nyAnsatt");
-        var popupWindow = document.getElementById("nyAnsattWindow");
-        var closeButton = document.getElementById("lag");
-
-        popupLink.addEventListener("click", function(event) {
-        event.preventDefault();
-        popupWindow.style.display = "block";
-    });
-
-        closeButton.addEventListener("click", function() {
-        popupWindow.style.display = "none";
-    });
-
+<script src="js/suite.js">
+    const hentAnsatte = ${ansatte}
 </script>
 </body>
 </html>
