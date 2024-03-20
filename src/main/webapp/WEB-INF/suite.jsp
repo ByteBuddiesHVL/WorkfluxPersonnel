@@ -28,7 +28,33 @@
             <div class="button" onclick="setActive(this)">Rapporter</div>
         </div>
         <div class="suite">
-            <div class="personal"></div>
+            <div class="personal">
+                <button type="button" id="nyAnsatt">Ny Ansatt</button>
+                <div id="nyAnsattWindow">
+                    <h1>Lag ansatt</h1>
+                    <form id="navn">
+                        <label for="fornavn">Fornavn:</label>
+                        <input type="text" id="fornavn" name="fornavn"><br><br>
+                        <label for="etternavn">Etternavn:</label>
+                        <input type="text" id="etternavn" name="etternavn"><br><br>
+                        <label for="telefonnummer">Telefonnummer:</label>
+                        <input type="text" id="telefonnummer" name="telefonnummer"><br><br>
+                        <label for="epost">Epost:</label>
+                        <input type="text" id="epost" name="epost"><br><br>
+                        <label for="gatenavn">Gatenavn:</label>
+                        <input type="text" id="gatenavn" name="gatenavn"><br><br>
+                        <label for="gatenummer">Gatenummer:</label>
+                        <input type="text" id="gatenummer" name="gatenummer"><br><br>
+                        <label for="postnummer">Postnummer:</label>
+                        <input type="text" id="postnummer" name="postnummer"><br><br>
+                        <label for="stillingsprosent">Stillingsprosent:</label>
+                        <input type="text" id="stillingsprosent" name="stillingsprosent"><br><br>
+                        <label for="stillingstype">Stillingstype:</label>
+                        <input type="text" id="stillingstype" name="stillingstype"><br><br>
+                        <input type="submit" id="lag" value="Lag ansatt">
+                    </form>
+                </div>
+            </div>
             <div class="lonn"></div>
             <div class="rapporter"></div>
         </div>
@@ -38,11 +64,25 @@
 <script>
     function setActive(button) {
         let buttons = document.querySelectorAll('.button');
-        buttons.forEach(function (btn){
+        buttons.forEach(function (btn) {
             btn.classList.remove('active');
         });
         button.classList.add('active');
     }
+
+        var popupLink = document.getElementById("nyAnsatt");
+        var popupWindow = document.getElementById("nyAnsattWindow");
+        var closeButton = document.getElementById("lag");
+
+        popupLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        popupWindow.style.display = "block";
+    });
+
+        closeButton.addEventListener("click", function() {
+        popupWindow.style.display = "none";
+    });
+
 </script>
 </body>
 </html>
