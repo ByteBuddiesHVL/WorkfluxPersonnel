@@ -1,9 +1,9 @@
 function setActive(button) {
     let buttons = document.querySelectorAll('.button');
-        buttons.forEach(function (btn) {
-            btn.classList.remove('active');
-        })
-        button.classList.add('active');
+    buttons.forEach(function (btn) {
+        btn.classList.remove('active');
+    })
+    button.classList.add('active');
 }
 
 const nyAnsatt = document.getElementById("nyAnsatt");

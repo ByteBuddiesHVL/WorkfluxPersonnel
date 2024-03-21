@@ -41,10 +41,7 @@ public class SuiteController {
     public String getSuiteSite(Model model, HttpSession session) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
-        String ansatte = ansattService.getAllAnsatte().stream()
-                .map(Ansatt::toString)
-                .collect(Collectors.joining(",", "[", "]"));
-        model.addAttribute("ansatte", ansatte);
+        model.addAttribute("ansatte", getAnsattString());
         return "suite";
     }
 
@@ -57,10 +54,9 @@ public class SuiteController {
     ) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
-        if (delside != null) {
-            attributes.addFlashAttribute("delside", delside);
-            attributes.addFlashAttribute("pathVar","../");
-        }
+        if (delside != null) attributes.addFlashAttribute("delside", delside);
+        if (delside.equals("ansatt")) model.addAttribute("ansattListe",ansattService.getAllAnsatte());
+        if (delside.equals("personal")) model.addAttribute("ansatte",getAnsattString());
         return "suite";
     }
 
@@ -85,11 +81,12 @@ public class SuiteController {
     @GetMapping("/personal")
     public String showAnsattListe(Model model) {
         List<Ansatt> ansattliste = ansattService.getAllAnsatte();
-        model.addAttribute("ansatte", ansattliste);
+        model.addAttribute("ansattListe", ansattliste);
         // attribute som sier hvilken delside i suite.jsp
         return "redirect:/suite";
     }
 
+    // denne metoden blir ikke brukt, bruker heller frontend søking
     @GetMapping("/ansattsok")
     public String ansattSok(
             @RequestParam(name = "brukernavn") String brukernavn,
@@ -99,10 +96,8 @@ public class SuiteController {
         Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
         if (ansatt == null) attributes.addFlashAttribute("error","Ansatt finnes ikke på dette brukernavnet");
         else {
-            model.addAttribute("ansatt",ansatt);
-            Adresse adresse = ansatt.getAdresseId();
-            model.addAttribute("adresse",adresse);
-            model.addAttribute("postnummer",adresse.getPostnummer());
+            List<Ansatt> ansatte = List.of(ansatt);
+            attributes.addAttribute("ansatte",ansatte);
         }
         return "redirect:/suite/ansatt";
     }
@@ -138,5 +133,11 @@ public class SuiteController {
 
     public Admin getLoggedInAttr(HttpSession session) {
         return (Admin) session.getAttribute("loggedin");
+    }
+
+    public String getAnsattString() {
+        return ansattService.getAllAnsatte().stream()
+                .map(Ansatt::toString)
+                .collect(Collectors.joining(",", "[", "]"));
     }
 }

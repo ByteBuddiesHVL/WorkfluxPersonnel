@@ -23,9 +23,9 @@
     </c:if>
     <section class="suiteWrapper">
         <div class="suiteChooser">
-            <div class="button active" onclick="setActive(this)">Personal</div>
-            <div class="button" onclick="setActive(this)">Lønn</div>
-            <div class="button" onclick="setActive(this)">Rapporter</div>
+            <div class="button active" onclick="setActive(this,'#personal')">Personal</div>
+            <div class="button" onclick="setActive(this,'#ansatt')">Ansatt</div>
+            <div class="button" onclick="setActive(this,'#rapporter')">Rapporter</div>
         </div>
         <div class="suite">
             <div id="personal" style="display: none;">
@@ -57,21 +57,14 @@
             </div>
             <div id="ansatt">
                 <div class="ansattSok">
-                    <form action="/ansattsok" method="get">
-                        <!--Kunne vært greit med søk i frontend istedenfor-->
-                        <label for="brukernavn">Brukernavn:</label> <!--Kan søke med navn også etc...-->
-                        <input name="brukernavn" id="brukernavn">
-                        <input type="submit" value="Søk">
-                    </form>
+                    <select name="ansattsok">
+                        <c:forEach items="${ansattListe}" var="ansatt">
+                            <option value="${ansatt}">${ansatt.brukernavn}</option>
+                        </c:forEach>
+                    </select>
                 </div>
                 <div class="ansattInfo">
-                    <c:forEach items="ansatt" var="ansatt">
-                        <p>Navn: <span>${ansatt.etternavn}, ${ansatt.fornavn}</span></p>
-                        <p>Telefonnummer: <span>${ansatt.telefonnummer}</span></p>
-                        <p>Epost: <span>${ansatt.epost}</span></p>
-                        <p>Adresse: <span>${ansatt.gatenavn} ${ansatt.gatenummer}, ${postnummer.postnummer} ${postnummer.poststed}</span></p>
-                        <p>Stilling: <span>${ansatt.Stillingsprosent} - ${ansatt.stillingstype}</span></p>
-                    </c:forEach>
+
                 </div>
             </div>
             <div id="rapporter"></div>
