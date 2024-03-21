@@ -6,10 +6,7 @@ import bytebuddies.services.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
@@ -51,6 +48,22 @@ public class SuiteController {
         return "suite";
     }
 
+    @GetMapping("/suite/{delside}")
+    public String getSuiteDelide(
+            Model model,
+            HttpSession session,
+            @PathVariable("delside") String delside,
+            RedirectAttributes attributes
+    ) {
+        Admin admin = getLoggedInAttr(session);
+        if (admin == null) return "suite-logon";
+        if (delside != null) {
+            attributes.addFlashAttribute("delside", delside);
+            attributes.addFlashAttribute("pathVar","../");
+        }
+        return "suite";
+    }
+
     @GetMapping("/logout")
     public String logOut(HttpSession session){
         session.invalidate();
@@ -70,11 +83,28 @@ public class SuiteController {
     }
 
     @GetMapping("/personal")
-    public String showAnsattListe(Model model, HttpSession session) {
+    public String showAnsattListe(Model model) {
         List<Ansatt> ansattliste = ansattService.getAllAnsatte();
         model.addAttribute("ansatte", ansattliste);
         // attribute som sier hvilken delside i suite.jsp
         return "redirect:/suite";
+    }
+
+    @GetMapping("/ansattsok")
+    public String ansattSok(
+            @RequestParam(name = "brukernavn") String brukernavn,
+            RedirectAttributes attributes,
+            Model model
+    ) {
+        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        if (ansatt == null) attributes.addFlashAttribute("error","Ansatt finnes ikke på dette brukernavnet");
+        else {
+            model.addAttribute("ansatt",ansatt);
+            Adresse adresse = ansatt.getAdresseId();
+            model.addAttribute("adresse",adresse);
+            model.addAttribute("postnummer",adresse.getPostnummer());
+        }
+        return "redirect:/suite/ansatt";
     }
 
     @PostMapping("/nyAnsatt")
@@ -95,11 +125,11 @@ public class SuiteController {
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
             Admin admin = getLoggedInAttr(session);
-            Bedrift bedrift = admin.getBedriftId();
-            if (bedrift == null) {
+            if (admin == null) {
                 attributes.addFlashAttribute("error", "Du er ikke logget inn!");
                 return "redirect:/personal";
             }
+            Bedrift bedrift = admin.getBedriftId();
             Ansatt ansatt = valServ.lagAnsatt(bedrift,fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype,etternavn);
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
         }

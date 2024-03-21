@@ -16,8 +16,8 @@ public class AnsattService {
     @Autowired
     private AnsattRepository ansattRepository;
 
-    public Optional<Ansatt> getAnsattByBrukernavn(String brukernavn) {
-        return ansattRepository.findAnsattByBrukernavn(brukernavn);
+    public Ansatt getAnsattByBrukernavn(String brukernavn) {
+        return ansattRepository.findAnsattByBrukernavn(brukernavn).orElseGet(null);
     }
 
     public List<Ansatt> getAllAnsatte() {

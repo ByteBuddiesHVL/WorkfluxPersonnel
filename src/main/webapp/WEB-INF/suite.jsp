@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workflux Suite</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <header class="header">
         <div class="headerLeftSide">
-            <img src="images/white_transparent_small_ns.png" alt="">
+            <img src="../images/white_transparent_small_ns.png" alt="">
             <h3>- Suite</h3>
         </div>
         <div class="headerRightSide">
@@ -28,7 +28,7 @@
             <div class="button" onclick="setActive(this)">Rapporter</div>
         </div>
         <div class="suite">
-            <div class="personal">
+            <div id="personal" style="display: none;">
                 <button type="button" id="nyAnsatt">Ny Ansatt</button>
                 <div id="nyAnsattWindow">
                     <h1>Lag ansatt</h1>
@@ -55,13 +55,31 @@
                     </form>
                 </div>
             </div>
-            <div class="lonn"></div>
-            <div class="rapporter"></div>
+            <div id="ansatt">
+                <div class="ansattSok">
+                    <form action="/ansattsok" method="get">
+                        <!--Kunne vært greit med søk i frontend istedenfor-->
+                        <label for="brukernavn">Brukernavn:</label> <!--Kan søke med navn også etc...-->
+                        <input name="brukernavn" id="brukernavn">
+                        <input type="submit" value="Søk">
+                    </form>
+                </div>
+                <div class="ansattInfo">
+                    <c:forEach items="ansatt" var="ansatt">
+                        <p>Navn: <span>${ansatt.etternavn}, ${ansatt.fornavn}</span></p>
+                        <p>Telefonnummer: <span>${ansatt.telefonnummer}</span></p>
+                        <p>Epost: <span>${ansatt.epost}</span></p>
+                        <p>Adresse: <span>${ansatt.gatenavn} ${ansatt.gatenummer}, ${postnummer.postnummer} ${postnummer.poststed}</span></p>
+                        <p>Stilling: <span>${ansatt.Stillingsprosent} - ${ansatt.stillingstype}</span></p>
+                    </c:forEach>
+                </div>
+            </div>
+            <div id="rapporter"></div>
         </div>
     </section>
 
 
-<script src="js/suite.js">
+<script src="../js/suite.js">
     const hentAnsatte = ${ansatte}
 </script>
 </body>
