@@ -52,7 +52,7 @@ public class SuiteController {
             RedirectAttributes attributes
     ) {
         Admin admin = getLoggedInAttr(session);
-        if (admin == null) return "suite-logon";
+        if (admin == null) return "redirect:/suite";
         if (delside != null) {
             attributes.addFlashAttribute("delside", delside);
             if (delside.equals("personal")) model.addAttribute("ansatte",getAnsattString());
