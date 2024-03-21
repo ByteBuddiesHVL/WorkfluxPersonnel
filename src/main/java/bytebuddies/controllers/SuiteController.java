@@ -41,7 +41,11 @@ public class SuiteController {
     public String getSuiteSite(Model model, HttpSession session) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
+
         model.addAttribute("ansatte", getAnsattString());
+        List<Ansatt> ansattliste = ansattService.getAllAnsatte();
+        model.addAttribute("ansattListe", ansattliste);
+
         return "suite";
     }
 

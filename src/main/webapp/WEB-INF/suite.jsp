@@ -23,12 +23,12 @@
     </c:if>
     <section class="suiteWrapper">
         <div class="suiteChooser">
-            <div class="button active" onclick="setActive(this,'#personal')">Personal</div>
-            <div class="button" onclick="setActive(this,'#ansatt')">Ansatt</div>
+            <div class="button active" onclick="setActive(this,personal)">Personal</div>
+            <div class="button" onclick="setActive(this,ansatt)">Ansatt</div>
             <div class="button" onclick="setActive(this,'#rapporter')">Rapporter</div>
         </div>
         <div class="suite">
-            <div id="personal" style="display: none;">
+            <div id="personal">
                 <button type="button" id="nyAnsatt">Ny Ansatt</button>
                 <div id="nyAnsattWindow">
                     <h1>Lag ansatt</h1>
@@ -56,16 +56,21 @@
                 </div>
             </div>
             <div id="ansatt">
-                <div class="ansattSok">
+                <div id="ansattSok">
                     <select name="ansattsok">
-                        <c:forEach items="${ansattListe}" var="ansatt">
-                            <option value="${ansatt}">${ansatt.brukernavn}</option>
-                        </c:forEach>
+                        <c:if test="${not empty ansattListe}">
+                            <c:forEach items="${ansattListe}" var="ansatt">
+                                <option id=${ansatt.brukernavn} value="${ansatt.brukernavn},${ansatt.fornavn},${ansatt.etternavn},${ansatt.telefonnummer}">
+                                        ${ansatt.brukernavn}
+                                </option>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${empty ansattListe}">
+                            <option value="">Ingen ansatte funnet</option>
+                        </c:if>
                     </select>
                 </div>
-                <div class="ansattInfo">
-
-                </div>
+                <div class="ansattInfo" id="ansattInfo"></div>
             </div>
             <div id="rapporter"></div>
         </div>
