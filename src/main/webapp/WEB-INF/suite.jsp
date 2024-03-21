@@ -23,11 +23,13 @@
     </c:if>
     <section class="suiteWrapper">
         <div class="suiteChooser">
-            <div class="button active" onclick="setActive(this,personal)">Personal</div>
-            <div class="button" onclick="setActive(this,ansatt)">Ansatt</div>
-            <div class="button" onclick="setActive(this,'#rapporter')">Rapporter</div>
+            <div class="button <c:if test="${empty delside}">active</c:if>" style="margin-right: 1em;" onclick="setActive(this);location.href='/suite'">Hjem</div>
+            <div class="button <c:if test="${delside eq 'personal'}">active</c:if>" onclick="setActive(this);location.href='/suite/personal'">Personal</div>
+            <div class="button <c:if test="${delside eq 'ansatt'}">active</c:if>" onclick="setActive(this);location.href='/suite/ansatt'">Ansatt</div>
+            <div class="button <c:if test="${delside eq 'rapporter'}">active</c:if>" onclick="setActive(this);location.href='/suite/rapporter'">Rapporter</div>
         </div>
         <div class="suite">
+            <div id="hjem"></div>
             <div id="personal">
                 <button type="button" id="nyAnsatt">Ny Ansatt</button>
                 <div id="nyAnsattWindow">
@@ -70,7 +72,7 @@
                         </c:if>
                     </select>
                 </div>
-                <div class="ansattInfo" id="ansattInfo"></div>
+                <div id="ansattInfo"></div>
             </div>
             <div id="rapporter"></div>
         </div>

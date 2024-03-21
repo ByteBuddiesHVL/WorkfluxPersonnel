@@ -166,7 +166,7 @@ input[type=submit] {
 }
 
 #personal {
-    display: grid;
+    display: none;
     grid-template-rows: 2em 15% 2% 40% auto 2em;
     height: 100%;
     width: 100%;
@@ -221,31 +221,31 @@ input[type=submit] {
 }
 
 #ansatt {
-    display: grid;
+    display: none;
     height: 100%;
     width: 100%;
     grid-template-rows: 2em 15% 2% 40% auto 2em;
     grid-template-columns: 2em 20% 2% auto 2% 20% 2em;
 }
 
-.ansattSok {
+#ansattSok {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
 }
 
-.ansattSok > form {
+#ansattSok > form {
     display: flex;
     flex-direction: row;
 }
 
-.ansattSok > form > div {
+#ansattSok > form > div {
     display: flex;
     flex-direction: column;
 }
 
-.ansattInfo {
+#ansattInfo {
     grid-column-start: 4;
     grid-column-end: 5;
     grid-row-start: 4;

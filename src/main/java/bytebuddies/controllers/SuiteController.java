@@ -38,14 +38,9 @@ public class SuiteController {
     ValideringsService valServ;
 
     @GetMapping("/suite")
-    public String getSuiteSite(Model model, HttpSession session) {
+    public String getSuiteSite(HttpSession session) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
-
-        model.addAttribute("ansatte", getAnsattString());
-        List<Ansatt> ansattliste = ansattService.getAllAnsatte();
-        model.addAttribute("ansattListe", ansattliste);
-
         return "suite";
     }
 
@@ -58,9 +53,11 @@ public class SuiteController {
     ) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return "suite-logon";
-        if (delside != null) attributes.addFlashAttribute("delside", delside);
-        if (delside.equals("ansatt")) model.addAttribute("ansattListe",ansattService.getAllAnsatte());
-        if (delside.equals("personal")) model.addAttribute("ansatte",getAnsattString());
+        if (delside != null) {
+            attributes.addFlashAttribute("delside", delside);
+            if (delside.equals("personal")) model.addAttribute("ansatte",getAnsattString());
+            else if (delside.equals("ansatt")) model.addAttribute("ansattListe",ansattService.getAllAnsatte());
+        }
         return "suite";
     }
 
@@ -80,30 +77,6 @@ public class SuiteController {
         String errorMessage = valServ.validerAdmin(brukernavn,passord,session);
         if (errorMessage != null) attributes.addFlashAttribute("error",errorMessage);
         return "redirect:/suite";
-    }
-
-    @GetMapping("/personal")
-    public String showAnsattListe(Model model) {
-        List<Ansatt> ansattliste = ansattService.getAllAnsatte();
-        model.addAttribute("ansattListe", ansattliste);
-        // attribute som sier hvilken delside i suite.jsp
-        return "redirect:/suite";
-    }
-
-    // denne metoden blir ikke brukt, bruker heller frontend søking
-    @GetMapping("/ansattsok")
-    public String ansattSok(
-            @RequestParam(name = "brukernavn") String brukernavn,
-            RedirectAttributes attributes,
-            Model model
-    ) {
-        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
-        if (ansatt == null) attributes.addFlashAttribute("error","Ansatt finnes ikke på dette brukernavnet");
-        else {
-            List<Ansatt> ansatte = List.of(ansatt);
-            attributes.addAttribute("ansatte",ansatte);
-        }
-        return "redirect:/suite/ansatt";
     }
 
     @PostMapping("/nyAnsatt")
