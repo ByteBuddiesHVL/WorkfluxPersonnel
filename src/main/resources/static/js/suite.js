@@ -43,9 +43,19 @@ lag.addEventListener("click", () => {
 
 // Midlertidig løsning
 const ansattInfo = document.getElementById("ansattInfo");
+function setAnsatt(btn) {
+    ansattInfo.innerHTML = btn.value;
+}
+
+/*
 let ansattSelected = document.querySelector("select").value;
 ansattInfo.innerHTML = ansattSelected;
+let searchResults = document.querySelectorAll(".searchResult");
+searchResults.forEach(s => s.addEventListener("click",(evt) => {
+    ansattInfo.innerHTML = evt.target.innerHTML;
+}))
 ansattSok.addEventListener("change", (evt) => {
     ansattSelected = document.querySelector("select").value;
     ansattInfo.innerHTML = ansattSelected;
 });
+*/

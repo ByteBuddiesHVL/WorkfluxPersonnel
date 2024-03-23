@@ -225,12 +225,12 @@ input[type=submit] {
     height: 100%;
     width: 100%;
     grid-template-rows: 2em 15% 2% 40% auto 2em;
-    grid-template-columns: 2em 20% 2% auto 2% 20% 2em;
+    grid-template-columns: 2em 20% 10% 2% auto 2% 20% 2em;
 }
 
 #ansattSok {
     grid-column-start: 2;
-    grid-column-end: 3;
+    grid-column-end: 4;
     grid-row-start: 2;
     grid-row-end: 3;
 }
@@ -246,8 +246,49 @@ input[type=submit] {
 }
 
 #ansattInfo {
-    grid-column-start: 4;
-    grid-column-end: 5;
+    display: flex;
+    grid-column-start: 5;
+    grid-column-end: 6;
     grid-row-start: 4;
     grid-row-end: 6;
+}
+
+#searchBarAnsatt {
+    position: relative;
+    display: flex;
+    height: 2em;
+    width: max-content;
+    padding: 10px;
+    border-radius: 5em;
+    background: white;
+}
+
+#searchInput {
+    border: 0;
+    outline: none;
+    padding: 0px 4px;
+}
+
+#searchLogo {
+    padding: 8px;
+}
+
+#searchResultWrapper {
+    display: flex;
+    flex-direction: column;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    background: white;
+    margin-top: .5em;
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.searchResult {
+    outline: none;
+    border: 0;
+    background: white;
+    cursor: pointer;
 }
