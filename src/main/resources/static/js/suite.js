@@ -41,12 +41,27 @@ lag.addEventListener("click", () => {
     nyAnsattWindow.style.display = "none";
 })
 
+function filtrerAnsatte() {
+    const wrapper = document.getElementById("searchResultWrapper");
+    const buttons = wrapper.getElementsByTagName("button");
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toUpperCase();
+
+    for (let i = 0; i < buttons.length; i++) {
+        let searchText = buttons[i].textContent;
+        if (searchText.toUpperCase().indexOf(filter) > -1) {
+            buttons[i].style.display = "";
+        } else {
+            buttons[i].style.display = "none";
+        }
+    }
+}
+
 // Midlertidig løsning
 const ansattInfo = document.getElementById("ansattInfo");
 function setAnsatt(btn) {
     ansattInfo.innerHTML = btn.value;
 }
-
 /*
 let ansattSelected = document.querySelector("select").value;
 ansattInfo.innerHTML = ansattSelected;

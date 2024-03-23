@@ -99,13 +99,13 @@ public class SuiteController {
             Admin admin = getLoggedInAttr(session);
             if (admin == null) {
                 attributes.addFlashAttribute("error", "Du er ikke logget inn!");
-                return "redirect:/personal";
+                return "redirect:/suite";
             }
             Bedrift bedrift = admin.getBedriftId();
             Ansatt ansatt = valServ.lagAnsatt(bedrift,fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype,etternavn);
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
         }
-        return "redirect:/personal";
+        return "redirect:/suite/personal";
     }
 
     public Admin getLoggedInAttr(HttpSession session) {
