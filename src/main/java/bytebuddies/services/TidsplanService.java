@@ -79,6 +79,13 @@ public class TidsplanService {
         return tidsplanRepository.getTidsplansByAnsattIdAndStarttidBetweenAndCalcedIsFalse(ansatt,start.atStartOfDay(),end.plusDays(1).atStartOfDay().minusMinutes(1));
     }
 
+    /**
+     *
+     * @param ansatt
+     * @param startDate - startdato på søk
+     * @param endDate - sluttdato på søk mellom start og slutt av starttid på tidsplan
+     * @return timer for en ansatt mellom to gitte datoer
+     */
     public long getTimerForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
         List<Tidsplan> tidsplanList = getTidsplaner(ansatt,startDate,endDate);
         Duration duration = Duration.ZERO;
