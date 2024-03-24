@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -61,13 +62,26 @@ public class StempleController {
     ) {
 
         Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        Tidsplan tidsplan = tidsplanService.getCurrentTidsplan(ansatt);
 
         switch(type) {
             case "Inn":
-                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time,null,null));
+                // check if tidsplan == lunsj ... etc
+                if (tidsplan != null) tidsplanService.endTidsplan(tidsplan,time);
+                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time,null,null,false));
                 break;
             case "Ut":
-                tidsplanService.endTidsplan(ansatt,time);
+                if (tidsplan == null) break;
+                LocalDate startDate = tidsplan.getStarttid().toLocalDate();
+                LocalDate dateNow = time.toLocalDate();
+                if (startDate.isEqual(dateNow))
+                    tidsplanService.endTidsplan(tidsplan,time);
+                else if (startDate.isBefore(dateNow)){
+                    tidsplanService.endTidsplan(tidsplan,startDate.atTime(23,59,59));
+                    tidsplanService.saveTidsplan(new Tidsplan(ansatt,dateNow.atTime(0,0,0),time,null,false));
+                } else if (startDate.isAfter(dateNow)){
+                    // return error
+                }
                 break;
             case "Lunsj":
                 // iterasjon 2

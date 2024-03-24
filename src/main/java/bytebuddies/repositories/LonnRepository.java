@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface LonnRepository extends JpaRepository<Lonn, Integer> {
-    Optional<Lonn> getTimelonnByAnsattId(Ansatt ansatt);
-
-    Optional<Lonn> getArslonnByAnsattId(Ansatt ansatt);
+    Optional<Lonn> getLonnByAnsattId(Ansatt ansatt);
 }

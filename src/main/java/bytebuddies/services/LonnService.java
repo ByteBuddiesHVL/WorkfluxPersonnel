@@ -35,18 +35,19 @@ public class LonnService {
     @Autowired
     private AnsattRepository ansattRepository;
 
-    public Optional<Lonn> finnTimelonnForAnsatt(Ansatt ansatt) {
-        return lonnRepository.getTimelonnByAnsattId(ansatt);
+    public Float finnTimelonnForAnsatt(Ansatt ansatt) {
+        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElseGet(null);
+        if (lonn != null) return lonn.getTimelonn();
+        return null;
     }
 
-    public Optional<Lonn> finnArslonnForAnsatt(Ansatt ansatt) {
-        return lonnRepository.getArslonnByAnsattId(ansatt);
+    public Float finnArslonnForAnsatt(Ansatt ansatt) {
+        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElseGet(null);
+        if (lonn != null) return lonn.getArslonn();
+        return null;
     }
 
-    public byte[] genererLonnslipp(Integer ansattId) throws IOException {
-
-        Ansatt ansatt = ansattRepository.findById(ansattId).orElseThrow();
-
+    public byte[] genererLonnslipp(Ansatt ansatt) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdfDoc = new PdfDocument(writer);

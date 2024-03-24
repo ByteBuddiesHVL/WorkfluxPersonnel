@@ -23,11 +23,15 @@ public class Tidsplan {
     @JoinColumn(name = "type_id")
     private Tidsplantype typeId;
 
-    public Tidsplan(Ansatt ansattId, LocalDateTime starttid, LocalDateTime sluttid, Tidsplantype typeId) {
+    @Column(name = "is_calced")
+    private Boolean isCalced;
+
+    public Tidsplan(Ansatt ansattId, LocalDateTime starttid, LocalDateTime sluttid, Tidsplantype typeId, Boolean isCalced) {
         this.ansattId = ansattId;
         this.starttid = starttid;
         this.sluttid = sluttid;
         this.typeId = typeId;
+        this.isCalced = isCalced;
     }
 
     public Tidsplan() {}
@@ -70,5 +74,13 @@ public class Tidsplan {
 
     public void setTypeId(Tidsplantype type_id) {
         this.typeId = type_id;
+    }
+
+    public Boolean getCalced() {
+        return isCalced;
+    }
+
+    public void setCalced(Boolean calced) {
+        isCalced = calced;
     }
 }
