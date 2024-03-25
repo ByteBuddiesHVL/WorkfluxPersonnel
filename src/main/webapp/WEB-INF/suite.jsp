@@ -60,30 +60,10 @@
             <div id="ansatt">
                 <div id="ansattSok">
                     <div id="searchBarAnsatt">
-                        <input id="searchInput" type="text" onkeyup="filtrerAnsatte()" placeholder="Search..">
+                        <input id="searchInput" type="text"  placeholder="Search..">
                         <svg id="searchLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
                     </div>
-                    <div id="searchResultWrapper">
-                        <c:forEach items="${ansattListe}" var="ansatt">
-                            <button class="searchResult" value="${ansatt.brukernavn}" onclick="setAnsatt(this)">
-                                <h4>${ansatt.fornavn} ${ansatt.etternavn} - ${ansatt.brukernavn}</h4>
-                            </button>
-                        </c:forEach>
-                    </div>
-                    <select name="ansattsok" style="display:none;">
-                        <c:choose>
-                            <c:when test="${not empty ansattListe}">
-                                <c:forEach items="${ansattListe}" var="ansatt">
-                                    <option id=${ansatt.brukernavn} value="${ansatt.brukernavn},${ansatt.fornavn},${ansatt.etternavn},${ansatt.telefonnummer}">
-                                            ${ansatt.brukernavn}
-                                    </option>
-                                </c:forEach>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="">Ingen ansatte funnet</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </select>
+                    <div id="searchResultWrapper" style="display: none"></div>
                 </div>
                 <div id="ansattInfo"></div>
             </div>
@@ -91,9 +71,9 @@
         </div>
     </section>
 
-
-<script src="../js/suite.js">
-    const hentAnsatte = ${ansatte}
+<script>
+    let ansattListe = [<c:forEach items="${ansattListe}" var="ansatt">['${ansatt.brukernavn}','${ansatt.fornavn}','${ansatt.etternavn}'],</c:forEach>];
 </script>
+<script src="../js/suite.js"></script>
 </body>
 </html>

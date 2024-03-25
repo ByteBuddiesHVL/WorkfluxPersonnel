@@ -274,7 +274,6 @@ input[type=submit] {
 }
 
 #searchResultWrapper {
-    display: flex;
     flex-direction: column;
     grid-column-start: 2;
     grid-column-end: 4;
@@ -291,4 +290,8 @@ input[type=submit] {
     border: 0;
     background: white;
     cursor: pointer;
+}
+
+.searchResult:hover {
+    background: #f1f1f1;
 }

@@ -57,20 +57,45 @@ function filtrerAnsatte() {
     }
 }
 
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResultWrapper");
+let searchTag = "";
+let searchElems = [];
+
+searchInput.addEventListener("keyup", (event) => {
+    searchResults.style.display = 'flex';
+    searchTag = searchInput.value;
+    if (searchTag === '') {
+        searchResults.style.display = 'none';
+        return;
+    }
+    searchElems = [];
+    let iterator = 0;
+    ansattListe.forEach(a => {
+        if (iterator > 2) return;
+        if (a[0].includes(searchTag)) {
+            searchElems[iterator++] = a;
+        }
+    })
+    if (searchElems.length === 0) {
+        searchResults.style.display = 'none';
+        return;
+    }
+    updateSearchResult()
+})
+
+function updateSearchResult() {
+    let html = '';
+    searchElems.forEach(e => {
+        html += '<button class="searchResult" value="'+ e[0] +'" onclick="setAnsatt(this)">' +
+            '<h4>'+e[1]+' '+e[2] + ' - ' + e[0]+'</h4></button>'
+    })
+    searchResults.innerHTML = html;
+}
+
+
 // Midlertidig løsning
 const ansattInfo = document.getElementById("ansattInfo");
 function setAnsatt(btn) {
     ansattInfo.innerHTML = btn.value;
 }
-/*
-let ansattSelected = document.querySelector("select").value;
-ansattInfo.innerHTML = ansattSelected;
-let searchResults = document.querySelectorAll(".searchResult");
-searchResults.forEach(s => s.addEventListener("click",(evt) => {
-    ansattInfo.innerHTML = evt.target.innerHTML;
-}))
-ansattSok.addEventListener("change", (evt) => {
-    ansattSelected = document.querySelector("select").value;
-    ansattInfo.innerHTML = ansattSelected;
-});
-*/
