@@ -97,5 +97,8 @@ function updateSearchResult() {
 // Midlertidig løsning
 const ansattInfo = document.getElementById("ansattInfo");
 function setAnsatt(btn) {
+    searchElems = [];
+    searchResults.style.display = 'none';
+    searchInput.value = '';
     ansattInfo.innerHTML = btn.value;
 }
