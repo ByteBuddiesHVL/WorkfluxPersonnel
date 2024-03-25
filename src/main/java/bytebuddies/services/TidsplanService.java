@@ -76,7 +76,7 @@ public class TidsplanService {
     }
 
     public List<Tidsplan> getTidsplaner(Ansatt ansatt, LocalDate start, LocalDate end) {
-        return tidsplanRepository.getTidsplansByAnsattIdAndStarttidBetweenAndCalcedIsFalse(ansatt,start.atStartOfDay(),end.plusDays(1).atStartOfDay().minusMinutes(1));
+        return tidsplanRepository.getTidsplansByAnsattIdAndStarttidBetweenAndIsCalcedIsFalse(ansatt,start.atStartOfDay(),end.plusDays(1).atStartOfDay().minusMinutes(1));
     }
 
     /**

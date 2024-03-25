@@ -13,5 +13,5 @@ import java.util.Optional;
 public interface TidsplanRepository extends JpaRepository<Tidsplan, Integer> {
     Optional<Tidsplan> getFirstByAnsattIdAndSluttidIsNullAndStarttidIsNotNullOrderByStarttidDesc(Ansatt ansatt);
 
-    List<Tidsplan> getTidsplansByAnsattIdAndStarttidBetweenAndCalcedIsFalse(Ansatt ansatt, LocalDateTime start, LocalDateTime end);
+    List<Tidsplan> getTidsplansByAnsattIdAndStarttidBetweenAndIsCalcedIsFalse(Ansatt ansatt, LocalDateTime start, LocalDateTime end);
 }
