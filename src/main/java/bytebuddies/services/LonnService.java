@@ -1,6 +1,5 @@
 package bytebuddies.services;
 
-import bytebuddies.entities.Admin;
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Lonn;
 import bytebuddies.repositories.AnsattRepository;
@@ -9,7 +8,6 @@ import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
@@ -23,10 +21,11 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 public class LonnService {
@@ -62,24 +61,24 @@ public class LonnService {
         float[] columnWidths1 = {170, 170};
         Table slippInformasjonTabell = new Table(UnitValue.createPointArray(columnWidths1));
         //Rad1
-        slippInformasjonTabell.addCell(new Cell(1, 2).add(new Paragraph("Lønnslipp Informasjon")).setFont(font).setTextAlignment(TextAlignment.CENTER));
+        slippInformasjonTabell.addCell(new Cell(1, 2).add(new Paragraph("Lønnslipp Informasjon").setFont(font)).setTextAlignment(TextAlignment.CENTER));
         //Rad2
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Lønnsmottaker")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Lønnsmottaker").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getFornavn() + ansatt.getEtternavn())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad3
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Adresse")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Adresse").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getAdresseId()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad4
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("AnsattId")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("AnsattId").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getAnsattId().toString())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad6
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Firmanavn / Avsender")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Firmanavn / Avsender").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getBedriftId()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad7
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("LønnsslippId")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("LønnsslippId").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("")).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad8
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Dato utbetalt")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Dato utbetalt").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(utbetalingsDato))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)));
 
 
@@ -97,77 +96,30 @@ public class LonnService {
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Ant/Gr.lag").setFont(font)));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Beløp").setFont(font)));
         //Rad3
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("Timelønn")).setBorderBottom(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate))).setBorderBottom(Border.NO_BORDER)));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(finnTimelonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate) * finnTimelonnForAnsatt(ansatt)))).setBorderBottom(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER));
+        timelonn(ansatt, startDate, endDate).forEach(lonnslippTabell::addCell);
         //Rad4
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("Skattetrekk")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
+        skattetrekk().forEach(lonnslippTabell::addCell);
         //Rad5
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("Brutto Lønn")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(finnArslonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
+        bruttolonn().forEach(lonnslippTabell::addCell);
         //Rad6
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
+        lagTomRad().forEach(lonnslippTabell::addCell);
         //Rad7
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Totalt Skattetrekk")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
+        IntStream.range(0, 5).forEach(i -> lonnslippTabell.addCell(lagTomCelle()));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
         //Rad8
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Skattetrekkgrunnlag")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
+        IntStream.range(0, 5).forEach(i -> lonnslippTabell.addCell(lagTomCelle()));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
         //Rad9
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Feriepengegrunnlag")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
+        IntStream.range(0, 5).forEach(i -> lonnslippTabell.addCell(lagTomCelle()));
         lonnslippTabell.addCell(new Cell().add(new Paragraph(finnArslonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
         //Rad10
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(lagTomCelle());
+        lagTomRad().forEach(lonnslippTabell::addCell);
         //Rad11
+        lagTomRad().forEach(lonnslippTabell::addCell);
+        //Rad12
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("")));
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("Netto utbetalt").setFont(font)).setBorderRight(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderLeft(Border.NO_BORDER));
@@ -193,4 +145,51 @@ public class LonnService {
                 .setBorderTop(Border.NO_BORDER);
     }
 
+    private List<Cell> lagTomRad() {
+        return Arrays.asList(
+                lagTomCelle(),
+                lagTomCelle(),
+                lagTomCelle(),
+                lagTomCelle(),
+                lagTomCelle(),
+                lagTomCelle(),
+                lagTomCelle()
+        );
+    }
+
+    private List<Cell> timelonn(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
+        return Arrays.asList(
+                new Cell().add(new Paragraph("Timelønn")).setBorderBottom(Border.NO_BORDER),
+                lagTomCelle(),
+                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate)))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(finnTimelonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate) * finnTimelonnForAnsatt(ansatt)))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate)))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate) * finnTimelonnForAnsatt(ansatt)))).setBorderBottom(Border.NO_BORDER)
+        );
+    }
+
+    private List<Cell> skattetrekk() {
+        return Arrays.asList(
+                new Cell().add(new Paragraph("Skattetrekk")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                lagTomCelle(),
+                lagTomCelle(),
+                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                lagTomCelle(),
+                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
+        );
+    }
+
+    private List<Cell> bruttolonn() {
+        return Arrays.asList(
+                new Cell().add(new Paragraph("Brutto Lønn")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                lagTomCelle(),
+                lagTomCelle(),
+                lagTomCelle(),
+                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                lagTomCelle(),
+                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
+        );
+    }
 }
