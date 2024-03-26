@@ -9,6 +9,7 @@ import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
@@ -24,6 +25,7 @@ import com.itextpdf.layout.element.Table;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -34,6 +36,9 @@ public class LonnService {
 
     @Autowired
     private AnsattRepository ansattRepository;
+
+    @Autowired
+    private TidsplanService tidsplanService;
 
     public Float finnTimelonnForAnsatt(Ansatt ansatt) {
         Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElseGet(null);
@@ -47,7 +52,7 @@ public class LonnService {
         return null;
     }
 
-    public byte[] genererLonnslipp(Ansatt ansatt) throws IOException {
+    public byte[] genererLonnslipp(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdfDoc = new PdfDocument(writer);
@@ -63,19 +68,19 @@ public class LonnService {
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getFornavn() + ansatt.getEtternavn())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad3
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Adresse")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("")).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getAdresseId()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad4
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("AnsattId")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getAnsattId().toString())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad6
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Firmanavn / Avsender")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("")).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getBedriftId()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad7
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("LønnsslippId")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("")).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad8
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Dato utbetalt")).setFont(font).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("")).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(utbetalingsDato))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)).setBorderBottom(new SolidBorder(1)));
 
 
         float[] columnWidths2 = {150, 90, 90, 90, 90, 90, 90};
@@ -94,9 +99,9 @@ public class LonnService {
         //Rad3
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Timelønn")).setBorderBottom(Border.NO_BORDER));
         lonnslippTabell.addCell(lagTomCelle());
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER));
+        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate))).setBorderBottom(Border.NO_BORDER)));
         lonnslippTabell.addCell(new Cell().add(new Paragraph(finnTimelonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER));
+        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate) * finnTimelonnForAnsatt(ansatt)))).setBorderBottom(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER));
         //Rad4
