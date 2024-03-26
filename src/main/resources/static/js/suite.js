@@ -94,6 +94,7 @@ function updateSearchResult() {
 }
 
 const ansattInfo = document.getElementById("ansattInfo")
+const Rbrukernavn = document.getElementById("Rbrukernavn")
 const Rfornavn = document.getElementById("Rfornavn")
 const Retternavn = document.getElementById("Retternavn")
 const Rtelefonnummer = document.getElementById("Rtelefonnummer")
@@ -118,6 +119,7 @@ function setAnsatt(btn) {
 
     ansattInfo.style.display = 'flex';
 
+    Rbrukernavn.value = ele[0];
     const navn = ele[1].split(', ')
     Rfornavn.value = navn[1];
     Retternavn.value = navn[0];
