@@ -41,23 +41,6 @@ lag.addEventListener("click", () => {
     nyAnsattWindow.style.display = "none";
 })
 
-/*
-function filtrerAnsatte() {
-    const wrapper = document.getElementById("searchResultWrapper");
-    const buttons = wrapper.getElementsByTagName("button");
-    const input = document.getElementById("searchInput");
-    const filter = input.value.toUpperCase();
-
-    for (let i = 0; i < buttons.length; i++) {
-        let searchText = buttons[i].textContent;
-        if (searchText.toUpperCase().indexOf(filter) > -1) {
-            buttons[i].style.display = "flex";
-        } else {
-            buttons[i].style.display = "none";
-        }
-    }
-} */
-
 const searchInput = document.getElementById("searchInput");
 const searchResults = document.getElementById("searchResultWrapper");
 let searchTag = "";
@@ -116,7 +99,6 @@ function setAnsatt(btn) {
             return true;
         }
     })
-    console.log(ansattListe);
 
     ansattInfo.style.display = 'flex';
 
