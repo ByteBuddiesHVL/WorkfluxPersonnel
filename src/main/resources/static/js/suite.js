@@ -55,7 +55,8 @@ searchInput.addEventListener("keyup", (event) => {
     }
     searchElems = [];
     let iterator = 0;
-    ansattListe.forEach(a => {
+    ansattListe.some(a => {
+        if (iterator > 3) return true; //for å minske maks antall søke resultater
         if (a[0].includes(searchTag)) {
             searchElems[iterator++] = a;
         }
