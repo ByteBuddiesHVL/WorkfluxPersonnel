@@ -88,6 +88,7 @@
                         <label for="stillingstype">Stillingstype:</label>
                         <input type="text" id="Rstillingstype" name="stillingstype"><br><br>
                         <input type="submit" id="rediger" value="Lagre">
+                        <input type="checkbox"  name="slettAnsatt">SLETT</input>
                     </form>
                 </div>
             </div>

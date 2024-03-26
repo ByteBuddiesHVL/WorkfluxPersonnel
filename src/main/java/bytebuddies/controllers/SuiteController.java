@@ -123,10 +123,15 @@ public class SuiteController {
             @RequestParam("postnummer") String postnummer,
             @RequestParam("stillingsprosent") Float stillingsprosent,
             @RequestParam("stillingstype") String stillingstype,
+            @RequestParam(required = false, defaultValue = "false") boolean slettAnsatt,
             HttpSession session,
             RedirectAttributes attributes
     ) {
 
+        if (slettAnsatt) {
+            ansattService.deleteAnsattByBrukernavn(brukernavn);
+            return "redirect:/suite/ansatt";
+        }
         String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype);
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
