@@ -20,6 +20,13 @@ public class AnsattService {
         return ansattRepository.findAnsattByBrukernavn(brukernavn).orElseGet(null);
     }
 
+    public void deleteAnsattByBrukernavn(String brukernavn) {
+        Ansatt ansatt = getAnsattByBrukernavn(brukernavn);
+        if (ansatt != null) {
+            ansattRepository.delete(ansatt);
+        }
+    }
+
     public List<Ansatt> getAllAnsatte() {
         return ansattRepository.findAll();
     }
