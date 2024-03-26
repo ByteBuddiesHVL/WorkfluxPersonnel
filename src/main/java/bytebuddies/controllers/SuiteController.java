@@ -56,7 +56,10 @@ public class SuiteController {
         if (delside != null) {
             attributes.addFlashAttribute("delside", delside);
             if (delside.equals("personal")) model.addAttribute("ansatte",getAnsattString());
-            else if (delside.equals("ansatt")) model.addAttribute("ansattListe",ansattService.getAllAnsatte());
+            else if (delside.equals("ansatt")) {
+                model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+            }
         }
         return "suite";
     }
