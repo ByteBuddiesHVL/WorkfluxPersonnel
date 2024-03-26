@@ -65,14 +65,38 @@
                     </div>
                     <div id="searchResultWrapper" style="display: none"></div>
                 </div>
-                <div id="ansattInfo"></div>
+                <div id="ansattInfo" style="display:none;">
+                    <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
+                        <label for="fornavn">Fornavn:</label>
+                        <input type="text" id="Rfornavn" name="fornavn"><br><br>
+                        <label for="etternavn">Etternavn:</label>
+                        <input type="text" id="Retternavn" name="etternavn"><br><br>
+                        <label for="telefonnummer">Telefonnummer:</label>
+                        <input type="text" id="Rtelefonnummer" name="telefonnummer"><br><br>
+                        <label for="epost">Epost:</label>
+                        <input type="text" id="Repost" name="epost"><br><br>
+                        <label for="gatenavn">Gatenavn:</label>
+                        <input type="text" id="Rgatenavn" name="gatenavn"><br><br>
+                        <label for="gatenummer">Gatenummer:</label>
+                        <input type="text" id="Rgatenummer" name="gatenummer"><br><br>
+                        <label for="postnummer">Postnummer:</label>
+                        <input type="text" id="Rpostnummer" name="postnummer"><br><br>
+                        <label for="stillingsprosent">Stillingsprosent:</label>
+                        <input type="text" id="Rstillingsprosent" name="stillingsprosent"><br><br>
+                        <label for="stillingstype">Stillingstype:</label>
+                        <input type="text" id="Rstillingstype" name="stillingstype"><br><br>
+                        <input type="submit" id="rediger" value="Lagre">
+                    </form>
+                </div>
             </div>
             <div id="rapporter"></div>
         </div>
     </section>
 
 <script>
-    let ansattListe = [<c:forEach items="${ansattListe}" var="ansatt">['${ansatt.brukernavn}','${ansatt.fornavn}','${ansatt.etternavn}'],</c:forEach>];
+    <c:if test="${not empty ansatte}">
+        let ansattListe = ${ansatte};
+    </c:if>
 </script>
 <script src="../js/suite.js"></script>
 </body>

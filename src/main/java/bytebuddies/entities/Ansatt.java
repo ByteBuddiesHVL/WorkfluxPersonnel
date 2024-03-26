@@ -4,6 +4,8 @@ import bytebuddies.embeddable.AnsattId;
 import bytebuddies.embeddable.Passord;
 import jakarta.persistence.*;
 
+import java.util.Locale;
+
 @Entity
 @Table(schema = "Workflux")
 public class Ansatt {
@@ -147,11 +149,11 @@ public class Ansatt {
                 etternavn + ", " + fornavn + "\",\"" +
                 telefonnummer + "\",\"" +
                 epost + "\",\"" +
-                adresseId.getGatenavn() + " " +
+                adresseId.getGatenavn() + "\",\"" +
                 adresseId.getGatenummer() + "\",\"" +
                 post.getPostnummer() + " " +
                 post.getPoststed() + "\"," +
-                String.format("%3.2f", stillingsprosent) + ",\"" +
+                String.format(Locale.US,"%.2f", stillingsprosent) + ",\"" +
                 stillingstype + "\"]";
     }
 }

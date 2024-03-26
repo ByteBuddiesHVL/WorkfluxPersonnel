@@ -88,17 +88,44 @@ function updateSearchResult() {
     let html = '';
     searchElems.forEach(e => {
         html += '<button class="searchResult" value="'+ e[0] +'" onclick="setAnsatt(this)">' +
-            '<h4>'+e[1]+' '+e[2] + ' - ' + e[0]+'</h4></button>'
+            '<h4>'+e[1]+' - ' + e[0]+'</h4></button>'
     })
     searchResults.innerHTML = html;
 }
 
-
-// Midlertidig løsning
-const ansattInfo = document.getElementById("ansattInfo");
+const ansattInfo = document.getElementById("ansattInfo")
+const Rfornavn = document.getElementById("Rfornavn")
+const Retternavn = document.getElementById("Retternavn")
+const Rtelefonnummer = document.getElementById("Rtelefonnummer")
+const Repost = document.getElementById("Repost")
+const Rgatenavn = document.getElementById("Rgatenavn")
+const Rgatenummer = document.getElementById("Rgatenummer")
+const Rpostnummer = document.getElementById("Rpostnummer")
+const Rstillingsprosent = document.getElementById("Rstillingsprosent")
+const Rstillingstype = document.getElementById("Rstillingstype")
 function setAnsatt(btn) {
     searchElems = [];
     searchResults.style.display = 'none';
     searchInput.value = '';
-    ansattInfo.innerHTML = btn.value;
+    let ele = undefined;
+
+    ansattListe.some(a => {
+        if (a[0] === btn.value) {
+            ele = a;
+            return true;
+        }
+    })
+
+    ansattInfo.style.display = 'flex';
+
+    const navn = ele[1].split(', ')
+    Rfornavn.value = navn[1];
+    Retternavn.value = navn[0];
+    Rtelefonnummer.value = ele[2];
+    Repost.value = ele[3];
+    Rgatenavn.value = ele[4];
+    Rgatenummer.value = ele[5];
+    Rpostnummer.value = ele[6].split(' ')[0];
+    Rstillingsprosent.value = ele[7];
+    Rstillingstype.value = ele[8];
 }

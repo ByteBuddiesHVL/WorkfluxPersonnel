@@ -224,25 +224,17 @@ input[type=submit] {
     display: none;
     height: 100%;
     width: 100%;
-    grid-template-rows: 2em 15% 2% 40% auto 2em;
+    grid-template-rows: 2em min-content 2% 40% auto 2em;
     grid-template-columns: 2em 20% 10% 2% auto 2% 20% 2em;
 }
 
 #ansattSok {
-    grid-column-start: 2;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    display: contents;
 }
 
 #ansattSok > form {
     display: flex;
     flex-direction: row;
-}
-
-#ansattSok > form > div {
-    display: flex;
-    flex-direction: column;
 }
 
 #ansattInfo {
@@ -261,6 +253,10 @@ input[type=submit] {
     padding: 10px;
     border-radius: 5em;
     background: white;
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 
 #searchInput {
@@ -283,6 +279,7 @@ input[type=submit] {
     margin-top: .5em;
     padding: 1em;
     border-radius: 1em;
+    height: min-content;
 }
 
 .searchResult {
