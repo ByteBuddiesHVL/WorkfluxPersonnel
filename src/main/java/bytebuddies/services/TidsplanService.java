@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,20 +88,20 @@ public class TidsplanService {
      * @param endDate - sluttdato på søk mellom start og slutt av starttid på tidsplan
      * @return timer for en ansatt mellom to gitte datoer
      */
-    public long getTimerForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
+    public float getTimerForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
         List<Tidsplan> tidsplanList = getTidsplaner(ansatt,startDate,endDate);
-        Duration duration = Duration.ZERO;
+        float duration = 0.00F;
 
         for (Tidsplan tidsplan : tidsplanList) {
             //check if type == lunsj etc...
             LocalDateTime shiftStart = tidsplan.getStarttid().withSecond(0);
             LocalDateTime shiftEnd = tidsplan.getSluttid().withSecond(0);
 
-            duration.plus(Duration.between(shiftStart,shiftEnd));
+            duration += ChronoUnit.HOURS.between(shiftStart,shiftEnd) + ChronoUnit.MINUTES.between(shiftStart,shiftEnd)/60F;
             //check if everything goes well ...
             tidsplan.setCalced(true);
         }
 
-        return duration.toDays();
+        return duration;
     }
 }
