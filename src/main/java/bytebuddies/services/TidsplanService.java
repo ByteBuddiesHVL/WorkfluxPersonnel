@@ -104,4 +104,8 @@ public class TidsplanService {
 
         return duration;
     }
+    public float getTimerForAnsattHittilIAr(Ansatt ansatt, LocalDate endDate) {
+
+        return getTimerForAnsatt(ansatt, LocalDate.of(endDate.getYear(), 1, 1), endDate);
+    }
 }
