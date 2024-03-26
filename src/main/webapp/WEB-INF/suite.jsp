@@ -67,7 +67,7 @@
                 </div>
                 <div id="ansattInfo" style="display:none;">
                     <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
-                        <input type="hidden" id="Rbrukernavn">
+                        <input type="hidden" id="Rbrukernavn" name="brukernavn">
 
                         <label for="fornavn">Fornavn:</label>
                         <input type="text" id="Rfornavn" name="fornavn"><br><br>

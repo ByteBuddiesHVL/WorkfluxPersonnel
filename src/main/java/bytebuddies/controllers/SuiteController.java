@@ -111,6 +111,47 @@ public class SuiteController {
         return "redirect:/suite/personal";
     }
 
+    @PostMapping("/redigerAnsatt")
+    public String redigerAnsatt(
+            @RequestParam("brukernavn") String brukernavn,
+            @RequestParam("fornavn") String fornavn,
+            @RequestParam("etternavn") String etternavn,
+            @RequestParam("telefonnummer") String telefonnummer,
+            @RequestParam("epost") String epost,
+            @RequestParam("gatenavn") String gatenavn,
+            @RequestParam("gatenummer") String gatenummer,
+            @RequestParam("postnummer") String postnummer,
+            @RequestParam("stillingsprosent") Float stillingsprosent,
+            @RequestParam("stillingstype") String stillingstype,
+            HttpSession session,
+            RedirectAttributes attributes
+    ) {
+
+        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype);
+        if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
+        else {
+            Admin admin = getLoggedInAttr(session);
+            if (admin == null) {
+                attributes.addFlashAttribute("error", "Du er ikke logget inn!");
+                return "redirect:/suite";
+            }
+            Bedrift bedrift = admin.getBedriftId();
+            Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+
+            ansatt.setFornavn(fornavn);
+            ansatt.setEtternavn(etternavn);
+            ansatt.setTelefonnummer(telefonnummer);
+            ansatt.setEpost(epost);
+            ansatt.getAdresseId().setGatenavn(gatenavn);
+            ansatt.getAdresseId().setGatenummer(gatenummer);
+            ansatt.getAdresseId().getPostnummer().setPostnummer(postnummer);
+            ansatt.setStillingsprosent(stillingsprosent);
+            ansatt.setStillingstype(stillingstype);
+            ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
+        }
+        return "redirect:/suite/ansatt";
+    }
+
     public Admin getLoggedInAttr(HttpSession session) {
         return (Admin) session.getAttribute("loggedin");
     }

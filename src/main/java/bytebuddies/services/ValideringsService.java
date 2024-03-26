@@ -78,7 +78,7 @@ public class ValideringsService {
         //gatenummer
         if (!postnummer.matches("^[0-9]{4}")) return "Ikke gyldig postnummer";
         if (postnummerService.findPostnummer(postnummer) == null) return "Postnummer eksisterer ikke"; // postnummerdatabasen bør oppdateres ofte
-        //stillingsprosent
+        if (stillingsprosent > 100 || stillingsprosent < 0) return "Ikke gyldig stillingsprosent";
         //stillingstype (må kanskje lages enda en entity for dette for å oppnå bedre normalisering)
         return null;
     }
