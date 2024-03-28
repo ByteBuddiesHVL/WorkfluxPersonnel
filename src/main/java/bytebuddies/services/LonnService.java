@@ -1,13 +1,16 @@
 package bytebuddies.services;
 
+import bytebuddies.TidsplanResult;
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Lonn;
+import bytebuddies.entities.Tidsplan;
 import bytebuddies.repositories.AnsattRepository;
 import bytebuddies.repositories.LonnRepository;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.kernel.font.PdfFont;
@@ -23,6 +26,7 @@ import com.itextpdf.layout.element.Table;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -51,12 +55,18 @@ public class LonnService {
         return null;
     }
 
+    private TidsplanResult tidsplanResult;
+    private Ansatt ansatt;
+
     public byte[] genererLonnslipp(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdfDoc = new PdfDocument(writer);
         Document document = new Document(pdfDoc);
         PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+
+        this.ansatt = ansatt;
+        tidsplanResult = tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate);
 
         float[] columnWidths1 = {170, 170};
         Table slippInformasjonTabell = new Table(UnitValue.createPointArray(columnWidths1));
@@ -96,7 +106,7 @@ public class LonnService {
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Ant/Gr.lag").setFont(font)));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Beløp").setFont(font)));
         //Rad3
-        timelonn(ansatt, startDate, endDate).forEach(lonnslippTabell::addCell);
+        timelonn(endDate).forEach(lonnslippTabell::addCell);
         //Rad4
         skattetrekk().forEach(lonnslippTabell::addCell);
         //Rad5
@@ -135,7 +145,8 @@ public class LonnService {
 
 
         document.close();
-
+        // check if document is ok
+        tidsplanResult.getTidsplaner().forEach(t -> t.setCalced(true));
         return baos.toByteArray();
     }
 
@@ -157,15 +168,19 @@ public class LonnService {
         );
     }
 
-    private List<Cell> timelonn(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
+    private List<Cell> timelonn(LocalDate endDate) {
+        float timer = tidsplanResult.getTimer();
+        float timelonn = finnTimelonnForAnsatt(ansatt);
+        float totalTimer = tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate);
+
         return Arrays.asList(
                 new Cell().add(new Paragraph("Timelønn")).setBorderBottom(Border.NO_BORDER),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate)))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(finnTimelonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate) * finnTimelonnForAnsatt(ansatt)))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate)))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate) * finnTimelonnForAnsatt(ansatt)))).setBorderBottom(Border.NO_BORDER)
+                new Cell().add(new Paragraph(String.valueOf(timer))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(timelonn))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(timer * timelonn))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(totalTimer))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(totalTimer * timelonn))).setBorderBottom(Border.NO_BORDER)
         );
     }
 

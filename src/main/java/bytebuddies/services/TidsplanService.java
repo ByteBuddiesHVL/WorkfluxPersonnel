@@ -1,5 +1,6 @@
 package bytebuddies.services;
 
+import bytebuddies.TidsplanResult;
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Tidsplan;
 import bytebuddies.repositories.TidsplanRepository;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +90,7 @@ public class TidsplanService {
      * @param endDate - sluttdato på søk mellom start og slutt av starttid på tidsplan
      * @return timer for en ansatt mellom to gitte datoer
      */
-    public float getTimerForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
+    public TidsplanResult getTimerForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate) {
         List<Tidsplan> tidsplanList = getTidsplaner(ansatt,startDate,endDate);
         float duration = 0.00F;
 
@@ -99,13 +101,12 @@ public class TidsplanService {
 
             duration += ChronoUnit.HOURS.between(shiftStart,shiftEnd) + ChronoUnit.MINUTES.between(shiftStart,shiftEnd)/60F;
             //check if everything goes well ...
-            tidsplan.setCalced(true);
         }
 
-        return duration;
+        //check if list is ok
+        return new TidsplanResult(tidsplanList,duration);
     }
     public float getTimerForAnsattHittilIAr(Ansatt ansatt, LocalDate endDate) {
-
-        return getTimerForAnsatt(ansatt, LocalDate.of(endDate.getYear(), 1, 1), endDate);
+        return getTimerForAnsatt(ansatt, LocalDate.of(endDate.getYear(), 1, 1), endDate).getTimer();
     }
 }
