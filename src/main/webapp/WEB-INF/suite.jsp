@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workflux Suite</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script type="module" src="../js/suite/${delside == null ? "hjem" : delside}.js"></script>
 </head>
 <body>
     <header class="header">
@@ -15,7 +16,7 @@
             <h3>- Suite</h3>
         </div>
         <div class="headerRightSide">
-            <h4 class="logout" onclick="location.href='/logout'">Logg ut</h4>
+            <a href="/logout" class="logout">Logg ut</a>
         </div>
     </header>
     <c:if test="${error != null}">
@@ -148,6 +149,5 @@
             let ansattListe = ${ansatte}
         </script>
     </c:if>
-    <script src="../js/suite.js"></script>
 </body>
 </html>

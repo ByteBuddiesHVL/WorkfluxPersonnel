@@ -5,7 +5,10 @@ import typescript from '@rollup/plugin-typescript';
 
 export default {
     input: {
-        test: 'src/js/test.ts',
+        "suite/hjem": 'src/js/suite/hjem.ts',
+        "suite/ansatt": 'src/js/suite/ansatt.ts',
+        "suite/personal": 'src/js/suite/personal.ts',
+        "suite/rapporter": 'src/js/suite/rapporter.ts',
     },
     output: {
         dir: 'src/main/resources/static/js',

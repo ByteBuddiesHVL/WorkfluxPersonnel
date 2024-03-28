@@ -29,7 +29,8 @@ header {
 }
 
 .logout {
-    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
 }
 
 .headerLeftSide > h3 {
@@ -186,8 +187,7 @@ input[type=submit] {
     z-index: 2;
     border-radius: 1em;
     box-shadow: 5px 5px 5px #00000036;
-    width: 50%;
-    height: 35%;
+    padding: 0.3em 1em;
     margin: auto;
     cursor: pointer;
 }
@@ -265,9 +265,8 @@ input[type=submit] {
 #searchBarAnsatt {
     position: relative;
     display: flex;
-    height: 2em;
     width: max-content;
-    padding: 10px;
+    padding: 0.625em;
     border-radius: 5em;
     background: white;
     grid-column-start: 2;
@@ -279,11 +278,11 @@ input[type=submit] {
 #searchInput {
     border: 0;
     outline: none;
-    padding: 0px 4px;
+    padding: 0 0.5em 0 0;
 }
 
 #searchLogo {
-    padding: 8px;
+    height: 1em;
 }
 
 #searchResultWrapper {

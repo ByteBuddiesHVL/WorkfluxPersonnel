@@ -10,6 +10,7 @@
     "moduleResolution": "bundler",
     "isolatedModules": true,
     "noEmit": true,
+    "moduleDetection": "force",
 
     /* Linting */
     "strict": true,
@@ -17,5 +18,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
   },
-  "include": ["src/main/resources/static/js"]
+  "include": ["src/js"]
 }
