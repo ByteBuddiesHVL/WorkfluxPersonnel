@@ -23,40 +23,65 @@
     </c:if>
     <section class="suiteWrapper">
         <div class="suiteChooser">
-            <div class="button <c:if test="${empty delside}">active</c:if>" style="margin-right: 1em;" onclick="setActive(this);location.href='/suite'">Hjem</div>
-            <div class="button <c:if test="${delside eq 'personal'}">active</c:if>" onclick="setActive(this);location.href='/suite/personal'">Personal</div>
-            <div class="button <c:if test="${delside eq 'ansatt'}">active</c:if>" onclick="setActive(this);location.href='/suite/ansatt'">Ansatt</div>
-            <div class="button <c:if test="${delside eq 'rapporter'}">active</c:if>" onclick="setActive(this);location.href='/suite/rapporter'">Rapporter</div>
+            <a href="/suite" class="button${delside == null ? " active" : ""}" style="margin-right: 1em;">Hjem</a>
+            <a href="/suite/personal" class="button${delside eq "personal" ? " active" : ""}">Personal</a>
+            <a href="/suite/ansatt" class="button${delside eq "ansatt" ? " active" : ""}">Ansatt</a>
+            <a href="/suite/rapporter" class="button${delside eq "rapporter" ? " active" : ""}">Rapporter</a>
         </div>
         <div class="suite">
-            <div id="hjem"></div>
+            <c:if test="${empty delside}">
+                <div id="hjem"></div>
+            </c:if>
+            <c:if test="${delside eq 'personal'}">
             <div id="personal">
                 <button type="button" id="nyAnsatt">Ny Ansatt</button>
                 <div id="nyAnsattWindow">
                     <h1>Lag ansatt</h1>
                     <form id="navn" method="post" action="/nyAnsatt">
-                        <label for="fornavn">Fornavn:</label>
-                        <input type="text" id="fornavn" name="fornavn"><br><br>
-                        <label for="etternavn">Etternavn:</label>
-                        <input type="text" id="etternavn" name="etternavn"><br><br>
-                        <label for="telefonnummer">Telefonnummer:</label>
-                        <input type="text" id="telefonnummer" name="telefonnummer"><br><br>
-                        <label for="epost">Epost:</label>
-                        <input type="text" id="epost" name="epost"><br><br>
-                        <label for="gatenavn">Gatenavn:</label>
-                        <input type="text" id="gatenavn" name="gatenavn"><br><br>
-                        <label for="gatenummer">Gatenummer:</label>
-                        <input type="text" id="gatenummer" name="gatenummer"><br><br>
-                        <label for="postnummer">Postnummer:</label>
-                        <input type="text" id="postnummer" name="postnummer"><br><br>
-                        <label for="stillingsprosent">Stillingsprosent:</label>
-                        <input type="text" id="stillingsprosent" name="stillingsprosent"><br><br>
-                        <label for="stillingstype">Stillingstype:</label>
-                        <input type="text" id="stillingstype" name="stillingstype"><br><br>
-                        <input type="submit" id="lag" value="Lag ansatt">
+                        <label>
+                            Fornavn:
+                            <input name="fornavn">
+                        </label>
+                        <label>
+                            Etternavn:
+                            <input name="etternavn">
+                        </label>
+                        <label>
+                            Telefonnummer:
+                            <input name="telefonnummer">
+                        </label>
+                        <label>
+                            Epost:
+                            <input type="email" name="epost">
+                        </label>
+                        <label>
+                            Gatenavn:
+                            <input name="gatenavn">
+                        </label>
+                        <label>
+                            Gatenummer:
+                            <input name="gatenummer">
+                        </label>
+                        <label>
+                            Postnummer:
+                            <input type="number" name="postnummer">
+                        </label>
+                        <label>
+                            Stillingsprosent:
+                            <input type="number" name="stillingsprosent">
+                        </label>
+                        <label>
+                            Stillingstype:
+                            <input name="stillingstype">
+                        </label>
+                        <div>
+                            <input type="submit" id="lag" value="Lag ansatt">
+                        </div>
                     </form>
                 </div>
             </div>
+            </c:if>
+            <c:if test="${delside eq 'ansatt'}">
             <div id="ansatt">
                 <div id="ansattSok">
                     <div id="searchBarAnsatt">
@@ -69,38 +94,60 @@
                     <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
                         <input type="hidden" id="Rbrukernavn" name="brukernavn">
 
-                        <label for="fornavn">Fornavn:</label>
-                        <input type="text" id="Rfornavn" name="fornavn"><br><br>
-                        <label for="etternavn">Etternavn:</label>
-                        <input type="text" id="Retternavn" name="etternavn"><br><br>
-                        <label for="telefonnummer">Telefonnummer:</label>
-                        <input type="text" id="Rtelefonnummer" name="telefonnummer"><br><br>
-                        <label for="epost">Epost:</label>
-                        <input type="text" id="Repost" name="epost"><br><br>
-                        <label for="gatenavn">Gatenavn:</label>
-                        <input type="text" id="Rgatenavn" name="gatenavn"><br><br>
-                        <label for="gatenummer">Gatenummer:</label>
-                        <input type="text" id="Rgatenummer" name="gatenummer"><br><br>
-                        <label for="postnummer">Postnummer:</label>
-                        <input type="text" id="Rpostnummer" name="postnummer"><br><br>
-                        <label for="stillingsprosent">Stillingsprosent:</label>
-                        <input type="text" id="Rstillingsprosent" name="stillingsprosent"><br><br>
-                        <label for="stillingstype">Stillingstype:</label>
-                        <input type="text" id="Rstillingstype" name="stillingstype"><br><br>
-                        <input type="submit" id="rediger" value="Lagre">
-                        <input type="checkbox"  name="slettAnsatt">SLETT</input>
+                        <label>
+                            Fornavn:
+                            <input name="fornavn">
+                        </label>
+                        <label>
+                            Etternavn:
+                            <input name="etternavn">
+                        </label>
+                        <label>
+                            Telefonnummer:
+                            <input name="telefonnummer">
+                        </label>
+                        <label>
+                            Epost:
+                            <input type="email" name="epost">
+                        </label>
+                        <label>
+                            Gatenavn:
+                            <input name="gatenavn">
+                        </label>
+                        <label>
+                            Gatenummer:
+                            <input name="gatenummer">
+                        </label>
+                        <label>
+                            Postnummer:
+                            <input type="number" name="postnummer">
+                        </label>
+                        <label>
+                            Stillingsprosent:
+                            <input type="number" name="stillingsprosent">
+                        </label>
+                        <label>
+                            Stillingstype:
+                            <input name="stillingstype">
+                        </label>
+                        <div>
+                            <input type="submit" value="Lagre">
+                            <input type="checkbox" name="slettAnsatt">SLETT</input>
+                        </div>
                     </form>
                 </div>
             </div>
+            </c:if>
+            <c:if test="${delside eq 'rapporter'}">
             <div id="rapporter"></div>
+            </c:if>
         </div>
     </section>
-
-<script>
     <c:if test="${not empty ansatte}">
-        let ansattListe = ${ansatte};
+        <script>
+            let ansattListe = ${ansatte}
+        </script>
     </c:if>
-</script>
-<script src="../js/suite.js"></script>
+    <script src="../js/suite.js"></script>
 </body>
 </html>
