@@ -12,69 +12,96 @@
 <header class="header">
     <img src="images/white_transparent_small_ns.png" alt="">
 </header>
-<section>
-    <label>Lagre ny dev</label>
+<section style="text-align: center">
+    <h2>Lagre ny dev</h2>
     <form action="/lagreDev" method="post">
-        <label>Brukernavn</label>
-        <input name="brukernavn" required>
-        <label>Passord</label>
-        <input name="passord" required>
+        <label>
+            Brukernavn:
+            <input name="brukernavn" required>
+        </label>
+        <label>
+            Passord:
+            <input name="passord" type="password" required>
+        </label>
         <input type="submit" value="OK">
     </form>
 
-    <label>Lagre ny bedrift</label>
+    <h2>Lagre ny bedrift</h2>
     <form action="/lagreBedrift" method="post">
-        <label>Navn</label>
-        <input name="navn" required>
-        <label>Forkortelse</label>
-        <input name="forkortelse" required>
+        <label>
+            Navn:
+            <input name="navn" required>
+        </label>
+        <label>
+            Forkortelse:
+            <input name="forkortelse" required>
+        </label>
         <input type="submit" value="OK">
     </form>
 
-    <label>Lagre ny admin</label>
+    <h2>Lagre ny admin</h2>
     <form action="/lagreAdmin" method="post">
-        <label>Brukernavn</label>
-        <input name="brukernavn" required>
-        <label>Bedrift forkortelse</label>
-        <input name="forkortelse" required>
-        <label>Passord</label>
-        <input name="passord" required>
+        <label>
+            Brukernavn:
+            <input name="brukernavn" required>
+        </label>
+        <label>
+            Bedrift forkortelse:
+            <input name="forkortelse" required>
+        </label>
+        <label>
+            Passord:
+            <input name="passord" required>
+        </label>
         <input type="submit" value="OK">
     </form>
 
-    <label>Lagre ny ansatt</label>
+    <h2>Lagre ny ansatt</h2>
     <form action="/lagreAnsatt" method="post">
-        <label>Bedriftforkortelse</label>
-        <input name="forkortelse" required>
-
-        <label>Fornavn</label>
-        <input name="fornavn" required>
-        <label>Etternavn</label>
-        <input name="etternavn" required>
-
-        <label>Telefonnummer</label>
-        <input name="telefonnummer">
-
-        <label>Epost</label>
-        <input name="epost">
-
-        <label>Gatenavn</label>
-        <input name="gatenavn" required>
-
-        <label>Gatenummer</label>
-        <input name="gatenummer" required>
-
-        <label>Postnummer</label>
-        <input name="postnummer" required>
-
-        <label>Stillingsprosent</label>
-        <input name="stillingsprosent" required>
-
-        <label>Stillingstype</label>
-        <input name="stillingstype" required>
-
-        <label>Passord</label>
-        <input name="passord" required>
+        <label>
+            Bedrift forkortelse:
+            <input name="forkortelse" required>
+        </label>
+        <label>
+            Fornavn:
+            <input name="fornavn">
+        </label>
+        <label>
+            Etternavn:
+            <input name="etternavn">
+        </label>
+        <label>
+            Telefonnummer:
+            <input name="telefonnummer">
+        </label>
+        <label>
+            Epost:
+            <input type="email" name="epost">
+        </label>
+        <label>
+            Gatenavn:
+            <input name="gatenavn">
+        </label>
+        <label>
+            Gatenummer:
+            <input name="gatenummer">
+        </label>
+        <label>
+            Postnummer:
+            <input name="postnummer">
+        </label>
+        <label>
+            Stillingsprosent:
+            <input type="number" name="stillingsprosent">
+        </label>
+        <label>
+            Stillingstype ID:
+            <input type="text" name="stillingstype">
+        </label>
+        <label>
+            Passord:
+            <input name="passord" type="password" required>
+        </label>
 
         <input type="submit" value="OK">
     </form>

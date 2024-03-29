@@ -75,8 +75,8 @@
                             Stillingstype:
                             <div class="select">
                                 <select name="stillingstype">
-                                    <c:forEach items="stillingstyper" var="s">
-                                        <option value="${s.stillingsypeId}">${s.stillingstype}</option>
+                                    <c:forEach items="${stillingstyper}" var="s">
+                                        <option value="${s.stillingstypeId}">${s.stillingstype}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -137,12 +137,11 @@
                             Stillingstype:
                             <div class="select">
                                 <select name="stillingstype">
-                                    <c:forEach items="stillingstyper" var="s">
-                                        <option value="${s.stillingsypeId}">${s.stillingstype}</option>
+                                    <c:forEach items="${stillingstyper}" var="s">
+                                        <option value="${s.stillingstypeId}">${s.stillingstype}</option>
                                     </c:forEach>
                                 </select>
                             </div>
-                            <input name="stillingstype">
                         </label>
                         <div>
                             <input type="submit" value="Lagre">

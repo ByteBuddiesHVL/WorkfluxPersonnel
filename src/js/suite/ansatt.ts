@@ -70,5 +70,5 @@ function setAnsatt(btn: HTMLButtonElement) {
     Rpostnummer.value = ele[6].split(' ')[0];
     Rstillingsprosent.value = <any>ele[7];
     // @ts-expect-error
-    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.value == ele[8]).value;
+    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.textContent == ele[8]).value;
 }
