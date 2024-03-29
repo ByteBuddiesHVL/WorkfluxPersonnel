@@ -34,6 +34,9 @@ public class DevController {
     @Autowired
     PostnummerService postnummerService;
 
+    @Autowired
+    StillingstypeService stillingstypeService;
+
     @GetMapping("/dev-tools")
     public String hentDevTools() {
         return "dev-tools";
@@ -85,7 +88,7 @@ public class DevController {
             @RequestParam("gatenummer") String gatenummer,
             @RequestParam("postnummer") String postnummer,
             @RequestParam("stillingsprosent") Float stillingsprosent,
-            @RequestParam("stillingstype") String stillingstype,
+            @RequestParam("stillingstype") Integer stillingstypeId,
             @RequestParam("passord") String passord
     ) {
         Bedrift b = bedriftService.findBedrift(bedriftF);
@@ -94,6 +97,8 @@ public class DevController {
 
         String salt = passordService.genererTilfeldigSalt();
         String hash = passordService.hashMedSalt(passord, salt);
+
+        Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
 
         Ansatt ansatt = new Ansatt(b, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, a, true, stillingsprosent, stillingstype);
         ansattService.saveAnsatt(ansatt,bedriftF);
