@@ -58,9 +58,13 @@ public class SuiteController {
         if (admin == null) return "redirect:/suite";
         if (delside != null) {
             attributes.addFlashAttribute("delside", delside);
-            if (delside.equals("personal")) model.addAttribute("ansatte",getAnsattString());
+            if (delside.equals("personal")) {
+                model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
+            }
             else if (delside.equals("ansatt")) {
                 model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
                 model.addAttribute("ansattListe", ansattService.getAllAnsatte());
             }
         }

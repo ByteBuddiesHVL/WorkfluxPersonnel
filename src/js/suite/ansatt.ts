@@ -69,5 +69,6 @@ function setAnsatt(btn: HTMLButtonElement) {
     Rgatenummer.value = ele[5];
     Rpostnummer.value = ele[6].split(' ')[0];
     Rstillingsprosent.value = <any>ele[7];
-    Rstillingstype.value = ele[8];
+    // @ts-expect-error
+    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.value == ele[8]).value;
 }

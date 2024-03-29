@@ -65,7 +65,7 @@
                         </label>
                         <label>
                             Postnummer:
-                            <input type="number" name="postnummer">
+                            <input name="postnummer">
                         </label>
                         <label>
                             Stillingsprosent:
@@ -73,7 +73,13 @@
                         </label>
                         <label>
                             Stillingstype:
-                            <input name="stillingstype">
+                            <div class="select">
+                                <select name="stillingstype">
+                                    <c:forEach items="stillingstyper" var="s">
+                                        <option value="${s.stillingsypeId}">${s.stillingstype}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </label>
                         <div>
                             <input type="submit" id="lag" value="Lag ansatt">
@@ -121,7 +127,7 @@
                         </label>
                         <label>
                             Postnummer:
-                            <input type="number" name="postnummer">
+                            <input name="postnummer">
                         </label>
                         <label>
                             Stillingsprosent:
@@ -129,6 +135,13 @@
                         </label>
                         <label>
                             Stillingstype:
+                            <div class="select">
+                                <select name="stillingstype">
+                                    <c:forEach items="stillingstyper" var="s">
+                                        <option value="${s.stillingsypeId}">${s.stillingstype}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                             <input name="stillingstype">
                         </label>
                         <div>

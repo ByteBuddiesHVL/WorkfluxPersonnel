@@ -1,6 +1,7 @@
 package bytebuddies.services;
 
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Stillingstype;
 import bytebuddies.repositories.AnsattRepository;
 import bytebuddies.repositories.StillingstypeRepository;
@@ -17,5 +18,9 @@ public class StillingstypeService {
 
     public Stillingstype getStillingstype(Integer id) {
         return stillingstypeRepository.findById(id).orElseGet(null);
+    }
+
+    public List<Stillingstype> getAlleTyper(Bedrift bedrift) {
+        return stillingstypeRepository.findAll().stream().filter(s -> s.getBedriftId().equals(bedrift)).toList();
     }
 }
