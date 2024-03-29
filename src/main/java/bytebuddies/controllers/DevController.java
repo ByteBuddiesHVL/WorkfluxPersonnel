@@ -97,9 +97,10 @@ public class DevController {
 
         String salt = passordService.genererTilfeldigSalt();
         String hash = passordService.hashMedSalt(passord, salt);
-        Stillingstype type = stillingstypeService.getStillingstype(stillingstypeId);
 
-        Ansatt ansatt = new Ansatt(b, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, a, true, stillingsprosent, type);
+        Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
+
+        Ansatt ansatt = new Ansatt(b, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, a, true, stillingsprosent, stillingstype);
         ansattService.saveAnsatt(ansatt,bedriftF);
         return "redirect:/dev-tools";
     }
