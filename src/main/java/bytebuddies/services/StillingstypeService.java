@@ -21,6 +21,6 @@ public class StillingstypeService {
     }
 
     public List<Stillingstype> getAlleTyper(Bedrift bedrift) {
-        return stillingstypeRepository.findAll().stream().filter(s -> s.getBedriftId().equals(bedrift)).toList();
+        return stillingstypeRepository.findAllByBedriftId(bedrift);
     }
 }
