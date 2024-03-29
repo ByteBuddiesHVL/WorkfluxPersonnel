@@ -1,10 +1,7 @@
 package bytebuddies.services;
 
 import bytebuddies.embeddable.Passord;
-import bytebuddies.entities.Admin;
-import bytebuddies.entities.Adresse;
-import bytebuddies.entities.Ansatt;
-import bytebuddies.entities.Bedrift;
+import bytebuddies.entities.*;
 import bytebuddies.repositories.AnsattRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,9 @@ public class ValideringsService {
     @Autowired
     PassordService passordService;
 
+    @Autowired
+    StillingstypeService stillingstypeService;
+
     public Ansatt lagAnsatt(
             Bedrift bedrift,
             String fornavn,
@@ -38,13 +38,15 @@ public class ValideringsService {
             String gatenummer,
             String postnummer,
             Float stillingsprosent,
-            String stillingstype,
+            Integer stillingstypeId,
             String passord
     ) {
         Adresse adresse = adresseService.saveAdresse(new Adresse(gatenavn, gatenummer, postnummerService.findPostnummer(postnummer), true));
 
         String salt = passordService.genererTilfeldigSalt();
         String hash = passordService.hashMedSalt(passord, salt);
+
+        Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
 
         return new Ansatt(bedrift, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, adresse, true, stillingsprosent, stillingstype);
     }
@@ -68,7 +70,7 @@ public class ValideringsService {
             String gatenummer,
             String postnummer,
             Float stillingsprosent,
-            String stillingstype
+            Integer stillingstype
     ) {
         if (!fornavn.matches("^[A-ZÆØÅ][A-ZÆØÅa-zæøå -]{1,19}$")) return "Ikke gyldig fornavn";
         if (!etternavn.matches("^[A-ZÆØÅ][A-ZÆØÅa-zæøå-]{1,19}$")) return "Ikke gyldig etternavn";
@@ -79,7 +81,7 @@ public class ValideringsService {
         if (!postnummer.matches("^[0-9]{4}")) return "Ikke gyldig postnummer";
         if (postnummerService.findPostnummer(postnummer) == null) return "Postnummer eksisterer ikke"; // postnummerdatabasen bør oppdateres ofte
         if (stillingsprosent > 100 || stillingsprosent < 0) return "Ikke gyldig stillingsprosent";
-        //stillingstype (må kanskje lages enda en entity for dette for å oppnå bedre normalisering)
+        if (stillingstypeService.getStillingstype(stillingstype) == null) return "Ingen type på denne id-en";
         return null;
     }
 }

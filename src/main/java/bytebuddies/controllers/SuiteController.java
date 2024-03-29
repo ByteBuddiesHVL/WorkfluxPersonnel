@@ -37,6 +37,9 @@ public class SuiteController {
     @Autowired
     ValideringsService valServ;
 
+    @Autowired
+    StillingstypeService stillingstypeService;
+
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
         Admin admin = getLoggedInAttr(session);
@@ -92,7 +95,7 @@ public class SuiteController {
             @RequestParam("gatenummer") String gatenummer,
             @RequestParam("postnummer") String postnummer,
             @RequestParam("stillingsprosent") Float stillingsprosent,
-            @RequestParam("stillingstype") String stillingstype,
+            @RequestParam("stillingstype") Integer stillingstype,
             HttpSession session,
             RedirectAttributes attributes
     ) {
@@ -122,7 +125,7 @@ public class SuiteController {
             @RequestParam("gatenummer") String gatenummer,
             @RequestParam("postnummer") String postnummer,
             @RequestParam("stillingsprosent") Float stillingsprosent,
-            @RequestParam("stillingstype") String stillingstype,
+            @RequestParam("stillingstype") Integer stillingstypeId,
             @RequestParam(required = false, defaultValue = "false") boolean slettAnsatt,
             HttpSession session,
             RedirectAttributes attributes
@@ -132,7 +135,7 @@ public class SuiteController {
             ansattService.deleteAnsattByBrukernavn(brukernavn);
             return "redirect:/suite/ansatt";
         }
-        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype);
+        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstypeId);
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
             Admin admin = getLoggedInAttr(session);
@@ -142,6 +145,7 @@ public class SuiteController {
             }
             Bedrift bedrift = admin.getBedriftId();
             Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+            Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
 
             ansatt.setFornavn(fornavn);
             ansatt.setEtternavn(etternavn);
@@ -151,7 +155,7 @@ public class SuiteController {
             ansatt.getAdresseId().setGatenummer(gatenummer);
             ansatt.getAdresseId().getPostnummer().setPostnummer(postnummer);
             ansatt.setStillingsprosent(stillingsprosent);
-            ansatt.setStillingstype(stillingstype);
+            ansatt.setStillingstypeId(stillingstype);
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
         }
         return "redirect:/suite/ansatt";

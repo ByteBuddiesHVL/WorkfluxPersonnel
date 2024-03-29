@@ -29,10 +29,15 @@ public class Ansatt {
     @Column(name = "is_active")
     private boolean isActive;
     private float stillingsprosent;
-    private String stillingstype;
 
-    public Ansatt(Bedrift bedriftId, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, float stillingsprosent, String stillingstype) {
-        this.bedriftId = bedriftId;
+    @ManyToOne
+    @JoinColumn(name = "stillingstype_id")
+    private Stillingstype stillingstypeId;
+
+    public Ansatt(){}
+
+    public Ansatt(Bedrift bedrift, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresse, boolean b, Float stillingsprosent, Stillingstype stillingstype) {
+        this.bedriftId = bedrift;
         this.passord = passord;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -41,10 +46,8 @@ public class Ansatt {
         this.adresseId = adresseId;
         this.isActive = isActive;
         this.stillingsprosent = stillingsprosent;
-        this.stillingstype = stillingstype;
+        this.stillingstypeId = stillingstypeId;
     }
-
-    public Ansatt(){}
 
     public Integer getAnsattId() {
         return ansattId;
@@ -134,12 +137,12 @@ public class Ansatt {
         this.stillingsprosent = stillingsprosent;
     }
 
-    public String getStillingstype() {
-        return stillingstype;
+    public Stillingstype getStillingstypeId() {
+        return stillingstypeId;
     }
 
-    public void setStillingstype(String stillingstype) {
-        this.stillingstype = stillingstype;
+    public void setStillingstypeId(Stillingstype stillingstypeId) {
+        this.stillingstypeId = stillingstypeId;
     }
 
     public String toString() {
@@ -154,6 +157,6 @@ public class Ansatt {
                 post.getPostnummer() + " " +
                 post.getPoststed() + "\"," +
                 String.format(Locale.US,"%.2f", stillingsprosent) + ",\"" +
-                stillingstype + "\"]";
+                stillingstypeId.getStillingstype() + "\"]";
     }
 }
