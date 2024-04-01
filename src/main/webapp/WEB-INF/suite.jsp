@@ -36,8 +36,8 @@
             <c:if test="${delside eq 'personal'}">
             <div id="personal">
                 <button type="button" id="nyAnsatt">Ny Ansatt</button>
-                <div id="nyAnsattWindow">
-                    <h1>Lag ansatt</h1>
+                <dialog id="nyAnsattWindow">
+                    <h2>Lag ansatt</h2>
                     <form id="navn" method="post" action="/nyAnsatt">
                         <label>
                             Fornavn:
@@ -81,11 +81,14 @@
                                 </select>
                             </div>
                         </label>
-                        <div>
-                            <input type="submit" id="lag" value="Lag ansatt">
-                        </div>
                     </form>
-                </div>
+                    <div>
+                        <input type="submit" id="lag" value="Lag ansatt" form="navn">
+                        <form method="dialog">
+                            <button class="button">Lukk</button>
+                        </form>
+                    </div>
+                </dialog>
             </div>
             </c:if>
             <c:if test="${delside eq 'ansatt'}">
@@ -97,7 +100,7 @@
                     </div>
                     <div id="searchResultWrapper" style="display: none"></div>
                 </div>
-                <div id="ansattInfo" style="display:none;">
+                <dialog id="ansattInfo">
                     <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
                         <input type="hidden" id="Rbrukernavn" name="brukernavn">
 
@@ -143,12 +146,18 @@
                                 </select>
                             </div>
                         </label>
-                        <div>
-                            <input type="submit" value="Lagre">
-                            <input type="checkbox" name="slettAnsatt">SLETT</input>
-                        </div>
                     </form>
-                </div>
+                    <div>
+                        <input type="submit" value="Lagre" form="redigerAnsattForm">
+                        <label>
+                            <input type="checkbox" name="slettAnsatt" form="redigerAnsattForm">
+                            SLETT
+                        </label>
+                        <form method="dialog">
+                            <button class="button">Lukk</button>
+                        </form>
+                    </div>
+                </dialog>
             </div>
             </c:if>
             <c:if test="${delside eq 'rapporter'}">

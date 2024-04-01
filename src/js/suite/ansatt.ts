@@ -1,6 +1,6 @@
 import type {Ansatt} from "../types";
 
-declare const ansattListe: Ansatt[]
+declare const ansattListe: Ansatt[];
 
 const searchInput = <HTMLInputElement>document.getElementById("searchInput")!;
 const searchResults = document.getElementById("searchResultWrapper")!;
@@ -39,7 +39,7 @@ function updateSearchResult() {
     searchResults.innerHTML = html;
 }
 
-const ansattInfo = document.getElementById("ansattInfo")!
+const dialog = document.querySelector("dialog")!
 const [
     Rbrukernavn,
     Rfornavn,
@@ -59,7 +59,7 @@ function setAnsatt(btn: HTMLButtonElement) {
     searchInput.value = '';
     let ele = ansattListe.find(a => a[0] == btn.value)!;
 
-    ansattInfo.style.display = 'flex';
+    dialog.showModal();
 
     Rbrukernavn.value = ele[0];
     [Rfornavn.value, Retternavn.value] = ele[1].split(', ');
