@@ -17,7 +17,7 @@ searchInput.oninput = () => {
     searchElems = [];
 
     for (let i = 0, j = 0; i < ansattListe.length && j < 4; i++) {
-        if (ansattListe[i][0].includes(searchTag)) {
+        if (ansattListe[i][0].toLowerCase().includes(searchTag.toLowerCase()) || ansattListe[i][1].toLowerCase().includes(searchTag.toLowerCase())) {
             searchElems[j++] = ansattListe[i];
         }
     }
