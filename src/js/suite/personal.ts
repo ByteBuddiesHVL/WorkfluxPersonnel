@@ -1,7 +1,5 @@
-const nyAnsattWindow = document.getElementById("nyAnsattWindow")!;
-let open = false;
+const nyAnsattWindow = document.querySelector("dialog")!;
 
 document.getElementById("nyAnsatt")!.onclick = () => {
-    nyAnsattWindow.style.display = open ? "none" : "block";
-    open = !open;
+    nyAnsattWindow.showModal();
 }
