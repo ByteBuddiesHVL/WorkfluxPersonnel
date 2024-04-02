@@ -8,6 +8,9 @@
     <title>Workflux Suite</title>
     <link rel="stylesheet" href="../css/style.css">
     <script type="module" src="../js/suite/${delside == null ? "hjem" : delside}.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <header class="header">
@@ -26,6 +29,7 @@
         <div class="suiteChooser">
             <a href="/suite" class="button${delside == null ? " active" : ""}" style="margin-right: 1em;">Hjem</a>
             <a href="/suite/personal" class="button${delside eq "personal" ? " active" : ""}">Personal</a>
+            <a href="/suite/kalender" class="button${delside eq "kalender" ? " active" : ""}">Kalender</a>
             <a href="/suite/ansatt" class="button${delside eq "ansatt" ? " active" : ""}">Ansatt</a>
             <a href="/suite/rapporter" class="button${delside eq "rapporter" ? " active" : ""}">Rapporter</a>
         </div>
@@ -89,6 +93,42 @@
                         </form>
                     </div>
                 </dialog>
+            </div>
+            </c:if>
+            <c:if test="${delside eq 'kalender'}">
+            <div id="kalender">
+                <section class="selectDate">
+                    <div class="smallDate-selector">
+                        <span class="material-symbols-outlined" id="monthIcon">calendar_month</span>
+                        <p class="selector-current-date"></p>
+                        <div class="selector-navigation">
+                            <span id="selector-prev" class="material-symbols-rounded">chevron_left</span>
+                            <span id="selector-next" class="material-symbols-rounded">chevron_right</span>
+                        </div>
+                    </div>
+                    <div class="calendar-container" id="calendarPopup" style="display: none">
+                        <div class="calendar-header">
+                            <p class="calendar-current-date"></p>
+                            <div class="calendar-navigation">
+                                <span id="calendar-prev" class="material-symbols-rounded">chevron_left</span>
+                                <span id="calendar-next" class="material-symbols-rounded">chevron_right</span>
+                            </div>
+                        </div>
+
+                        <div class="calendar-body">
+                            <ul class="calendar-weekdays">
+                                <li>Mon</li>
+                                <li>Tue</li>
+                                <li>Wed</li>
+                                <li>Thu</li>
+                                <li>Fri</li>
+                                <li>Sat</li>
+                                <li>Sun</li>
+                            </ul>
+                            <ul class="calendar-dates"></ul>
+                        </div>
+                    </div>
+                </section>
             </div>
             </c:if>
             <c:if test="${delside eq 'ansatt'}">

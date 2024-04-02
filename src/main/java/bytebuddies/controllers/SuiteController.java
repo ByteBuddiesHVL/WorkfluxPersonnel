@@ -40,6 +40,16 @@ public class SuiteController {
     @Autowired
     StillingstypeService stillingstypeService;
 
+    @GetMapping("/hentDagTidsplan")
+    public String getDagTidsplan(
+            @RequestParam("year") String year,
+            @RequestParam("month") String month,
+            @RequestParam("day") String day
+    ) {
+        System.out.println(year + ":" + month + ":" + day);
+        return "redirect:/suite/kalender";
+    }
+
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
         Admin admin = getLoggedInAttr(session);
