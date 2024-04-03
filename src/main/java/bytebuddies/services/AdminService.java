@@ -21,7 +21,7 @@ public class AdminService {
     private BedriftRepository bedriftRepository;
 
     public List<Admin> getAllByBedriftId(Integer bedriftId) {
-        Bedrift b = bedriftRepository.findById(bedriftId).orElseGet(null);
+        Bedrift b = bedriftRepository.findById(bedriftId).orElse(null);
         if (b != null) return adminRepository.getAdminsByBedriftId(b);
         return null;
     }

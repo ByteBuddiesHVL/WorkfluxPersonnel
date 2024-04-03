@@ -13,7 +13,7 @@ public class PostnummerService {
     private PostnummerRepository postnummerRepository;
 
     public Postnummer findPostnummer(String postnummer) {
-        return postnummerRepository.findById(postnummer).orElseGet(null);
+        return postnummerRepository.findById(postnummer).orElse(null);
     }
 
 }

@@ -36,7 +36,7 @@ public class Ansatt {
 
     public Ansatt(){}
 
-    public Ansatt(Bedrift bedrift, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresse, boolean b, Float stillingsprosent, Stillingstype stillingstype) {
+    public Ansatt(Bedrift bedrift, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, Float stillingsprosent, Stillingstype stillingstypeId) {
         this.bedriftId = bedrift;
         this.passord = passord;
         this.fornavn = fornavn;

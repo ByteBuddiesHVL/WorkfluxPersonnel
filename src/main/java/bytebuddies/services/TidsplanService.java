@@ -55,7 +55,7 @@ public class TidsplanService {
     }
 
     public Tidsplan endTidsplan(Ansatt ansatt, LocalDateTime ldt) {
-        Tidsplan t = tidsplanRepository.getFirstByAnsattIdAndSluttidIsNullAndStarttidIsNotNullOrderByStarttidDesc(ansatt).orElseGet(null);
+        Tidsplan t = tidsplanRepository.getFirstByAnsattIdAndSluttidIsNullAndStarttidIsNotNullOrderByStarttidDesc(ansatt).orElse(null);
         if (t == null) return null;
         t.setSluttid(ldt);
         return tidsplanRepository.save(t);
@@ -67,7 +67,7 @@ public class TidsplanService {
     }
 
     public Tidsplan getCurrentTidsplan(Ansatt ansatt) {
-        return tidsplanRepository.getFirstByAnsattIdAndSluttidIsNullAndStarttidIsNotNullOrderByStarttidDesc(ansatt).orElseGet(null);
+        return tidsplanRepository.getFirstByAnsattIdAndSluttidIsNullAndStarttidIsNotNullOrderByStarttidDesc(ansatt).orElse(null);
     }
 
     /**

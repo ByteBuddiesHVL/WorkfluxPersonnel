@@ -17,7 +17,7 @@ public class StillingstypeService {
     private StillingstypeRepository stillingstypeRepository;
 
     public Stillingstype getStillingstype(Integer id) {
-        return stillingstypeRepository.findById(id).orElseGet(null);
+        return stillingstypeRepository.findById(id).orElse(null);
     }
 
     public List<Stillingstype> getAlleTyper(Bedrift bedrift) {

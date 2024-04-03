@@ -44,13 +44,13 @@ public class LonnService {
     private TidsplanService tidsplanService;
 
     public Float finnTimelonnForAnsatt(Ansatt ansatt) {
-        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElseGet(null);
+        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElse(null);
         if (lonn != null) return lonn.getTimelonn();
         return null;
     }
 
     public Float finnArslonnForAnsatt(Ansatt ansatt) {
-        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElseGet(null);
+        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElse(null);
         if (lonn != null) return lonn.getArslonn();
         return null;
     }

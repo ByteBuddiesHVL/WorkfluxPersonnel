@@ -17,7 +17,7 @@ public class AnsattService {
     private AnsattRepository ansattRepository;
 
     public Ansatt getAnsattByBrukernavn(String brukernavn) {
-        return ansattRepository.findAnsattByBrukernavn(brukernavn).orElseGet(null);
+        return ansattRepository.findAnsattByBrukernavn(brukernavn).orElse(null);
     }
 
     public void deleteAnsattByBrukernavn(String brukernavn) {

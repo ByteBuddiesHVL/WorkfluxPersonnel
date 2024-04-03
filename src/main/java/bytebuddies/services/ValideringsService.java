@@ -41,7 +41,9 @@ public class ValideringsService {
             Integer stillingstypeId,
             String passord
     ) {
-        Adresse adresse = adresseService.saveAdresse(new Adresse(gatenavn, gatenummer, postnummerService.findPostnummer(postnummer), true));
+        Adresse adresse = adresseService.getAdresse(gatenavn,gatenummer,postnummer);
+        if (adresse == null) adresse = adresseService.saveAdresse(new Adresse(gatenavn, gatenummer, postnummerService.findPostnummer(postnummer), true));
+        // hvis adresse fortsatt er null, push error
 
         String salt = passordService.genererTilfeldigSalt();
         String hash = passordService.hashMedSalt(passord, salt);
@@ -52,7 +54,7 @@ public class ValideringsService {
     }
 
     public String validerAdmin(String brukernavn, String passord, HttpSession session) {
-        Admin admin = adminService.getAdminByBrukernavn(brukernavn).orElseGet(null);
+        Admin admin = adminService.getAdminByBrukernavn(brukernavn).orElse(null);
         if (admin == null) return "Feil brukernavn/passord";
         Passord p = admin.getPassord();
         if (!passordService.erKorrektPassord(passord,p.getSalt(),p.getHash())) return "Feil brukernavn/passord";

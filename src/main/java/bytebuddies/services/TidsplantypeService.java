@@ -13,11 +13,11 @@ public class TidsplantypeService {
     private TidsplantypeRepository tidsplantypeRepository;
 
     public Tidsplantype getTidsplantypeByType(String type) {
-        return tidsplantypeRepository.getTidsplantypeByType(type).orElseGet(null);
+        return tidsplantypeRepository.getTidsplantypeByType(type).orElse(null);
     }
 
     public Tidsplantype getTidsplantypeById(Integer id) {
-        return tidsplantypeRepository.findById(id).orElseGet(null);
+        return tidsplantypeRepository.findById(id).orElse(null);
     }
 
 }

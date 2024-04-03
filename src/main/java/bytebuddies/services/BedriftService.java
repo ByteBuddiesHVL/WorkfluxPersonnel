@@ -16,7 +16,7 @@ public class BedriftService {
     }
 
     public Bedrift findBedrift(String forkortelse) {
-        return bedriftRepository.findBedriftByForkortelse(forkortelse).orElseGet(null);
+        return bedriftRepository.findBedriftByForkortelse(forkortelse).orElse(null);
     }
 
 }
