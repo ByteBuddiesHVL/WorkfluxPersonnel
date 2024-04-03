@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,13 +42,19 @@ public class SuiteController {
     @Autowired
     StillingstypeService stillingstypeService;
 
+    @Autowired
+    TidsplanService tidsplanService;
+
     @GetMapping("/hentDagTidsplan")
     public String getDagTidsplan(
-            @RequestParam("year") String year,
-            @RequestParam("month") String month,
-            @RequestParam("day") String day
+            @RequestParam("year") Integer year,
+            @RequestParam("month") Integer month,
+            @RequestParam("day") Integer day
     ) {
-        System.out.println(year + ":" + month + ":" + day);
+        if (year != null && month != null && day != null) {
+            LocalDate date = LocalDate.of(year, month, day);
+            tidsplanService.getTidsplanByDate(date);
+        }
         return "redirect:/suite/kalender";
     }
 

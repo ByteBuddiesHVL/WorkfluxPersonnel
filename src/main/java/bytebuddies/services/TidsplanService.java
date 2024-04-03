@@ -109,4 +109,8 @@ public class TidsplanService {
     public float getTimerForAnsattHittilIAr(Ansatt ansatt, LocalDate endDate) {
         return getTimerForAnsatt(ansatt, LocalDate.of(endDate.getYear(), 1, 1), endDate).getTimer();
     }
+
+    public List<Tidsplan> getTidsplanByDate(LocalDate date) {
+        return tidsplanRepository.getTidsplansByStarttidBetween(date.atStartOfDay(),date.plusDays(1).atStartOfDay().minusNanos(1));
+    }
 }

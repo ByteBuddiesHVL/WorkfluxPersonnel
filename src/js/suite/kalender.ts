@@ -119,3 +119,32 @@ document.addEventListener("click", function(evt) {
     // @ts-ignore
     if (!calendarPopup.contains(targetElement) && targetElement.id !== "monthIcon") calendarPopup.style.display = "none"
 })
+
+const tidsplan = document.getElementById('tidsplan')!;
+
+// generate grid lines
+const numVert = 8;
+const numHoriz = 92;
+
+
+
+for (let i = 1; i <= numVert; i++) {
+    const gridBox = document.createElement('div');
+    gridBox.classList.add('gridLines');
+    gridBox.style.gridColumnStart = `${1}`
+    gridBox.style.gridColumnEnd = `${numHoriz + 3}`
+    gridBox.style.gridRowStart = `${i}`
+    gridBox.style.gridRowEnd = `${i + 1}`
+    tidsplan.appendChild(gridBox);
+}
+
+for (let j = 1; j <= (numHoriz - 1); j += 2) {
+    const gridBox = document.createElement('div');
+    gridBox.classList.add('gridLines');
+    if (j % 4 === 1) gridBox.classList.add('dottedLine');
+    gridBox.style.gridColumnStart = `${j}`
+    gridBox.style.gridColumnEnd = `${j + 2}`
+    gridBox.style.gridRowStart = `${1}`
+    gridBox.style.gridRowEnd = `${numVert + 1}`
+    tidsplan.appendChild(gridBox);
+}

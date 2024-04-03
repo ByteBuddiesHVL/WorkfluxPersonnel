@@ -73,7 +73,7 @@
                         </label>
                         <label>
                             Stillingsprosent:
-                            <input type="number" name="stillingsprosent">
+                            <input type="number" step=".01" name="stillingsprosent">
                         </label>
                         <label>
                             Stillingstype:
@@ -97,7 +97,7 @@
             </c:if>
             <c:if test="${delside eq 'kalender'}">
             <div id="kalender">
-                <section class="selectDate">
+                <section class="datoVelger">
                     <div class="smallDate-selector">
                         <span class="material-symbols-outlined" id="monthIcon">calendar_month</span>
                         <p class="selector-current-date"></p>
@@ -126,6 +126,46 @@
                                 <li>Sun</li>
                             </ul>
                             <ul class="calendar-dates"></ul>
+                        </div>
+                    </div>
+                </section>
+                <section class="raskInfo"></section>
+                <section class="tidsRedigering">
+                    <div id="skiftVisning">
+                        <div id="dato"></div>
+                        <div id="timer">
+                            <span style="justify-content: left">0</span>
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
+                            <span>11</span>
+                            <span>12</span>
+                            <span>13</span>
+                            <span>14</span>
+                            <span>15</span>
+                            <span>16</span>
+                            <span>17</span>
+                            <span>18</span>
+                            <span>20</span>
+                            <span>21</span>
+                            <span>22</span>
+                            <span>23</span>
+                        </div>
+                        <div id="ansatte"></div>
+                        <div id="tidsplan">
+                            <div class="skift" style="
+                                 grid-column-start: calc(4 * 9 + 1);
+                                 grid-column-end: calc(4 * 18 + 1);
+                                 grid-row-start: 1;
+                                 display: flex;">
+                            </div>
                         </div>
                     </div>
                 </section>
