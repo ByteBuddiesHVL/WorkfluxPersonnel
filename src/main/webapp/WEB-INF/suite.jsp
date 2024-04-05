@@ -104,16 +104,16 @@
                         <span class="material-symbols-outlined" id="monthIcon">calendar_month</span>
                         <p class="selector-current-date"></p>
                         <div class="selector-navigation">
-                            <span id="selector-prev" class="material-symbols-rounded">chevron_left</span>
-                            <span id="selector-next" class="material-symbols-rounded">chevron_right</span>
+                            <span id="selector-prev" class="chevron"></span>
+                            <span id="selector-next" class="chevron right"></span>
                         </div>
                     </div>
                     <div class="calendar-container" id="calendarPopup" style="display: none">
                         <div class="calendar-header">
                             <p class="calendar-current-date"></p>
                             <div class="calendar-navigation">
-                                <span id="calendar-prev" class="material-symbols-rounded">chevron_left</span>
-                                <span id="calendar-next" class="material-symbols-rounded">chevron_right</span>
+                                <span id="calendar-prev" class="chevron"></span>
+                                <span id="calendar-next" class="chevron right"></span>
                             </div>
                         </div>
 
