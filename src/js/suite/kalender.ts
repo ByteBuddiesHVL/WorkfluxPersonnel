@@ -6,8 +6,7 @@ let year = date.getFullYear();
 const dayCalendar = document.querySelector(".calendar-dates")!;
 
 const currDate = document.querySelector(".calendar-current-date");
-const currDateSelector = document.querySelector(".selector-current-date");
-
+const currDateSelector = document.querySelector<HTMLParagraphElement>(".selector-current-date")!;
 const prevNextIcons = document.querySelectorAll(".calendar-navigation span");
 const prevNextIconsSelector = document.querySelectorAll(".selector-navigation span");
 
@@ -15,8 +14,7 @@ const prevNextIconsSelector = document.querySelectorAll(".selector-navigation sp
 const months = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"];
 
 const updateSelector = () => {
-    // @ts-ignore
-    currDateSelector.innerText = `${selectorDate.getDate()} ${months[selectorDate.getMonth()]} ${selectorDate.getFullYear()}`
+    currDateSelector.textContent = `${selectorDate.getDate()} ${months[selectorDate.getMonth()]} ${selectorDate.getFullYear()}`
 }
 
 updateSelector();
@@ -107,7 +105,6 @@ prevNextIcons.forEach(icon => {
     });
 });
 
-// @ts-ignore
 const calendarPopup = document.getElementById("calendarPopup")!;
 document.getElementById("monthIcon")!.addEventListener("click", () => {
     if (calendarPopup.style.display === "none") calendarPopup.style.display = "block";

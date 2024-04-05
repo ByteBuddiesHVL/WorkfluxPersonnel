@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workflux</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/stemple.css">
 </head>
 <body>
     <header class="header">
@@ -39,6 +40,5 @@
             </form>
         </div>
     </section>
-<script src="js/test.ts"></script>
 </body>
 </html>
