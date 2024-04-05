@@ -162,12 +162,6 @@
                         </div>
                         <div id="ansatte"></div>
                         <div id="tidsplan">
-                            <div class="skift" style="
-                                 grid-column-start: calc(4 * 9 + 1);
-                                 grid-column-end: calc(4 * 18 + 1);
-                                 grid-row-start: 1;
-                                 display: flex;">
-                            </div>
                         </div>
                     </div>
                 </section>
@@ -249,7 +243,8 @@
     </section>
     <c:if test="${not empty ansatte}">
         <script>
-            let ansattListe = ${ansatte}
+            let ansattListe = ${ansatte};
+            <c:if test="${not empty tidsplan}">let tidsplanListe = ${tidsplan};</c:if>
         </script>
     </c:if>
 </body>

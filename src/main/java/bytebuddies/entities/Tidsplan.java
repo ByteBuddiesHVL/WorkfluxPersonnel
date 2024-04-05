@@ -3,6 +3,7 @@ package bytebuddies.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Entity
 @Table(schema = "Workflux")
@@ -82,5 +83,15 @@ public class Tidsplan {
 
     public void setCalced(Boolean calced) {
         isCalced = calced;
+    }
+
+    public String toString() {
+        return "[\"" +
+                tidsplanId + "\"," +
+                ansattId.toString() + ",\"" +
+                starttid.toString() + "\",\"" +
+                sluttid.toString() + "\",\"" +
+                typeId.getTidsplantypeId() + "\",\"" +
+                typeId.getType() + "\"]";
     }
 }

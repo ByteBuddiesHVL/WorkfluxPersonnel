@@ -1,3 +1,7 @@
+import type {Tidsplan} from "../types";
+
+declare const tidsplanListe: Tidsplan[];
+
 let date = new Date();
 let selectorDate = date;
 let month = date.getMonth();
@@ -117,7 +121,7 @@ document.addEventListener("click", function(evt) {
     if (!calendarPopup.contains(targetElement) && targetElement.id !== "monthIcon") calendarPopup.style.display = "none"
 })
 
-const tidsplan = document.getElementById('tidsplan')!;
+const tidsplanDiv = document.getElementById('tidsplan')!;
 
 // generate grid lines
 const numVert = 8;
@@ -132,7 +136,7 @@ for (let i = 1; i <= numVert; i++) {
     gridBox.style.gridColumnEnd = `${numHoriz + 3}`
     gridBox.style.gridRowStart = `${i}`
     gridBox.style.gridRowEnd = `${i + 1}`
-    tidsplan.appendChild(gridBox);
+    tidsplanDiv.appendChild(gridBox);
 }
 
 for (let j = 1; j <= (numHoriz - 1); j += 2) {
@@ -143,5 +147,19 @@ for (let j = 1; j <= (numHoriz - 1); j += 2) {
     gridBox.style.gridColumnEnd = `${j + 2}`
     gridBox.style.gridRowStart = `${1}`
     gridBox.style.gridRowEnd = `${numVert + 1}`
-    tidsplan.appendChild(gridBox);
+    tidsplanDiv.appendChild(gridBox);
+}
+
+for (let i = 1; i <= tidsplanListe.length; i++) {
+    const skift = document.createElement('div');
+    let starttid = tidsplanListe[i - 1][2];
+    let starttidTime = starttid.split('T')[1].split(':');
+    let sluttid = tidsplanListe[i - 1][3];
+    let sluttidTime = sluttid.split('T')[1].split(':');
+    skift.style.gridColumnStart = `calc(4 * ${Number(starttidTime[0]) + Number(starttidTime[1])/60} + 1)`;
+    skift.style.gridColumnEnd = `calc(4 * ${Number(sluttidTime[0]) + Number(sluttidTime[1])/60} + 1)`;
+    skift.style.gridRowStart = `${i}`;
+    skift.style.display = 'flex';
+    skift.classList.add('skift');
+    tidsplanDiv.appendChild(skift);
 }

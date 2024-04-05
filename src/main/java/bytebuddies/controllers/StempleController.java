@@ -2,6 +2,7 @@ package bytebuddies.controllers;
 
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Tidsplan;
+import bytebuddies.entities.Tidsplantype;
 import bytebuddies.services.AnsattService;
 import bytebuddies.services.TidsplanService;
 import bytebuddies.services.TidsplantypeService;
@@ -63,12 +64,15 @@ public class StempleController {
 
         Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
         Tidsplan tidsplan = tidsplanService.getCurrentTidsplan(ansatt);
+        Tidsplantype typeSalg = tidsplantypeService.getTidsplantypeById(1);
+        Tidsplantype typeKasse = tidsplantypeService.getTidsplantypeById(2);
+        Tidsplantype typeLunsj = tidsplantypeService.getTidsplantypeById(3);
 
         switch(type) {
             case "Inn":
                 // check if tidsplan == lunsj ... etc
                 if (tidsplan != null) tidsplanService.endTidsplan(tidsplan,time);
-                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time,null,null,false));
+                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time,null,typeSalg,false));
                 break;
             case "Ut":
                 if (tidsplan == null) break;
@@ -78,7 +82,7 @@ public class StempleController {
                     tidsplanService.endTidsplan(tidsplan,time);
                 else if (startDate.isBefore(dateNow)){
                     tidsplanService.endTidsplan(tidsplan,startDate.atTime(23,59,59));
-                    tidsplanService.saveTidsplan(new Tidsplan(ansatt,dateNow.atTime(0,0,0),time,null,false));
+                    tidsplanService.saveTidsplan(new Tidsplan(ansatt,dateNow.atTime(0,0,0),time,tidsplan.getTypeId(),false));
                 } else if (startDate.isAfter(dateNow)){
                     // return error
                 }

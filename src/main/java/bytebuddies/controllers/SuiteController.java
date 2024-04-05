@@ -45,15 +45,16 @@ public class SuiteController {
     @Autowired
     TidsplanService tidsplanService;
 
-    @GetMapping("/hentDagTidsplan")
-    public String getDagTidsplan(
+    private LocalDate currentDate = LocalDate.now();
+
+    @GetMapping("/setDagTidsplan")
+    public String setDagForTidsplan(
             @RequestParam("year") Integer year,
             @RequestParam("month") Integer month,
             @RequestParam("day") Integer day
     ) {
         if (year != null && month != null && day != null) {
-            LocalDate date = LocalDate.of(year, month, day);
-            tidsplanService.getTidsplanByDate(date);
+            currentDate = LocalDate.of(year, month, day);
         }
         return "redirect:/suite/kalender";
     }
@@ -83,7 +84,11 @@ public class SuiteController {
             else if (delside.equals("ansatt")) {
                 model.addAttribute("ansatte", getAnsattString());
                 model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
-                model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+            }
+            else if (delside.equals("kalender")) {
+                System.out.println(tidsplanService.getTidsplanByDate(currentDate));
+                model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("tidsplan",getTidsplanString());
             }
         }
         return "suite";
@@ -190,6 +195,12 @@ public class SuiteController {
     public String getAnsattString() {
         return ansattService.getAllAnsatte().stream()
                 .map(Ansatt::toString)
+                .collect(Collectors.joining(",", "[", "]"));
+    }
+
+    public String getTidsplanString() {
+        return tidsplanService.getTidsplanByDate(currentDate).stream()
+                .map(Tidsplan::toString)
                 .collect(Collectors.joining(",", "[", "]"));
     }
 }
