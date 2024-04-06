@@ -152,6 +152,7 @@
                             <span>16</span>
                             <span>17</span>
                             <span>18</span>
+                            <span>19</span>
                             <span>20</span>
                             <span>21</span>
                             <span>22</span>
@@ -241,7 +242,10 @@
     <c:if test="${not empty ansatte}">
         <script>
             let ansattListe = ${ansatte};
-            <c:if test="${not empty tidsplan}">let tidsplanListe = ${tidsplan};</c:if>
+            <c:if test="${not empty tidsplan}">
+            let tidsplanListe = ${tidsplan};
+            let dag = '${dag}';
+            </c:if>
         </script>
     </c:if>
 </body>

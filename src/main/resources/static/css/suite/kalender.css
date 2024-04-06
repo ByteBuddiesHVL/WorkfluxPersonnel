@@ -212,7 +212,7 @@
     grid-row-end: 2;
 
     display: grid;
-    grid-template-columns: repeat(23,1fr);
+    grid-template-columns: repeat(24,1fr);
     grid-template-rows: auto;
     align-items: center;
 }
@@ -234,12 +234,17 @@
     grid-template-columns: auto;
 }
 
+#ansatte > span {
+    text-align: center;
+    align-self: center;
+}
+
 #tidsplan {
     grid-column-start: 2;
     grid-row-start: 2;
 
     display: grid;
-    grid-template-columns: repeat(92,1fr);
+    grid-template-columns: repeat(96,1fr);
     grid-template-rows: repeat(8,calc(100% / 8));
 
     position: relative; /* Add grid lines */

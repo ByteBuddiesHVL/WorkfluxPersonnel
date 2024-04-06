@@ -1,8 +1,12 @@
 import type {Tidsplan} from "../types";
+import type {Dag} from "../types";
 
 declare const tidsplanListe: Tidsplan[];
+declare const dag: Dag;
 
-let date = new Date();
+let dagArr = dag.split('-')
+
+let date = new Date(Number(dagArr[0]),Number(dagArr[1]) - 1,Number(dagArr[2]) - 1);
 let selectorDate = date;
 let month = date.getMonth();
 let year = date.getFullYear();
@@ -81,8 +85,10 @@ const manipulate = () => {
 
 manipulate();
 
+let timeoutFunc = setTimeout(()=>{},1000);
 prevNextIconsSelector.forEach(icon => {
     icon.addEventListener("click", () => {
+        clearTimeout(timeoutFunc);
         let offset = icon.id === "selector-prev" ? -1 : 1;
 
         selectorDate.setDate(selectorDate.getDate() + offset);
@@ -90,7 +96,9 @@ prevNextIconsSelector.forEach(icon => {
         month = selectorDate.getMonth();
 
         updateSelector();
-        manipulate();
+        timeoutFunc = setTimeout(() => {
+            location.href = `/setDagTidsplan?year=${year}&month=${month + 1}&day=${selectorDate.getDate() + 1}`
+        },500) // mulighet for å raskt skippe mellom mange datoer uten at siden reloader
     })
 })
 
@@ -111,7 +119,10 @@ prevNextIcons.forEach(icon => {
 
 const calendarPopup = document.getElementById("calendarPopup")!;
 document.getElementById("monthIcon")!.addEventListener("click", () => {
-    if (calendarPopup.style.display === "none") calendarPopup.style.display = "block";
+    if (calendarPopup.style.display === "none") {
+        manipulate();
+        calendarPopup.style.display = "block";
+    }
     else if (calendarPopup.style.display === "block") calendarPopup.style.display = "none";
 })
 
@@ -122,10 +133,11 @@ document.addEventListener("click", function(evt) {
 })
 
 const tidsplanDiv = document.getElementById('tidsplan')!;
+const ansattDiv = document.getElementById('ansatte')!;
 
 // generate grid lines
 const numVert = 8;
-const numHoriz = 92;
+const numHoriz = 96;
 
 
 
@@ -150,16 +162,33 @@ for (let j = 1; j <= (numHoriz - 1); j += 2) {
     tidsplanDiv.appendChild(gridBox);
 }
 
+let appended: number[] = [];
+
 for (let i = 1; i <= tidsplanListe.length; i++) {
+    let result = findPrevAppended(Number(tidsplanListe[i - 1][1]))
     const skift = document.createElement('div');
-    let starttid = tidsplanListe[i - 1][2];
-    let starttidTime = starttid.split('T')[1].split(':');
-    let sluttid = tidsplanListe[i - 1][3];
-    let sluttidTime = sluttid.split('T')[1].split(':');
+    const starttidTime = tidsplanListe[i - 1][3].split('T')[1].split(':');
+    const sluttidTime = tidsplanListe[i - 1][4].split('T')[1].split(':');
     skift.style.gridColumnStart = `calc(4 * ${Number(starttidTime[0]) + Number(starttidTime[1])/60} + 1)`;
     skift.style.gridColumnEnd = `calc(4 * ${Number(sluttidTime[0]) + Number(sluttidTime[1])/60} + 1)`;
-    skift.style.gridRowStart = `${i}`;
     skift.style.display = 'flex';
     skift.classList.add('skift');
+    if (result == undefined) {
+        skift.style.gridRowStart = `${i}`;
+
+        const ansatt = document.createElement('span');
+        ansatt.innerText = `${tidsplanListe[i - 1][2]}`
+        ansattDiv.appendChild(ansatt);
+        appended[i - 1] = Number(tidsplanListe[i - 1][1]);
+    } else skift.style.gridRowStart = `${result + 1}`;
+
     tidsplanDiv.appendChild(skift);
+
+}
+
+function findPrevAppended(a: number | undefined) {
+    for (let i = 0; i < appended.length; i++) {
+        if (appended[i] == a) return i;
+    }
+    return undefined;
 }

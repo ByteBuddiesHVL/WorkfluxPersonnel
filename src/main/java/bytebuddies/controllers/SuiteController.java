@@ -86,8 +86,8 @@ public class SuiteController {
                 model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
             }
             else if (delside.equals("kalender")) {
-                System.out.println(tidsplanService.getTidsplanByDate(currentDate));
                 model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("dag", currentDate.toString());
                 model.addAttribute("tidsplan",getTidsplanString());
             }
         }
