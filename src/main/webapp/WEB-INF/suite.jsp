@@ -10,9 +10,6 @@
     <link rel="stylesheet" href="../css/suite/style.css">
     <link rel="stylesheet" href="../css/suite/${delside == null ? "hjem" : delside}.css">
     <script type="module" src="../js/suite/${delside == null ? "hjem" : delside}.js"></script>
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
     <header class="header">
@@ -101,7 +98,7 @@
             <div id="kalender">
                 <section class="datoVelger">
                     <div class="smallDate-selector">
-                        <span class="material-symbols-outlined" id="monthIcon">calendar_month</span>
+                        <span class="calendar-icon" id="monthIcon"></span>
                         <p class="selector-current-date"></p>
                         <div class="selector-navigation">
                             <span id="selector-prev" class="chevron"></span>

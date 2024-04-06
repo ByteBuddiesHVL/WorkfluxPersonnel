@@ -143,7 +143,13 @@
 
 .smallDate-selector span {
     cursor: pointer;
-    filter: brightness(0);
+    filter: brightness(0.33);
+}
+
+.calendar-icon {
+    width: 1.5em;
+    height: 1.5em;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="%23888"><path d="M7 2v3m10-3v3M4 9h16"/><rect x="4" y="5" width="16" height="16" rx="1"/><path d="m8 13h0m4 0h0m4 0h0m-8 4h0m4 0h0m4 0h0" stroke-linecap="round"/></svg>');
 }
 
 .chevron {
