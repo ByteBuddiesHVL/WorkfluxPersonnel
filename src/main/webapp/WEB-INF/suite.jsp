@@ -174,6 +174,22 @@
                     </div>
                     <div id="searchResultWrapper" style="display: none"></div>
                 </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th><button>Brukernavn</button></th>
+                            <th><button>Navn</button></th>
+                            <th><button>Tlf nummer</button></th>
+                            <th><button>Epost</button></th>
+                            <th><button>Adresse</button></th>
+                            <th><button>Poststed</button></th>
+                            <th><button>Stilling</button></th>
+                            <th><button>Rolle</button></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
                 <dialog id="ansattInfo">
                     <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
                         <input type="hidden" id="Rbrukernavn" name="brukernavn">

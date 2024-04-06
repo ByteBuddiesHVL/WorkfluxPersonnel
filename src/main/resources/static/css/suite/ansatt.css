@@ -1,9 +1,5 @@
 #ansatt {
     display: grid;
-    height: 100%;
-    width: 100%;
-    grid-template-rows: 2em min-content 2% 40% auto 2em;
-    grid-template-columns: 2em 20% 10% 2% auto 2% 20% 2em;
 }
 
 #ansattSok {
@@ -27,10 +23,6 @@
     padding: 0.625em;
     border-radius: 5em;
     background: white;
-    grid-column-start: 2;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 3;
 }
 
 #searchInput {
@@ -49,10 +41,6 @@
 
 #searchResultWrapper {
     flex-direction: column;
-    grid-column-start: 2;
-    grid-column-end: 4;
-    grid-row-start: 4;
-    grid-row-end: 5;
     background: white;
     margin-top: .5em;
     padding: 1em;
@@ -69,4 +57,22 @@
 
 .searchResult:hover {
     background: #f1f1f1;
+}
+
+th > * {
+    display: grid;
+    width: 100%;
+    align-items: center;
+    grid-template-columns: auto 1fr;
+    justify-content: start;
+}
+
+th > ::after {
+    content: "";
+    display: inline-block;
+    background-color: currentColor;
+    height: 1em;
+    width: .6em;
+    clip-path: polygon(50% 8.5%, 0 34.29%, 14.12% 44.14%, 14.12% 55.86%, 0 65.71%, 50% 91.5%, 100% 65.71%, 85.88% 55.86%, 50% 74.36%, 14.12% 55.86%, 14.12% 44.14%, 50% 25.64%, 85.88% 44.14%, 100% 34.29%);
+    margin-left: .3rem;
 }

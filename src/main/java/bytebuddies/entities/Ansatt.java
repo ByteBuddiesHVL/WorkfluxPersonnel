@@ -152,7 +152,7 @@ public class Ansatt {
                 etternavn + ", " + fornavn + "\",\"" +
                 telefonnummer + "\",\"" +
                 epost + "\",\"" +
-                adresseId.getGatenavn() + "\",\"" +
+                adresseId.getGatenavn() + " " +
                 adresseId.getGatenummer() + "\",\"" +
                 post.getPostnummer() + " " +
                 post.getPoststed() + "\"," +
