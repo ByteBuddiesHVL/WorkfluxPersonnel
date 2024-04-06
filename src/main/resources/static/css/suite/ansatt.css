@@ -40,7 +40,11 @@
 }
 
 #searchLogo {
-    height: 1em;
+    width: 1em;
+    stroke: currentColor;
+    stroke-width: 4;
+    stroke-linecap: round;
+    fill: none;
 }
 
 #searchResultWrapper {
