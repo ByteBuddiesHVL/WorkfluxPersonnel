@@ -82,6 +82,24 @@ public class SuiteController {
         return "redirect:/suite/kalender";
     }
 
+    @PostMapping("/timeAnsatt")
+    public String endreTime(
+            @RequestParam("date") LocalDate date,
+            @RequestParam("brukernavn") String brukernavn,
+            @RequestParam("starttid") LocalTime starttid,
+            @RequestParam("sluttid") LocalTime sluttid,
+            @RequestParam("tidsplantype") Integer typeId
+    ) {
+        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        if (ansatt != null) {
+            //todo - check if there is already a tidsplan between the starttid and sluttid
+            Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
+            Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0),sluttid.atDate(date).withSecond(0),type,false);
+            tidsplanService.saveTidsplan(tidsplan);
+        }
+        return "redirect:/suite/kalender";
+    }
+
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
         Admin admin = getLoggedInAttr(session);
@@ -110,6 +128,7 @@ public class SuiteController {
             }
             else if (delside.equals("kalender")) {
                 model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("ansattListe", ansattService.getAllAnsatte());
                 model.addAttribute("dag", currentDate.toString());
                 model.addAttribute("tidsplan", getTidsplanString());
                 model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));

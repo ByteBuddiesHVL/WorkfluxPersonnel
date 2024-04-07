@@ -128,7 +128,45 @@
                         </div>
                     </div>
                 </section>
-                <section class="raskInfo"></section>
+                <section class="raskInfo">
+                    <button id="leggTilAnsatt">Legg til nytt skift</button>
+                    <dialog id="timeAnsatt">
+                        <form method="post" action="/timeAnsatt">
+                            <input type="hidden" name="date">
+
+                            <label>
+                                Ansatt:
+                                <div class="select">
+                                    <select name="brukernavn" required>
+                                        <c:forEach items="${ansattListe}" var="a">
+                                            <option value="${a.brukernavn}">${a.brukernavn} - ${a.fornavn} ${a.etternavn}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </label>
+                            <label>
+                                Starttid:
+                                <input type="time" name="starttid" required>
+                            </label>
+                            <label>
+                                Sluttid:
+                                <input type="time" name="sluttid" required>
+                            </label>
+                            <label>
+                                Tidsplantype:
+                                <div class="select">
+                                    <select name="tidsplantype" required>
+                                        <c:forEach items="${tidsplantyper}" var="t">
+                                            <option value="${t.tidsplantypeId}">${t.type}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </label>
+                            <button id="avbrytTimeAnsatt" type="button">Avbryt</button>
+                            <input type="submit" value="Legg til">
+                        </form>
+                    </dialog>
+                </section>
                 <section class="tidsRedigering">
                     <div id="skiftVisning">
                         <div id="dato"></div>
@@ -167,16 +205,16 @@
 
                                 <label>
                                     Starttid:
-                                    <input type="time" name="starttid">
+                                    <input type="time" name="starttid" required>
                                 </label>
                                 <label>
                                     Sluttid:
-                                    <input type="time" name="sluttid">
+                                    <input type="time" name="sluttid" required>
                                 </label>
                                 <label>
                                     Tidsplantype:
                                     <div class="select">
-                                        <select name="tidsplantype">
+                                        <select name="tidsplantype" required>
                                             <c:forEach items="${tidsplantyper}" var="t">
                                                 <option value="${t.tidsplantypeId}">${t.type}</option>
                                             </c:forEach>

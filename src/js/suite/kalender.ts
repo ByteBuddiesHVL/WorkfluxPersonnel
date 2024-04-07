@@ -6,7 +6,7 @@ declare const dag: Dag;
 
 let dagArr = dag.split('-')
 
-let date = new Date(Number(dagArr[0]),Number(dagArr[1]) - 1,Number(dagArr[2]) - 1);
+let date = new Date(Number(dagArr[0]),Number(dagArr[1]) - 1,Number(dagArr[2]));
 let selectorDate = date;
 let month = date.getMonth();
 let year = date.getFullYear();
@@ -97,7 +97,7 @@ prevNextIconsSelector.forEach(icon => {
 
         updateSelector();
         timeoutFunc = setTimeout(() => {
-            location.href = `/setDagTidsplan?year=${year}&month=${month + 1}&day=${selectorDate.getDate() + 1}`
+            location.href = `/setDagTidsplan?year=${year}&month=${month + 1}&day=${selectorDate.getDate()}`
         },500) // mulighet for å raskt skippe mellom mange datoer uten at siden reloader
     })
 })
@@ -139,10 +139,14 @@ const skiftVisning = document.getElementById('skiftVisning')!;
 const timeEndringDialog = skiftVisning.querySelector('dialog')!;
 const endringInputs = timeEndringDialog.querySelectorAll('input')!;
 const endringOptions = timeEndringDialog.querySelectorAll('option')!;
-let appended: string[] = [];
+
+let appended: (string)[] = [];
 
 for (let i = 1; i <= tidsplanListe.length; i++) {
-    let result = findPrevAppended(tidsplanListe[i - 1][1])
+    const brukernavn = tidsplanListe[i-1][1];
+
+    let rowStart = findAppendedRow(brukernavn)
+
     const skift = document.createElement('div');
     const starttidTime = tidsplanListe[i - 1][3].split('T')[1].split(':');
     const sluttidTime = tidsplanListe[i - 1][4].split('T')[1].split(':');
@@ -150,14 +154,15 @@ for (let i = 1; i <= tidsplanListe.length; i++) {
     skift.style.gridColumnEnd = `calc(4 * ${Number(sluttidTime[0]) + Number(sluttidTime[1])/60} + 1)`;
     skift.style.display = 'flex';
     skift.classList.add('skift');
-    if (result == null) {
-        skift.style.gridRowStart = `${i}`;
 
+    if (rowStart == undefined) {
+        appended.push(brukernavn)
+        skift.style.gridRowStart = `${appended.length}`;
         const ansatt = document.createElement('span');
         ansatt.innerText = `${tidsplanListe[i - 1][2]}`
         ansattDiv.appendChild(ansatt);
-        appended[i - 1] = tidsplanListe[i - 1][1];
-    } else skift.style.gridRowStart = `${result + 1}`;
+    } else skift.style.gridRowStart = `${rowStart}`;
+
 
     tidsplanDiv.appendChild(skift);
     skift.addEventListener('click', () => {
@@ -173,14 +178,23 @@ for (let i = 1; i <= tidsplanListe.length; i++) {
     })
 }
 
+function findAppendedRow(a: string) {
+    for (let i = 0; i < appended.length; i++)
+        if (appended[i] == a) return i + 1;
+    return undefined;
+}
+
 document.getElementById('avbrytTimeEndring')!.addEventListener('click', () => {
     timeEndringDialog.close();
 })
 
+const timeAnsattDialog = document.querySelector('.raskInfo')!.querySelector('dialog')!;
+const leggTilInputs = timeAnsattDialog.querySelectorAll('input')!;
+document.getElementById('leggTilAnsatt')!.addEventListener('click', () => {
+    leggTilInputs[0].value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
+    timeAnsattDialog.showModal();
+})
 
-function findPrevAppended(a: string | undefined) {
-    for (let i = 0; i < appended.length; i++) {
-        if (appended[i] == a) return i;
-    }
-    return undefined;
-}
+document.getElementById('avbrytTimeAnsatt')!.addEventListener('click', () => {
+    timeAnsattDialog.close();
+})
