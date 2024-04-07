@@ -138,50 +138,41 @@ const ansattDiv = document.getElementById('ansatte')!;
 const skiftVisning = document.getElementById('skiftVisning')!;
 const timeEndringDialog = skiftVisning.querySelector('dialog')!;
 const endringInputs = timeEndringDialog.querySelectorAll('input')!;
-const endringOptions = timeEndringDialog.querySelectorAll('option')!;
+const endringSelect = timeEndringDialog.querySelector('select')!;
 
-let appended: (string)[] = [];
+const rows = new Map<string, number>();
 
-for (let i = 1; i <= tidsplanListe.length; i++) {
-    const brukernavn = tidsplanListe[i-1][1];
-
-    let rowStart = findAppendedRow(brukernavn)
+for (let i = 0; i < tidsplanListe.length; i++) {
+    const tidsplan = tidsplanListe[i];
+    const brukernavn = tidsplan[1];
+    const rowStart = rows.get(brukernavn);
 
     const skift = document.createElement('div');
-    const starttidTime = tidsplanListe[i - 1][3].split('T')[1].split(':');
-    const sluttidTime = tidsplanListe[i - 1][4].split('T')[1].split(':');
-    skift.style.gridColumnStart = `calc(4 * ${Number(starttidTime[0]) + Number(starttidTime[1])/60} + 1)`;
-    skift.style.gridColumnEnd = `calc(4 * ${Number(sluttidTime[0]) + Number(sluttidTime[1])/60} + 1)`;
-    skift.style.display = 'flex';
-    skift.classList.add('skift');
+    const startTidTime = +tidsplan[3].slice(11, 13);
+    const startTidMin = +tidsplan[3].slice(14, 16);
+    const sluttTidTime = +tidsplan[4].slice(11, 13);
+    const sluttTidMin = +tidsplan[4].slice(14, 16);
+    skift.style.left = `${(startTidTime + startTidMin / 60) / 0.24}%`;
+    skift.style.right = `${(24 - sluttTidTime - sluttTidMin / 60) / 0.24}%`;
+    skift.className = 'skift';
 
-    if (rowStart == undefined) {
-        appended.push(brukernavn)
-        skift.style.gridRowStart = `${appended.length}`;
+    if (rowStart == null) {
+        skift.style.top = `${rows.size * 12.5}%`;
+        rows.set(brukernavn, rows.size);
         const ansatt = document.createElement('span');
-        ansatt.innerText = `${tidsplanListe[i - 1][2]}`
-        ansattDiv.appendChild(ansatt);
-    } else skift.style.gridRowStart = `${rowStart}`;
+        ansatt.textContent = tidsplan[2] as any;
+        ansattDiv.append(ansatt);
+    } else skift.style.top = `${rowStart * 12.5}%`;
 
-
-    tidsplanDiv.appendChild(skift);
+    tidsplanDiv.append(skift);
     skift.addEventListener('click', () => {
-        const tidsplan = tidsplanListe[i - 1];
-        endringInputs[0].value = `${tidsplan[0]}`;
-        endringInputs[1].value = tidsplan[3].split('T')[0];
-        endringInputs[2].value = `${starttidTime[0]}:${starttidTime[1]}`
-        endringInputs[3].value = `${sluttidTime[0]}:${sluttidTime[1]}`
-        endringOptions.forEach((option => {
-            if (Number(option.value) == tidsplan[5]) option.selected = true;
-        }))
+        endringInputs[0].value = tidsplan[0] as any;
+        endringInputs[1].value = tidsplan[3].slice(0, 10);
+        endringInputs[2].value = tidsplan[3].slice(11, 16);
+        endringInputs[3].value = tidsplan[4].slice(11, 16);
+        endringSelect.value = tidsplan[5] as any;
         timeEndringDialog.showModal();
     })
-}
-
-function findAppendedRow(a: string) {
-    for (let i = 0; i < appended.length; i++)
-        if (appended[i] == a) return i + 1;
-    return undefined;
 }
 
 document.getElementById('avbrytTimeEndring')!.addEventListener('click', () => {

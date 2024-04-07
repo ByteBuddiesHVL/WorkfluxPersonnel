@@ -86,13 +86,13 @@ public class Tidsplan {
     }
 
     public String toString() {
-        return "[\"" +
-                tidsplanId + "\",\"" +
+        return "[" +
+                tidsplanId + ",\"" +
                 ansattId.getBrukernavn() + "\",\"" +
                 ansattId.getFornavn() + " " + ansattId.getEtternavn() + "\",\"" +
-                starttid.toString() + "\",\"" +
-                sluttid.toString() + "\",\"" +
-                typeId.getTidsplantypeId() + "\",\"" +
+                starttid + "\",\"" +
+                sluttid + "\"," +
+                typeId.getTidsplantypeId() + ",\"" +
                 typeId.getType() + "\"]";
     }
 }
