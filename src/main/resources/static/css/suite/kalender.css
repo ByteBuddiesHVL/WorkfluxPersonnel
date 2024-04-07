@@ -256,6 +256,7 @@
     border-radius: .5em;
     box-shadow: 4px 4px 6px #00000059;
     margin: 2px;
+    cursor: pointer;
 }
 
 /* GRID LINES */

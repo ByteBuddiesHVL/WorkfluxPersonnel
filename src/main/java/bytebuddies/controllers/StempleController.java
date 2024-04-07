@@ -72,14 +72,14 @@ public class StempleController {
             case "Inn":
                 // check if tidsplan == lunsj ... etc
                 if (tidsplan != null) tidsplanService.endTidsplan(tidsplan,time);
-                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time,null,typeSalg,false));
+                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time.withSecond(0),null,typeSalg,false));
                 break;
             case "Ut":
                 if (tidsplan == null) break;
                 LocalDate startDate = tidsplan.getStarttid().toLocalDate();
                 LocalDate dateNow = time.toLocalDate();
                 if (startDate.isEqual(dateNow))
-                    tidsplanService.endTidsplan(tidsplan,time);
+                    tidsplanService.endTidsplan(tidsplan,time.withSecond(59));
                 else if (startDate.isBefore(dateNow)){
                     tidsplanService.endTidsplan(tidsplan,startDate.atTime(23,59,59));
                     tidsplanService.saveTidsplan(new Tidsplan(ansatt,dateNow.atTime(0,0,0),time,tidsplan.getTypeId(),false));

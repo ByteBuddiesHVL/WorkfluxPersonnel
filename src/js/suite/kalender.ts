@@ -162,10 +162,14 @@ for (let j = 1; j <= (numHoriz - 1); j += 2) {
     tidsplanDiv.appendChild(gridBox);
 }
 
-let appended: number[] = [];
+const skiftVisning = document.getElementById('skiftVisning')!;
+const timeEndringDialog = skiftVisning.querySelector('dialog')!;
+const endringInputs = timeEndringDialog.querySelectorAll('input')!;
+const endringOptions = timeEndringDialog.querySelectorAll('option')!;
+let appended: string[] = [];
 
 for (let i = 1; i <= tidsplanListe.length; i++) {
-    let result = findPrevAppended(Number(tidsplanListe[i - 1][1]))
+    let result = findPrevAppended(tidsplanListe[i - 1][1])
     const skift = document.createElement('div');
     const starttidTime = tidsplanListe[i - 1][3].split('T')[1].split(':');
     const sluttidTime = tidsplanListe[i - 1][4].split('T')[1].split(':');
@@ -179,14 +183,29 @@ for (let i = 1; i <= tidsplanListe.length; i++) {
         const ansatt = document.createElement('span');
         ansatt.innerText = `${tidsplanListe[i - 1][2]}`
         ansattDiv.appendChild(ansatt);
-        appended[i - 1] = Number(tidsplanListe[i - 1][1]);
+        appended[i - 1] = tidsplanListe[i - 1][1];
     } else skift.style.gridRowStart = `${result + 1}`;
 
     tidsplanDiv.appendChild(skift);
-
+    skift.addEventListener('click', () => {
+        const tidsplan = tidsplanListe[i - 1];
+        endringInputs[0].value = `${tidsplan[0]}`;
+        endringInputs[1].value = tidsplan[3].split('T')[0];
+        endringInputs[2].value = `${starttidTime[0]}:${starttidTime[1]}`
+        endringInputs[3].value = `${sluttidTime[0]}:${sluttidTime[1]}`
+        endringOptions.forEach((option => {
+            if (Number(option.value) == tidsplan[5]) option.selected = true;
+        }))
+        timeEndringDialog.showModal();
+    })
 }
 
-function findPrevAppended(a: number | undefined) {
+document.getElementById('avbrytTimeEndring')!.addEventListener('click', () => {
+    timeEndringDialog.close();
+})
+
+
+function findPrevAppended(a: string | undefined) {
     for (let i = 0; i < appended.length; i++) {
         if (appended[i] == a) return i;
     }
