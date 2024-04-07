@@ -40,8 +40,8 @@ public class TidsplanService {
      * @param id ID for den ønskede tidsplanen.
      * @return et {@link Optional} av {@link Tidsplan}.
      */
-    public Optional<Tidsplan> getTidsplan(int id) {
-        return tidsplanRepository.findById(id);
+    public Tidsplan getTidsplan(int id) {
+        return tidsplanRepository.findById(id).orElse(null);
     }
 
     /**

@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,9 @@ public class SuiteController {
     @Autowired
     TidsplanService tidsplanService;
 
+    @Autowired
+    TidsplantypeService tidsplantypeService;
+
     private LocalDate currentDate = LocalDate.now();
 
     @GetMapping("/setDagTidsplan")
@@ -56,6 +60,25 @@ public class SuiteController {
         if (year != null && month != null && day != null) {
             currentDate = LocalDate.of(year, month, day);
         }
+        return "redirect:/suite/kalender";
+    }
+
+    @PostMapping("/endreTime")
+    public String endreTime(
+            @RequestParam("tidsplanId") Integer tidsplanId,
+            @RequestParam("date") LocalDate date,
+            @RequestParam("starttid") LocalTime starttid,
+            @RequestParam("sluttid") LocalTime sluttid,
+            @RequestParam("tidsplantype") Integer typeId
+    ) {
+        Tidsplan tidsplan = tidsplanService.getTidsplan(tidsplanId);
+        Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
+
+        tidsplan.setStarttid(starttid.atDate(date).withSecond(0));
+        tidsplan.setSluttid(sluttid.atDate(date).withSecond(59));
+        tidsplan.setTypeId(type);
+        tidsplanService.saveTidsplan(tidsplan);
+
         return "redirect:/suite/kalender";
     }
 
@@ -88,7 +111,8 @@ public class SuiteController {
             else if (delside.equals("kalender")) {
                 model.addAttribute("ansatte", getAnsattString());
                 model.addAttribute("dag", currentDate.toString());
-                model.addAttribute("tidsplan",getTidsplanString());
+                model.addAttribute("tidsplan", getTidsplanString());
+                model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
             }
         }
         return "suite";

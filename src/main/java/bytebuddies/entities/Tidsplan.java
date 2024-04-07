@@ -88,7 +88,7 @@ public class Tidsplan {
     public String toString() {
         return "[\"" +
                 tidsplanId + "\",\"" +
-                ansattId.getAnsattId() + "\",\"" +
+                ansattId.getBrukernavn() + "\",\"" +
                 ansattId.getFornavn() + " " + ansattId.getEtternavn() + "\",\"" +
                 starttid.toString() + "\",\"" +
                 sluttid.toString() + "\",\"" +

@@ -159,8 +159,34 @@
                             <span>23</span>
                         </div>
                         <div id="ansatte"></div>
-                        <div id="tidsplan">
-                        </div>
+                        <div id="tidsplan"></div>
+                        <dialog id="timeEndring">
+                            <form method="post" action="/endreTime">
+                                <input type="hidden" name="tidsplanId">
+                                <input type="hidden" name="date">
+
+                                <label>
+                                    Starttid:
+                                    <input type="time" name="starttid">
+                                </label>
+                                <label>
+                                    Sluttid:
+                                    <input type="time" name="sluttid">
+                                </label>
+                                <label>
+                                    Tidsplantype:
+                                    <div class="select">
+                                        <select name="tidsplantype">
+                                            <c:forEach items="${tidsplantyper}" var="t">
+                                                <option value="${t.tidsplantypeId}">${t.type}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </label>
+                                <button id="avbrytTimeEndring" type="button">Avbryt</button>
+                                <input type="submit" value="Lagre">
+                            </form>
+                        </dialog>
                     </div>
                 </section>
             </div>

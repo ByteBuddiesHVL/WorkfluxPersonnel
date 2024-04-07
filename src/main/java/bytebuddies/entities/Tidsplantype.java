@@ -12,9 +12,13 @@ public class Tidsplantype {
 
     private String type;
 
-    public Tidsplantype(Integer tidsplantypeId, String type) {
-        this.tidsplantypeId = tidsplantypeId;
+    @ManyToOne
+    @JoinColumn(name = "bedrift_id")
+    private Bedrift bedriftId;
+
+    public Tidsplantype(String type, Bedrift bedriftId) {
         this.type = type;
+        this.bedriftId = bedriftId;
     }
 
     public Tidsplantype() {
@@ -35,4 +39,19 @@ public class Tidsplantype {
     public void setType(String type) {
         this.type = type;
     }
+
+    public Bedrift getBedriftId() {
+        return bedriftId;
+    }
+
+    public void setBedriftId(Bedrift bedriftId) {
+        this.bedriftId = bedriftId;
+    }
+
+    public String toString() {
+        return "[\"" +
+                tidsplantypeId + "\",\"" +
+                type + "\"]";
+    }
+
 }
