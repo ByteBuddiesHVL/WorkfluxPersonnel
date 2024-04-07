@@ -135,33 +135,6 @@ document.addEventListener("click", function(evt) {
 const tidsplanDiv = document.getElementById('tidsplan')!;
 const ansattDiv = document.getElementById('ansatte')!;
 
-// generate grid lines
-const numVert = 8;
-const numHoriz = 96;
-
-
-
-for (let i = 1; i <= numVert; i++) {
-    const gridBox = document.createElement('div');
-    gridBox.classList.add('gridLines');
-    gridBox.style.gridColumnStart = `${1}`
-    gridBox.style.gridColumnEnd = `${numHoriz + 3}`
-    gridBox.style.gridRowStart = `${i}`
-    gridBox.style.gridRowEnd = `${i + 1}`
-    tidsplanDiv.appendChild(gridBox);
-}
-
-for (let j = 1; j <= (numHoriz - 1); j += 2) {
-    const gridBox = document.createElement('div');
-    gridBox.classList.add('gridLines');
-    if (j % 4 === 1) gridBox.classList.add('dottedLine');
-    gridBox.style.gridColumnStart = `${j}`
-    gridBox.style.gridColumnEnd = `${j + 2}`
-    gridBox.style.gridRowStart = `${1}`
-    gridBox.style.gridRowEnd = `${numVert + 1}`
-    tidsplanDiv.appendChild(gridBox);
-}
-
 const skiftVisning = document.getElementById('skiftVisning')!;
 const timeEndringDialog = skiftVisning.querySelector('dialog')!;
 const endringInputs = timeEndringDialog.querySelectorAll('input')!;
@@ -177,7 +150,7 @@ for (let i = 1; i <= tidsplanListe.length; i++) {
     skift.style.gridColumnEnd = `calc(4 * ${Number(sluttidTime[0]) + Number(sluttidTime[1])/60} + 1)`;
     skift.style.display = 'flex';
     skift.classList.add('skift');
-    if (result == undefined) {
+    if (result == null) {
         skift.style.gridRowStart = `${i}`;
 
         const ansatt = document.createElement('span');
