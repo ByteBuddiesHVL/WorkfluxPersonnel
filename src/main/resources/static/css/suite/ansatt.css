@@ -1,5 +1,13 @@
+.suite {
+    contain: strict;
+}
+
 #ansatt {
     display: grid;
+    gap: 1em;
+    padding: 1em;
+    max-height: calc(100% - 2em);
+    grid-template-rows: auto 1fr;
 }
 
 #ansattSok {
@@ -16,7 +24,7 @@
     border-radius: 0.6em;
 }
 
-#searchBarAnsatt {
+#ansattSok > div {
     position: relative;
     display: flex;
     width: max-content;
@@ -25,13 +33,13 @@
     background: white;
 }
 
-#searchInput {
+#ansattSok input {
     border: 0;
     outline: none;
     padding: 0 0.5em 0 0;
 }
 
-#searchLogo {
+#ansattSok svg {
     width: 1em;
     stroke: currentColor;
     stroke-width: 4;
@@ -59,8 +67,46 @@
     background: #f1f1f1;
 }
 
+.table {
+    overflow: auto;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+}
+
+td {
+    padding: 0.3em 0.5em;
+    background: white;
+}
+
+th {
+    background: whitesmoke;
+    position: sticky;
+    top: 0;
+    padding: 0;
+}
+
+td,
+th > *,
+th:empty {
+    border-left: 1px solid #888;
+    border-bottom: 1px solid #888;
+}
+
+th > *,
+th:empty {
+    border-top: 1px solid #888;
+}
+
+tr > :last-child {
+    border-right: 1px solid #888;
+}
+
 th > * {
     display: grid;
+    padding: .4em .5em;
     width: 100%;
     align-items: center;
     grid-template-columns: auto 1fr;
@@ -72,7 +118,15 @@ th > ::after {
     display: inline-block;
     background-color: currentColor;
     height: 1em;
-    width: .6em;
+    width: 0.6em;
     clip-path: polygon(50% 8.5%, 0 34.29%, 14.12% 44.14%, 14.12% 55.86%, 0 65.71%, 50% 91.5%, 100% 65.71%, 85.88% 55.86%, 50% 74.36%, 14.12% 55.86%, 14.12% 44.14%, 50% 25.64%, 85.88% 44.14%, 100% 34.29%);
-    margin-left: .3rem;
+    margin-left: 0.3rem;
+}
+
+[aria-sort="ascending"] > ::after {
+    clip-path: polygon(50% 32%, 0% 57.79%, 14.12% 67.64%, 50% 49.14%, 85.88% 67.64%, 100% 57.79%);
+}
+
+[aria-sort="descending"] > ::after {
+    clip-path: polygon(14.12% 32.36%, 0% 42.21%, 50% 68%, 100% 42.21%, 85.88% 32.36%, 50% 50.86%);
 }

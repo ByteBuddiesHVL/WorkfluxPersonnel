@@ -1,18 +1,51 @@
 import type {Ansatt} from "../types";
 
-type Row = (ansatt: Ansatt) => void
+type Row = (ansatt: Ansatt | null) => void
 
 declare const ansattListe: Ansatt[];
 
 const numAnsatte = ansattListe.length;
-const searchInput = <HTMLInputElement>document.getElementById("searchInput")!;
-const searchResults = document.getElementById("searchResultWrapper")!;
+const lowerCased: Ansatt[] = Array(numAnsatte);
+const searchInput = document.querySelector("input")!;
 const rowTemplate = document.createElement("tr");
 const rows: Row[] = [];
 const table = document.querySelector("table")!;
 const tbody = table.tBodies[0];
+const headerRow = table.querySelector("tr")!;
+const btns = [...headerRow.getElementsByTagName("button")]
 
-rowTemplate.innerHTML = "<td> </td>".repeat(9) + "<td><button>Endre</button></td>";
+const sort = () => {
+    sortOrder = Array(numAnsatte);
+    for (let i = 0; i < numAnsatte; i++) {
+        sortOrder[i] = [ansattListe[i][sortId], i];
+    }
+    sortOrder.sort(([a], [b]) => {
+        return a > b ? order : a == b ? 0 : -order
+    })
+    updateTable();
+}
+
+const updateTable = () => {
+    for (let i = 0; i < numAnsatte; i++) {
+        const index = sortOrder[i][1];
+        rows[i](excluded[index] ? null : ansattListe[index]);
+    }
+}
+
+headerRow.onclick = e => {
+    const newId = btns.indexOf(e.target as HTMLButtonElement);
+    if (newId + 1) {
+        if (newId == sortId) order = order < 0 ? 1 : -1;
+        else {
+            btns[sortId].parentElement!.removeAttribute('aria-sort');
+            order = 1;
+        }
+        btns[sortId = newId].parentElement!.setAttribute('aria-sort', order > 0 ? 'ascending' : 'descending');
+        sort();
+    }
+};
+
+rowTemplate.innerHTML = "<td> </td>".repeat(8) + "<td><button>Endre</button></td>";
 
 for (let i = 0; i < numAnsatte; i++) {
     let hidden = false
@@ -20,7 +53,7 @@ for (let i = 0; i < numAnsatte; i++) {
     let tr = rowTemplate.cloneNode(true) as HTMLTableRowElement
     let cells = tr.children;
     let textNodes: Text[] = [];
-    let update = (ansatt?: Ansatt) => {
+    let update: Row = ansatt => {
         if (ansatt) {
             if (old != ansatt) {
                 for (let i = 0; i < 8; i++) {
@@ -36,50 +69,37 @@ for (let i = 0; i < numAnsatte; i++) {
             tr.style.display = hidden ? "none" : "";
         }
     }
+    let lowerCase = lowerCased[i] = Array(8) as Ansatt;
 
     (cells[8].firstChild as HTMLButtonElement).onclick = () => {
         setAnsatt(old)
     }
 
-    for (let i = 0; i < 8; i++) {
-        textNodes[i] = cells[i].firstChild as Text;
+    for (let j = 0; j < 8; j++) {
+        textNodes[j] = cells[j].firstChild as Text;
+        lowerCase[j] = j == 6 ? ansattListe[i][j] : (ansattListe[i][j] as string).toLowerCase();
     }
-
-    update(ansattListe[i]);
 
     rows[i] = update;
     tbody.append(tr);
 }
 
-
-let searchTag = "";
-let searchElems: Ansatt[] = [];
+let sortId = 0;
+let order = 1;
+let sortOrder: [string | number, number][];
+let excluded: boolean[] = [];
 
 searchInput.oninput = () => {
-    searchResults.style.display = 'flex';
-    searchTag = searchInput.value;
-    if (searchTag === '') {
-        searchResults.style.display = 'none';
-        return;
+    excluded = [];
+    const searchTerm = searchInput.value.toLowerCase();
+    const l = searchTerm.length;
+    for (let i = 0; i < numAnsatte; i++) {
+        let name = lowerCased[i][1];
+        let j = 0, pos = 0;
+        while (j < l && (pos = name.indexOf(searchTerm[j], pos) + 1)) j++;
+        excluded[i] = j < l;
     }
-    searchElems = [];
-
-    for (let i = 0, j = 0; i < numAnsatte && j < 4; i++) {
-        if (ansattListe[i][0].toLowerCase().includes(searchTag.toLowerCase()) || ansattListe[i][1].toLowerCase().includes(searchTag.toLowerCase())) {
-            searchElems[j++] = ansattListe[i];
-        }
-    }
-
-    if (searchElems.length) updateSearchResult();
-    else searchResults.style.display = 'none';
-}
-
-function updateSearchResult() {
-    let html = '';
-    searchElems.forEach(e => {
-        html += `<button class="searchResult" value="${e[0]}"><strong>${e[1]} - ${e[0]}</strong></button>`
-    })
-    searchResults.innerHTML = html;
+    updateTable();
 }
 
 const dialog = document.querySelector("dialog")!
@@ -96,7 +116,7 @@ const [
     Rstillingstype,
 ] = <HTMLInputElement[]><any>document.querySelector("form")
 
-function setAnsatt(ansatt: Ansatt) {
+const setAnsatt = (ansatt: Ansatt) => {
     dialog.showModal();
 
     Rbrukernavn.value = ansatt[0];
@@ -107,5 +127,7 @@ function setAnsatt(ansatt: Ansatt) {
     Rpostnummer.value = ansatt[5].split(' ')[0];
     Rstillingsprosent.value = <any>ansatt[6];
     // @ts-expect-error
-    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.textContent == ele[7]).value;
+    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.textContent == ansatt[7]).value;
 }
+
+sort();

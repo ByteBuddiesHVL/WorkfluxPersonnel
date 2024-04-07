@@ -168,28 +168,29 @@
             <c:if test="${delside eq 'ansatt'}">
             <div id="ansatt">
                 <div id="ansattSok">
-                    <div id="searchBarAnsatt">
-                        <input id="searchInput" type="text"  placeholder="Search..">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" id="searchLogo"><circle cx="13" cy="13" r="11"></circle><path d="m22 22l8 8"></path></svg>
+                    <div>
+                        <input placeholder="Search..">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="13" cy="13" r="11"></circle><path d="m22 22l8 8"></path></svg>
                     </div>
-                    <div id="searchResultWrapper" style="display: none"></div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th><button>Brukernavn</button></th>
-                            <th><button>Navn</button></th>
-                            <th><button>Tlf nummer</button></th>
-                            <th><button>Epost</button></th>
-                            <th><button>Adresse</button></th>
-                            <th><button>Poststed</button></th>
-                            <th><button>Stilling</button></th>
-                            <th><button>Rolle</button></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th aria-sort="ascending"><button>Brukernavn</button></th>
+                                <th><button>Navn</button></th>
+                                <th><button>Tlf&nbsp;nummer</button></th>
+                                <th><button>Epost</button></th>
+                                <th><button>Adresse</button></th>
+                                <th><button>Poststed</button></th>
+                                <th><button>Stilling</button></th>
+                                <th><button>Rolle</button></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
                 <dialog id="ansattInfo">
                     <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
                         <input type="hidden" id="Rbrukernavn" name="brukernavn">
