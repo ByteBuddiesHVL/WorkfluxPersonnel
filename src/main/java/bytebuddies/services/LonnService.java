@@ -2,6 +2,7 @@ package bytebuddies.services;
 
 import bytebuddies.TidsplanResult;
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Lonn;
 import bytebuddies.entities.Tidsplan;
 import bytebuddies.repositories.AnsattRepository;
@@ -29,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -58,7 +60,20 @@ public class LonnService {
     private TidsplanResult tidsplanResult;
     private Ansatt ansatt;
 
-    public byte[] genererLonnslipp(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
+    public List<byte[]> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
+        List<Ansatt> ansatte = ansattRepository.findAllByBedriftId(bedriftId);
+        return ansatte.stream()
+                .map(ansatt -> {
+                    try {
+                        return genererLonnsslippForAnsatt(ansatt, startDate, endDate, utbetalingsDato);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    public byte[] genererLonnsslippForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdfDoc = new PdfDocument(writer);
@@ -71,7 +86,7 @@ public class LonnService {
         float[] columnWidths1 = {170, 170};
         Table slippInformasjonTabell = new Table(UnitValue.createPointArray(columnWidths1));
         //Rad1
-        slippInformasjonTabell.addCell(new Cell(1, 2).add(new Paragraph("Lønnslipp Informasjon").setFont(font)).setTextAlignment(TextAlignment.CENTER));
+        slippInformasjonTabell.addCell(new Cell(1, 2).add(new Paragraph("Lønnsslipp Informasjon").setFont(font)).setTextAlignment(TextAlignment.CENTER));
         //Rad2
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Lønnsmottaker").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getFornavn() + ansatt.getEtternavn())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
@@ -207,4 +222,5 @@ public class LonnService {
                 new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
     }
+
 }
