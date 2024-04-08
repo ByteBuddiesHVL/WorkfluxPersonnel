@@ -5,6 +5,7 @@ import bytebuddies.entities.*;
 import bytebuddies.services.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -130,7 +132,7 @@ public class SuiteController {
                 model.addAttribute("ansatte", getAnsattString());
                 model.addAttribute("ansattListe", ansattService.getAllAnsatte());
                 model.addAttribute("dag", currentDate.toString());
-                model.addAttribute("tidsplan", getTidsplanString());
+                model.addAttribute("tidsplan", getTidsplanString(currentDate));
                 model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
             }
         }
@@ -231,6 +233,15 @@ public class SuiteController {
         return "redirect:/suite/ansatt";
     }
 
+    @GetMapping(value = "/tidsplan", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody()
+    public String hentTidsplan(
+            @RequestParam(name = "dag", required = false) LocalDate dag
+    ) {
+        // TODO beskytt med admin
+        return getTidsplanString(dag);
+    }
+
     public Admin getLoggedInAttr(HttpSession session) {
         return (Admin) session.getAttribute("loggedin");
     }
@@ -241,8 +252,9 @@ public class SuiteController {
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
-    public String getTidsplanString() {
-        return tidsplanService.getTidsplanByDate(currentDate).stream()
+    public String getTidsplanString(LocalDate dato) {
+        if (dato == null) dato = currentDate;
+        return tidsplanService.getTidsplanByDate(dato).stream()
                 .map(Tidsplan::toString)
                 .collect(Collectors.joining(",", "[", "]"));
     }

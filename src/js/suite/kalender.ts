@@ -13,7 +13,7 @@ let year = date.getFullYear();
 
 const dayCalendar = document.querySelector(".calendar-dates")!;
 
-const currDate = document.querySelector(".calendar-current-date");
+const currDate = document.querySelector(".calendar-current-date")!;
 const currDateSelector = document.querySelector<HTMLParagraphElement>(".selector-current-date")!;
 const prevNextIcons = document.querySelectorAll(".calendar-navigation span");
 const prevNextIconsSelector = document.querySelectorAll(".selector-navigation span");
@@ -78,8 +78,7 @@ const manipulate = () => {
         lit += `<li class="inactive"><a href="/hentDagTidsplan?year=${nextYear}&month=${nextMonth}&day=${nextMonthDate}">${nextMonthDate}</a></li>`
     }
 
-    // @ts-ignore
-    currDate.innerText = `${months[month]} ${year}`;
+    currDate.textContent = `${months[month]} ${year}`;
     dayCalendar.innerHTML = lit;
 }
 
@@ -182,7 +181,7 @@ document.getElementById('avbrytTimeEndring')!.addEventListener('click', () => {
 const timeAnsattDialog = document.querySelector('.raskInfo')!.querySelector('dialog')!;
 const leggTilInputs = timeAnsattDialog.querySelectorAll('input')!;
 document.getElementById('leggTilAnsatt')!.addEventListener('click', () => {
-    leggTilInputs[0].value = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`
+    leggTilInputs[0].value = date.toISOString().slice(0, 10);
     timeAnsattDialog.showModal();
 })
 
