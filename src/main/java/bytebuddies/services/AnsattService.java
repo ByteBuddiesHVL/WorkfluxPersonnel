@@ -37,4 +37,8 @@ public class AnsattService {
         ansattRepository.save(a);
         return a;
     }
+
+    public List<Ansatt> getAllAnsatteByBedrift(Bedrift bedriftId) {
+        return ansattRepository.findAllByBedriftId(bedriftId);
+    }
 }
