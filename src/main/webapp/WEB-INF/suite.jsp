@@ -71,6 +71,10 @@
                             <input name="postnummer">
                         </label>
                         <label>
+                            Timelønn:
+                            <input type="number" step=".01" min="0.00" name="timelonn">
+                        </label>
+                        <label>
                             Stillingsprosent:
                             <input type="number" step=".01" min="0.00" name="stillingsprosent">
                         </label>
@@ -264,8 +268,12 @@
                             <input name="postnummer">
                         </label>
                         <label>
+                            Timelønn:
+                            <input type="number" step=".01" min="0.00" name="timelonn">
+                        </label>
+                        <label>
                             Stillingsprosent:
-                            <input type="number" name="stillingsprosent">
+                            <input type="number" step=".01" min="0.00"  name="stillingsprosent">
                         </label>
                         <label>
                             Stillingstype:

@@ -51,6 +51,9 @@ public class SuiteController {
     @Autowired
     TidsplantypeService tidsplantypeService;
 
+    @Autowired
+    LonnService lonnService;
+
     private LocalDate currentDate = LocalDate.now();
 
     @GetMapping("/setDagTidsplan")
@@ -168,12 +171,13 @@ public class SuiteController {
             @RequestParam("gatenavn") String gatenavn,
             @RequestParam("gatenummer") String gatenummer,
             @RequestParam("postnummer") String postnummer,
+            @RequestParam("timelonn") Float timelonn,
             @RequestParam("stillingsprosent") Float stillingsprosent,
             @RequestParam("stillingstype") Integer stillingstype,
             HttpSession session,
             RedirectAttributes attributes
     ) {
-        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype);
+        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,timelonn,stillingsprosent,stillingstype);
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
             Admin admin = getLoggedInAttr(session);
@@ -182,8 +186,9 @@ public class SuiteController {
                 return "redirect:/suite";
             }
             Bedrift bedrift = admin.getBedriftId();
-            Ansatt ansatt = valServ.lagAnsatt(bedrift,fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstype,etternavn);
+            Ansatt ansatt = valServ.lagAnsatt(bedrift,fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,timelonn,stillingsprosent,stillingstype,etternavn);
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
+            lonnService.lagreLonn(timelonn,null);
         }
         return "redirect:/suite/personal";
     }
@@ -198,6 +203,7 @@ public class SuiteController {
             @RequestParam("gatenavn") String gatenavn,
             @RequestParam("gatenummer") String gatenummer,
             @RequestParam("postnummer") String postnummer,
+            @RequestParam("timelonn") Float timelonn,
             @RequestParam("stillingsprosent") Float stillingsprosent,
             @RequestParam("stillingstype") Integer stillingstypeId,
             @RequestParam(required = false, defaultValue = "false") boolean slettAnsatt,
@@ -209,7 +215,7 @@ public class SuiteController {
             ansattService.deleteAnsattByBrukernavn(brukernavn);
             return "redirect:/suite/ansatt";
         }
-        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,stillingsprosent,stillingstypeId);
+        String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,timelonn,stillingsprosent,stillingstypeId);
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
             Admin admin = getLoggedInAttr(session);
@@ -230,7 +236,9 @@ public class SuiteController {
             ansatt.getAdresseId().getPostnummer().setPostnummer(postnummer);
             ansatt.setStillingsprosent(stillingsprosent);
             ansatt.setStillingstypeId(stillingstype);
+            ansatt.setLonnId(lonnService.lagreLonn(timelonn,null));
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
+
         }
         return "redirect:/suite/ansatt";
     }

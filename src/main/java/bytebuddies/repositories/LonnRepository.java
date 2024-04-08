@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface LonnRepository extends JpaRepository<Lonn, Integer> {
-    Optional<Lonn> getLonnByAnsattId(Ansatt ansatt);
-}
+public interface LonnRepository extends JpaRepository<Lonn, Integer> {}

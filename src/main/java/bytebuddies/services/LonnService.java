@@ -45,22 +45,15 @@ public class LonnService {
     @Autowired
     private TidsplanService tidsplanService;
 
-    public Float finnTimelonnForAnsatt(Ansatt ansatt) {
-        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElse(null);
-        if (lonn != null) return lonn.getTimelonn();
-        return null;
-    }
-
-    public Float finnArslonnForAnsatt(Ansatt ansatt) {
-        Lonn lonn = lonnRepository.getLonnByAnsattId(ansatt).orElse(null);
-        if (lonn != null) return lonn.getArslonn();
-        return null;
+    public Lonn lagreLonn(Float timelonn, Float arslonn) {
+        return lonnRepository.save(new Lonn(timelonn,arslonn,LocalDate.now()));
     }
 
     private TidsplanResult tidsplanResult;
     private Ansatt ansatt;
 
     private double skatt = 0.0;
+    private float timelonn = 0.0F;
 
     public List<byte[]> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
         List<Ansatt> ansatte = ansattRepository.findAllByBedriftId(bedriftId);
@@ -140,8 +133,8 @@ public class LonnService {
         lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
         //Rad9
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Feriepengegrunnlag")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
-        IntStream.range(0, 5).forEach(i -> lonnslippTabell.addCell(lagTomCelle()));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(finnArslonnForAnsatt(ansatt).toString())).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
+        IntStream.range(0, 6).forEach(i -> lonnslippTabell.addCell(lagTomCelle()));
+        //lonnslippTabell.addCell(new Cell().add(new Paragraph((ansatt.getLonnId().).toString())).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER));
         //Rad10
         lagTomRad().forEach(lonnslippTabell::addCell);
         //Rad11
@@ -149,7 +142,7 @@ public class LonnService {
         //Rad12
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("")));
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("Netto utbetalt").setFont(font)).setBorderRight(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(nettoskatt(finnTimelonnForAnsatt(ansatt)*tidsplanResult.getTimer())))).setBorderLeft(Border.NO_BORDER));
+        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(nettoskatt((timelonn)*tidsplanResult.getTimer())))).setBorderLeft(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Utbetalt til").setFont(font)).setBorderRight(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("xxxx xx xxxxx")).setBorderLeft(Border.NO_BORDER));
 
@@ -187,7 +180,7 @@ public class LonnService {
 
     private List<Cell> timelonn(LocalDate endDate) {
         float timer = tidsplanResult.getTimer();
-        float timelonn = finnTimelonnForAnsatt(ansatt);
+        timelonn = ansatt.getLonnId().getTimelonn();
         float totalTimer = tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate);
 
         return Arrays.asList(
@@ -202,7 +195,6 @@ public class LonnService {
     }
 
     private List<Cell> skattetrekk(LocalDate endDate) {
-        float timelonn = finnTimelonnForAnsatt(ansatt);
         float timer = tidsplanResult.getTimer();
         float bruttolonn = timelonn * timer;
         skatt = skattefratak(bruttolonn);
@@ -221,7 +213,6 @@ public class LonnService {
     }
 
     private List<Cell> bruttolonn(LocalDate endDate) {
-        float timelonn = finnTimelonnForAnsatt(ansatt);
         float timer = tidsplanResult.getTimer();
         float bruttolonn = timelonn * timer;
 

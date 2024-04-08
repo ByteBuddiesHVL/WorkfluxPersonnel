@@ -76,32 +76,4 @@ public class DevController {
         adminService.saveAdmin(new Admin(bedrift,brukernavn,new Passord(hash,salt)));
         return "redirect:/dev-tools";
     }
-
-    @PostMapping("/lagreAnsatt")
-    public String lagreAnsatt(
-            @RequestParam("forkortelse") String bedriftF,
-            @RequestParam("fornavn") String fornavn,
-            @RequestParam("etternavn") String etternavn,
-            @RequestParam("telefonnummer") String telefonnummer,
-            @RequestParam("epost") String epost,
-            @RequestParam("gatenavn") String gatenavn,
-            @RequestParam("gatenummer") String gatenummer,
-            @RequestParam("postnummer") String postnummer,
-            @RequestParam("stillingsprosent") Float stillingsprosent,
-            @RequestParam("stillingstype") Integer stillingstypeId,
-            @RequestParam("passord") String passord
-    ) {
-        Bedrift b = bedriftService.findBedrift(bedriftF);
-        if (b == null) return ""; //something
-        Adresse a = adresseService.saveAdresse(new Adresse(gatenavn, gatenummer, postnummerService.findPostnummer(postnummer), true));
-
-        String salt = passordService.genererTilfeldigSalt();
-        String hash = passordService.hashMedSalt(passord, salt);
-
-        Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
-
-        Ansatt ansatt = new Ansatt(b, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, a, true, stillingsprosent, stillingstype);
-        ansattService.saveAnsatt(ansatt,bedriftF);
-        return "redirect:/dev-tools";
-    }
 }

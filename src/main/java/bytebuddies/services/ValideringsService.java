@@ -28,6 +28,9 @@ public class ValideringsService {
     @Autowired
     StillingstypeService stillingstypeService;
 
+    @Autowired
+    LonnService lonnService;
+
     public Ansatt lagAnsatt(
             Bedrift bedrift,
             String fornavn,
@@ -37,6 +40,7 @@ public class ValideringsService {
             String gatenavn,
             String gatenummer,
             String postnummer,
+            Float timelonn,
             Float stillingsprosent,
             Integer stillingstypeId,
             String passord
@@ -50,7 +54,7 @@ public class ValideringsService {
 
         Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
 
-        return new Ansatt(bedrift, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, adresse, true, stillingsprosent, stillingstype);
+        return new Ansatt(bedrift, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, adresse, true, lonnService.lagreLonn(timelonn,null), stillingsprosent, stillingstype);
     }
 
     public String validerAdmin(String brukernavn, String passord, HttpSession session) {
@@ -71,6 +75,7 @@ public class ValideringsService {
             String gatenavn,
             String gatenummer,
             String postnummer,
+            Float timelonn,
             Float stillingsprosent,
             Integer stillingstype
     ) {
@@ -82,6 +87,7 @@ public class ValideringsService {
         //gatenummer
         if (!postnummer.matches("^\\d{4}$")) return "Ikke gyldig postnummer";
         if (postnummerService.findPostnummer(postnummer) == null) return "Postnummer eksisterer ikke"; // postnummerdatabasen bør oppdateres ofte
+        if (timelonn < 0.0) return "Ikke gyldig timelonn";
         if (stillingsprosent > 100 || stillingsprosent < 0) return "Ikke gyldig stillingsprosent";
         if (stillingstypeService.getStillingstype(stillingstype) == null) return "Ingen type på denne id-en";
         return null;

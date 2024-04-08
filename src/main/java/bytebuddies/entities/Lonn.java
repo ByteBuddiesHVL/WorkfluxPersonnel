@@ -11,17 +11,11 @@ public class Lonn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lonn_id")
     private Integer lonnId;
-
-    @ManyToOne
-    @JoinColumn(name = "ansatt_id")
-    private Ansatt ansattId;
-
-    private float timelonn; //kan være null (da er arslonn ikke null)
-    private float arslonn; //kan være null (da er timelonn ikke null)
+    private Float timelonn; //kan være null (da er arslonn ikke null)
+    private Float arslonn; //kan være null (da er timelonn ikke null)
     private LocalDate virkningsdato;
 
-    public Lonn(Ansatt ansattId, float timelonn, float arslonn, LocalDate virkningsdato) {
-        this.ansattId = ansattId;
+    public Lonn(Float timelonn, Float arslonn, LocalDate virkningsdato) {
         this.timelonn = timelonn;
         this.arslonn = arslonn;
         this.virkningsdato = virkningsdato;
@@ -37,27 +31,19 @@ public class Lonn {
         this.lonnId = lonnId;
     }
 
-    public Ansatt getAnsattId() {
-        return ansattId;
-    }
-
-    public void setAnsattId(Ansatt ansattId) {
-        this.ansattId = ansattId;
-    }
-
-    public float getTimelonn() {
+    public Float getTimelonn() {
         return timelonn;
     }
 
-    public void setTimelonn(float timelonn) {
+    public void setTimelonn(Float timelonn) {
         this.timelonn = timelonn;
     }
 
-    public float getArslonn() {
+    public Float getArslonn() {
         return arslonn;
     }
 
-    public void setArslonn(float arslonn) {
+    public void setArslonn(Float arslonn) {
         this.arslonn = arslonn;
     }
 

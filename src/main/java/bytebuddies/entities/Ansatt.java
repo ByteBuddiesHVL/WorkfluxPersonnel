@@ -28,16 +28,18 @@ public class Ansatt {
     private Adresse adresseId;
     @Column(name = "is_active")
     private boolean isActive;
+    @OneToOne
+    @JoinColumn(name = "lonn_id")
+    private Lonn lonnId;
     private float stillingsprosent;
-
     @ManyToOne
     @JoinColumn(name = "stillingstype_id")
     private Stillingstype stillingstypeId;
 
     public Ansatt(){}
 
-    public Ansatt(Bedrift bedrift, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, Float stillingsprosent, Stillingstype stillingstypeId) {
-        this.bedriftId = bedrift;
+    public Ansatt(Bedrift bedriftId, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, Lonn lonnId, float stillingsprosent, Stillingstype stillingstypeId) {
+        this.bedriftId = bedriftId;
         this.passord = passord;
         this.fornavn = fornavn;
         this.etternavn = etternavn;
@@ -45,6 +47,7 @@ public class Ansatt {
         this.epost = epost;
         this.adresseId = adresseId;
         this.isActive = isActive;
+        this.lonnId = lonnId;
         this.stillingsprosent = stillingsprosent;
         this.stillingstypeId = stillingstypeId;
     }
@@ -129,6 +132,14 @@ public class Ansatt {
         isActive = active;
     }
 
+    public Lonn getLonnId() {
+        return lonnId;
+    }
+
+    public void setLonnId(Lonn lonnId) {
+        this.lonnId = lonnId;
+    }
+
     public float getStillingsprosent() {
         return stillingsprosent;
     }
@@ -156,6 +167,7 @@ public class Ansatt {
                 adresseId.getGatenummer() + "\",\"" +
                 post.getPostnummer() + " " +
                 post.getPoststed() + "\"," +
+                lonnId.getTimelonn() + "," +
                 String.format(Locale.US,"%.2f", stillingsprosent) + ",\"" +
                 stillingstypeId.getStillingstype() + "\"]";
     }
