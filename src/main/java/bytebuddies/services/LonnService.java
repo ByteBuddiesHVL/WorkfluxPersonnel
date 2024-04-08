@@ -60,6 +60,8 @@ public class LonnService {
     private TidsplanResult tidsplanResult;
     private Ansatt ansatt;
 
+    private double skatt = 0.0;
+
     public List<byte[]> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
         List<Ansatt> ansatte = ansattRepository.findAllByBedriftId(bedriftId);
         return ansatte.stream()
@@ -123,9 +125,9 @@ public class LonnService {
         //Rad3
         timelonn(endDate).forEach(lonnslippTabell::addCell);
         //Rad4
-        skattetrekk().forEach(lonnslippTabell::addCell);
+        skattetrekk(endDate).forEach(lonnslippTabell::addCell);
         //Rad5
-        bruttolonn().forEach(lonnslippTabell::addCell);
+        bruttolonn(endDate).forEach(lonnslippTabell::addCell);
         //Rad6
         lagTomRad().forEach(lonnslippTabell::addCell);
         //Rad7
@@ -147,9 +149,9 @@ public class LonnService {
         //Rad12
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("")));
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("Netto utbetalt").setFont(font)).setBorderRight(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderLeft(Border.NO_BORDER));
+        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(nettoskatt(finnTimelonnForAnsatt(ansatt)*tidsplanResult.getTimer())))).setBorderLeft(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Utbetalt til").setFont(font)).setBorderRight(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph("")).setBorderLeft(Border.NO_BORDER));
+        lonnslippTabell.addCell(new Cell().add(new Paragraph("xxxx xx xxxxx")).setBorderLeft(Border.NO_BORDER));
 
 
         document.add(slippInformasjonTabell);
@@ -199,28 +201,49 @@ public class LonnService {
         );
     }
 
-    private List<Cell> skattetrekk() {
+    private List<Cell> skattetrekk(LocalDate endDate) {
+        float timelonn = finnTimelonnForAnsatt(ansatt);
+        float timer = tidsplanResult.getTimer();
+        float bruttolonn = timelonn * timer;
+        skatt = skattefratak(bruttolonn);
+
+        float totalTimer = (tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate));
+
         return Arrays.asList(
                 new Cell().add(new Paragraph("Skattetrekk")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
-                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(30))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
                 lagTomCelle(),
-                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(skatt))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
-                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
+                new Cell().add(new Paragraph(String.valueOf(skattefratak(totalTimer*timelonn)))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
     }
 
-    private List<Cell> bruttolonn() {
+    private List<Cell> bruttolonn(LocalDate endDate) {
+        float timelonn = finnTimelonnForAnsatt(ansatt);
+        float timer = tidsplanResult.getTimer();
+        float bruttolonn = timelonn * timer;
+
+        float totalTimer = (tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate));
+
         return Arrays.asList(
                 new Cell().add(new Paragraph("Brutto Lønn")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
                 lagTomCelle(),
                 lagTomCelle(),
-                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(String.valueOf(bruttolonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
-                new Cell().add(new Paragraph("")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
+                new Cell().add(new Paragraph(String.valueOf(totalTimer*timelonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
+    }
+
+    private double skattefratak(double lonn){
+        return -(lonn - ((double) 70000/12) * 0.3);
+    }
+
+    private double nettoskatt(double lonn){
+        return (lonn - ((double) 70000/12)) * 0.7 + ((double) 70000/12);
     }
 
 }
