@@ -77,7 +77,7 @@ public class SuiteController {
         Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
 
         tidsplan.setStarttid(starttid.atDate(date).withSecond(0));
-        tidsplan.setSluttid(sluttid.atDate(date).withSecond(59));
+        tidsplan.setSluttid(sluttid.atDate(date).withSecond(0));
         tidsplan.setTypeId(type);
         tidsplanService.saveTidsplan(tidsplan);
 
