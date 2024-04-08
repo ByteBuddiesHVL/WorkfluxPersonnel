@@ -97,41 +97,17 @@
             <c:if test="${delside eq 'kalender'}">
             <div id="kalender">
                 <section class="datoVelger">
-                    <div class="smallDate-selector">
-                        <span class="calendar-icon" id="monthIcon"></span>
-                        <p class="selector-current-date"></p>
-                        <div class="selector-navigation">
-                            <span id="selector-prev" class="chevron"></span>
-                            <span id="selector-next" class="chevron right"></span>
-                        </div>
-                    </div>
-                    <div class="calendar-container" id="calendarPopup" style="display: none">
-                        <div class="calendar-header">
-                            <p class="calendar-current-date"></p>
-                            <div class="calendar-navigation">
-                                <span id="calendar-prev" class="chevron"></span>
-                                <span id="calendar-next" class="chevron right"></span>
-                            </div>
-                        </div>
-
-                        <div class="calendar-body">
-                            <ul class="calendar-weekdays">
-                                <li>Mon</li>
-                                <li>Tue</li>
-                                <li>Wed</li>
-                                <li>Thu</li>
-                                <li>Fri</li>
-                                <li>Sat</li>
-                                <li>Sun</li>
-                            </ul>
-                            <ul class="calendar-dates"></ul>
-                        </div>
-                    </div>
+                    <label>
+                        Dag:
+                        <input type="date" value="${dag}">
+                    </label>
+                    <button class="chevron"></button>
+                    <button class="chevron right"></button>
                 </section>
                 <section class="raskInfo">
                     <button id="leggTilAnsatt">Legg til nytt skift</button>
                     <dialog id="timeAnsatt">
-                        <form method="post" action="/timeAnsatt">
+                        <form action="/timeAnsatt">
                             <input type="hidden" name="date">
 
                             <label>
@@ -199,7 +175,7 @@
                         <div id="ansatte"></div>
                         <div id="tidsplan"></div>
                         <dialog id="timeEndring">
-                            <form method="post" action="/endreTime">
+                            <form action="/endreTime">
                                 <input type="hidden" name="tidsplanId">
                                 <input type="hidden" name="date">
 
@@ -325,7 +301,6 @@
             let ansattListe = ${ansatte};
             <c:if test="${not empty tidsplan}">
             let tidsplanListe = ${tidsplan};
-            let dag = '${dag}';
             </c:if>
         </script>
     </c:if>

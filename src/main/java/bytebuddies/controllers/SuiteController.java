@@ -65,7 +65,8 @@ public class SuiteController {
         return "redirect:/suite/kalender";
     }
 
-    @PostMapping("/endreTime")
+    @PostMapping(value = "/endreTime", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody()
     public String endreTime(
             @RequestParam("tidsplanId") Integer tidsplanId,
             @RequestParam("date") LocalDate date,
@@ -81,10 +82,11 @@ public class SuiteController {
         tidsplan.setTypeId(type);
         tidsplanService.saveTidsplan(tidsplan);
 
-        return "redirect:/suite/kalender";
+        return getTidsplanString(date);
     }
 
-    @PostMapping("/timeAnsatt")
+    @PostMapping(value = "/timeAnsatt", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody()
     public String endreTime(
             @RequestParam("date") LocalDate date,
             @RequestParam("brukernavn") String brukernavn,
@@ -99,7 +101,7 @@ public class SuiteController {
             Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0),sluttid.atDate(date).withSecond(0),type,false);
             tidsplanService.saveTidsplan(tidsplan);
         }
-        return "redirect:/suite/kalender";
+        return getTidsplanString(date);
     }
 
     @GetMapping("/suite")
