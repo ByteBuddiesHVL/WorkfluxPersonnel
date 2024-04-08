@@ -6,12 +6,17 @@
     grid-template-columns: 2em 25% 2% auto 20% 2em;
 }
 
-#personal > button {
+#personal > section {
     grid-column-start: 5;
     grid-column-end: 6;
     grid-row-start: 2;
     grid-row-end: 3;
 
+    display: flex;
+    flex-direction: column;
+}
+
+#personal button {
     background-color:  lightgray;
     z-index: 2;
     border-radius: 1em;
@@ -21,7 +26,7 @@
     cursor: pointer;
 }
 
-#nyAnsattWindow {
+dialog {
     border: 1px solid black;
     background-color: lightgray;
     color: #2d2d2d;
@@ -30,7 +35,7 @@
     border-radius: 0.6em;
 }
 
-#nyAnsattWindow #lag {
+dialog input[type=submit] {
     background-color: lightgray;
     font-family: "Roboto",sans-serif;
     color: #2d2d2d;
@@ -38,5 +43,8 @@
     box-shadow: 5px 5px 5px #00000036;
     border-radius: 1em;
     border: 2px solid black;
+}
 
+#lonnsslippForm > div {
+    display: flex;
 }

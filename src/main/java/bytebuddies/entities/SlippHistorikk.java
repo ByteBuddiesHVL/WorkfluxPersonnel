@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(schema = "Workflux")
+@Table(schema = "Workflux",name = "slipphistorikk")
 public class SlippHistorikk {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,17 +16,22 @@ public class SlippHistorikk {
     @JoinColumn(name = "ansatt_id")
     private Ansatt ansattId;
     private LocalDate dato;
-    private float brutto;
-    private float skatt;
-    private float netto;
+    private Float brutto;
+    private Float skatt;
+    private Float netto;
+    @Column(name = "file_data")
+    private byte[] fileData;
 
-    public SlippHistorikk(Ansatt ansattId, LocalDate dato, float brutto, float skatt, float netto) {
+    public SlippHistorikk(Ansatt ansattId, LocalDate dato, Float brutto, Float skatt, Float netto, byte[] fileData) {
         this.ansattId = ansattId;
         this.dato = dato;
         this.brutto = brutto;
         this.skatt = skatt;
         this.netto = netto;
+        this.fileData = fileData;
     }
+
+
 
     public SlippHistorikk() {}
 
@@ -54,27 +59,35 @@ public class SlippHistorikk {
         this.dato = dato;
     }
 
-    public float getBrutto() {
+    public Float getBrutto() {
         return brutto;
     }
 
-    public void setBrutto(float brutto) {
+    public void setBrutto(Float brutto) {
         this.brutto = brutto;
     }
 
-    public float getSkatt() {
+    public Float getSkatt() {
         return skatt;
     }
 
-    public void setSkatt(float skatt) {
+    public void setSkatt(Float skatt) {
         this.skatt = skatt;
     }
 
-    public float getNetto() {
+    public Float getNetto() {
         return netto;
     }
 
-    public void setNetto(float netto) {
+    public void setNetto(Float netto) {
         this.netto = netto;
+    }
+
+    public byte[] getFileData() {
+        return fileData;
+    }
+
+    public void setFileData(byte[] fileData) {
+        this.fileData = fileData;
     }
 }

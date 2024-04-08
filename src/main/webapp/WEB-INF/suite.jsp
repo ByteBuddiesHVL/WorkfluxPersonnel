@@ -38,64 +38,104 @@
             </c:if>
             <c:if test="${delside eq 'personal'}">
             <div id="personal">
-                <button type="button" id="nyAnsatt">Ny Ansatt</button>
-                <dialog id="nyAnsattWindow">
-                    <h2>Lag ansatt</h2>
-                    <form id="navn" method="post" action="/nyAnsatt">
-                        <label>
-                            Fornavn:
-                            <input name="fornavn">
-                        </label>
-                        <label>
-                            Etternavn:
-                            <input name="etternavn">
-                        </label>
-                        <label>
-                            Telefonnummer:
-                            <input name="telefonnummer">
-                        </label>
-                        <label>
-                            Epost:
-                            <input type="email" name="epost">
-                        </label>
-                        <label>
-                            Gatenavn:
-                            <input name="gatenavn">
-                        </label>
-                        <label>
-                            Gatenummer:
-                            <input name="gatenummer">
-                        </label>
-                        <label>
-                            Postnummer:
-                            <input name="postnummer">
-                        </label>
-                        <label>
-                            Timelønn:
-                            <input type="number" step=".01" min="0.00" name="timelonn">
-                        </label>
-                        <label>
-                            Stillingsprosent:
-                            <input type="number" step=".01" min="0.00" name="stillingsprosent">
-                        </label>
-                        <label>
-                            Stillingstype:
-                            <div class="select">
-                                <select name="stillingstype">
-                                    <c:forEach items="${stillingstyper}" var="s">
-                                        <option value="${s.stillingstypeId}">${s.stillingstype}</option>
-                                    </c:forEach>
-                                </select>
+                <section>
+                    <a href="/getLonnsslipp?filnavn=2024-04-08_wf000002">2024-04-08_wf000002.pdf</a>
+                    <div id="lonnslippDiv">
+                        <button type="button" id="lagLonnsslipper">Lag Lønnsslipper</button>
+                        <dialog id="lonnsslippWindow">
+                            <h2>Generer lønnsslipper</h2>
+                            <form id="lonnsslippForm" method="post" action="/genererLonnsslipper">
+                                <label>
+                                    Måned for generering:
+                                    <input type="month" name="month" required>
+                                </label>
+                                <div>
+                                    <input type="radio" id="radio1" name="for" value="all" required checked>
+                                    <label for="radio1">Alle</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="radio2" name="for" value="one" required>
+                                    <label for="radio2">
+                                        Enkel:
+                                        <div class="select">
+                                            <select name="brukernavn">
+                                                <c:forEach items="${ansattListe}" var="a">
+                                                    <option value="${a.brukernavn}">${a.brukernavn} - ${a.fornavn} ${a.etternavn}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                    </label>
+                                </div>
+                            </form>
+                            <div>
+                                <input type="submit" id="lagSlipper" value="Generer" form="lonnsslippForm">
+                                <form method="dialog">
+                                    <button class="button">Lukk</button>
+                                </form>
                             </div>
-                        </label>
-                    </form>
-                    <div>
-                        <input type="submit" id="lag" value="Lag ansatt" form="navn">
-                        <form method="dialog">
-                            <button class="button">Lukk</button>
-                        </form>
+                        </dialog>
                     </div>
-                </dialog>
+                    <div id="nyAnsattDiv">
+                        <button type="button" id="nyAnsatt">Ny Ansatt</button>
+                        <dialog id="nyAnsattWindow">
+                            <h2>Lag ansatt</h2>
+                            <form id="navn" method="post" action="/nyAnsatt">
+                                <label>
+                                    Fornavn:
+                                    <input name="fornavn">
+                                </label>
+                                <label>
+                                    Etternavn:
+                                    <input name="etternavn">
+                                </label>
+                                <label>
+                                    Telefonnummer:
+                                    <input name="telefonnummer">
+                                </label>
+                                <label>
+                                    Epost:
+                                    <input type="email" name="epost">
+                                </label>
+                                <label>
+                                    Gatenavn:
+                                    <input name="gatenavn">
+                                </label>
+                                <label>
+                                    Gatenummer:
+                                    <input name="gatenummer">
+                                </label>
+                                <label>
+                                    Postnummer:
+                                    <input name="postnummer">
+                                </label>
+                                <label>
+                                    Timelønn:
+                                    <input type="number" step=".01" min="0.00" name="timelonn">
+                                </label>
+                                <label>
+                                    Stillingsprosent:
+                                    <input type="number" step=".01" min="0.00" name="stillingsprosent">
+                                </label>
+                                <label>
+                                    Stillingstype:
+                                    <div class="select">
+                                        <select name="stillingstype">
+                                            <c:forEach items="${stillingstyper}" var="s">
+                                                <option value="${s.stillingstypeId}">${s.stillingstype}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </label>
+                            </form>
+                            <div>
+                                <input type="submit" id="lag" value="Lag ansatt" form="navn">
+                                <form method="dialog">
+                                    <button class="button">Lukk</button>
+                                </form>
+                            </div>
+                        </dialog>
+                    </div>
+                </section>
             </div>
             </c:if>
             <c:if test="${delside eq 'kalender'}">

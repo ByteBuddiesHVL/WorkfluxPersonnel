@@ -29,7 +29,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -55,17 +57,19 @@ public class LonnService {
     private double skatt = 0.0;
     private float timelonn = 0.0F;
 
-    public List<byte[]> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
+    public Map<Ansatt,byte[]> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
         List<Ansatt> ansatte = ansattRepository.findAllByBedriftId(bedriftId);
-        return ansatte.stream()
-                .map(ansatt -> {
-                    try {
-                        return genererLonnsslippForAnsatt(ansatt, startDate, endDate, utbetalingsDato);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toList());
+        Map<Ansatt,byte[]> lonnsslippMap = new HashMap<>();
+
+        ansatte.forEach(ansatt -> {
+            try {
+                byte[] lonnsslipp = genererLonnsslippForAnsatt(ansatt,startDate,endDate,utbetalingsDato);
+                lonnsslippMap.put(ansatt,lonnsslipp);
+            } catch (IOException e) {
+                //TODO return error
+            }
+        });
+        return lonnsslippMap;
     }
 
     public byte[] genererLonnsslippForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
@@ -155,8 +159,7 @@ public class LonnService {
 
 
         document.close();
-        // check if document is ok
-        tidsplanResult.getTidsplaner().forEach(t -> t.setCalced(true));
+        // check if document is ok - TODO tidsplanResult.getTidsplaner().forEach(t -> t.setCalced(true));
         return baos.toByteArray();
     }
 

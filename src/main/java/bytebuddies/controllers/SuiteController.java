@@ -3,19 +3,23 @@ package bytebuddies.controllers;
 import bytebuddies.embeddable.Passord;
 import bytebuddies.entities.*;
 import bytebuddies.services.*;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -53,6 +57,9 @@ public class SuiteController {
 
     @Autowired
     LonnService lonnService;
+
+    @Autowired
+    SlippHistorikkService slippHistorikkService;
 
     private LocalDate currentDate = LocalDate.now();
 
@@ -107,6 +114,65 @@ public class SuiteController {
         return getTidsplanString(date);
     }
 
+    @PostMapping("/genererLonnsslipper")
+    public String genererLonnsslipper(
+            @RequestParam("month") String yearmonth,
+            @RequestParam("for") String type,
+            @RequestParam("brukernavn") String brukernavn,
+            HttpSession session
+    ) {
+        int year = Integer.parseInt(yearmonth.split("-")[0]);
+        int month = Integer.parseInt(yearmonth.split("-")[1]);
+        LocalDate startDate = LocalDate.of(year,month,1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        Admin admin = getLoggedInAttr(session);
+
+        if (admin != null) {
+            Bedrift bedrift = admin.getBedriftId();
+            LocalDate today = LocalDate.now();
+
+            if (type.equals("all")) {
+                Map<Ansatt,byte[]> lonnsslippMap = lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,today);
+                lonnsslippMap.forEach(((ansatt, bytes) -> {
+                    slippHistorikkService.lagreSlipp(ansatt,today,bytes);
+                }));
+            } else if (type.equals("one")) {
+                Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+                if (ansatt != null) {
+                    try {
+                        byte[] lonnsslipp = lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,today);
+                        slippHistorikkService.lagreSlipp(ansatt,today,lonnsslipp);
+                    } catch (IOException e) {
+                        // TODO return error
+                    }
+                }
+            }
+        }
+        return "redirect:/suite/personal";
+    }
+
+    @GetMapping("/getLonnsslipp")
+    public String hentLonnsslipp(
+            @RequestParam("filnavn") String filNavn,
+            HttpServletResponse response
+    ) {
+        String[] navn = filNavn.split("_");
+        String[] dateS = navn[0].split("-");
+        LocalDate date = LocalDate.of(Integer.parseInt(dateS[0]),Integer.parseInt(dateS[1]),Integer.parseInt(dateS[2]));
+        String brukernavn = navn[1];
+        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        if (ansatt != null) {
+            try {
+                slippHistorikkService.convertToPDF(slippHistorikkService.hentSlipp(ansatt,date).getFileData(),response,filNavn + ".pdf");
+            } catch (IOException e) {
+                //TODO return error
+            }
+        }
+
+        return "redirect:/suite/personal";
+    }
+
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
         Admin admin = getLoggedInAttr(session);
@@ -125,20 +191,23 @@ public class SuiteController {
         if (admin == null) return "redirect:/suite";
         if (delside != null) {
             attributes.addFlashAttribute("delside", delside);
-            if (delside.equals("personal")) {
-                model.addAttribute("ansatte", getAnsattString());
-                model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
-            }
-            else if (delside.equals("ansatt")) {
-                model.addAttribute("ansatte", getAnsattString());
-                model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
-            }
-            else if (delside.equals("kalender")) {
-                model.addAttribute("ansatte", getAnsattString());
-                model.addAttribute("ansattListe", ansattService.getAllAnsatte());
-                model.addAttribute("dag", currentDate.toString());
-                model.addAttribute("tidsplan", getTidsplanString(currentDate));
-                model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
+            switch (delside) {
+                case "personal" -> {
+                    model.addAttribute("ansatte", getAnsattString());
+                    model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+                    model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
+                }
+                case "ansatt" -> {
+                    model.addAttribute("ansatte", getAnsattString());
+                    model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
+                }
+                case "kalender" -> {
+                    model.addAttribute("ansatte", getAnsattString());
+                    model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+                    model.addAttribute("dag", currentDate.toString());
+                    model.addAttribute("tidsplan", getTidsplanString(currentDate));
+                    model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
+                }
             }
         }
         return "suite";
