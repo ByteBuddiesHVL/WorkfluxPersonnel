@@ -71,7 +71,6 @@ public class StempleController {
 
         switch(type) {
             case "Inn":
-                // check if tidsplan == lunsj ... etc
                 if (tidsplan != null) {
                     tidsplanService.endTidsplan(tidsplan, time.withSecond(0));
 
