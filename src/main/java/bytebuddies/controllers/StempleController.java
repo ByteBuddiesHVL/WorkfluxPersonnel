@@ -72,19 +72,19 @@ public class StempleController {
         switch(type) {
             case "Inn":
                 if (tidsplan != null) {
-                    tidsplanService.endTidsplan(tidsplan, time.withSecond(0));
+                    tidsplanService.endTidsplan(tidsplan, time.withSecond(0).withNano(0));
 
                     if (Objects.equals(tidsplan.getTypeId(), typeLunsj))
-                        tidsplanService.saveTidsplan(new Tidsplan(ansatt, time.withSecond(0), null, typeSalg, false));
+                        tidsplanService.saveTidsplan(new Tidsplan(ansatt, time.withSecond(0).withNano(0), null, typeSalg, false));
                 } else
-                    tidsplanService.saveTidsplan(new Tidsplan(ansatt,time.withSecond(0),null,typeSalg,false));
+                    tidsplanService.saveTidsplan(new Tidsplan(ansatt,time.withSecond(0).withNano(0),null,typeSalg,false));
                 break;
             case "Ut":
                 if (tidsplan == null) break;
                 LocalDate startDate = tidsplan.getStarttid().toLocalDate();
                 LocalDate dateNow = time.toLocalDate();
                 if (startDate.isEqual(dateNow))
-                    tidsplanService.endTidsplan(tidsplan,time.withSecond(0));
+                    tidsplanService.endTidsplan(tidsplan,time.withSecond(0).withNano(0));
                 else if (startDate.isBefore(dateNow)){
                     tidsplanService.endTidsplan(tidsplan,startDate.atTime(23,59,0));
                     tidsplanService.saveTidsplan(new Tidsplan(ansatt,dateNow.atTime(0,0,0),time,tidsplan.getTypeId(),false));
@@ -93,8 +93,8 @@ public class StempleController {
                 }
                 break;
             case "Lunsj":
-                if (tidsplan != null) tidsplanService.endTidsplan(tidsplan,time.withSecond(0));
-                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time.withSecond(0),null,typeLunsj,false));
+                if (tidsplan != null) tidsplanService.endTidsplan(tidsplan,time.withSecond(0).withNano(0));
+                tidsplanService.saveTidsplan(new Tidsplan(ansatt,time.withSecond(0).withNano(0),null,typeLunsj,false));
         }
 
         return "redirect:/";

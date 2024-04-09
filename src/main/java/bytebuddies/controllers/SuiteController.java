@@ -87,8 +87,8 @@ public class SuiteController {
         Tidsplan tidsplan = tidsplanService.getTidsplan(tidsplanId);
         Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
 
-        tidsplan.setStarttid(starttid.atDate(date).withSecond(0));
-        tidsplan.setSluttid(sluttid.atDate(date).withSecond(0));
+        tidsplan.setStarttid(starttid.atDate(date).withSecond(0).withNano(0));
+        tidsplan.setSluttid(sluttid.atDate(date).withSecond(0).withNano(0));
         tidsplan.setTypeId(type);
         tidsplanService.saveTidsplan(tidsplan);
 
@@ -108,7 +108,7 @@ public class SuiteController {
         if (ansatt != null) {
             //todo - check if there is already a tidsplan between the starttid and sluttid
             Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
-            Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0),sluttid.atDate(date).withSecond(0),type,false);
+            Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0).withNano(0),sluttid.atDate(date).withSecond(0).withNano(0),type,false);
             tidsplanService.saveTidsplan(tidsplan);
         }
         return getTidsplanString(date);
