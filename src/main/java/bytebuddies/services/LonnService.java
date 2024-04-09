@@ -1,10 +1,7 @@
 package bytebuddies.services;
 
 import bytebuddies.TidsplanResult;
-import bytebuddies.entities.Ansatt;
-import bytebuddies.entities.Bedrift;
-import bytebuddies.entities.Lonn;
-import bytebuddies.entities.Tidsplan;
+import bytebuddies.entities.*;
 import bytebuddies.repositories.AnsattRepository;
 import bytebuddies.repositories.LonnRepository;
 import com.itextpdf.io.source.ByteArrayOutputStream;
@@ -47,6 +44,9 @@ public class LonnService {
     @Autowired
     private TidsplanService tidsplanService;
 
+    @Autowired
+    private SlippHistorikkService slippHistorikkService;
+
     public Lonn lagreLonn(Float timelonn, Float arslonn) {
         return lonnRepository.save(new Lonn(timelonn,arslonn,LocalDate.now()));
     }
@@ -56,23 +56,24 @@ public class LonnService {
 
     private double skatt = 0.0;
     private float timelonn = 0.0F;
+    private float brutto = 0.0F;
+    private float netto = 0.0F;
+    private float timer = 0.0F;
 
-    public Map<Ansatt,byte[]> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
+
+
+    public List<SlippHistorikk> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
         List<Ansatt> ansatte = ansattRepository.findAllByBedriftId(bedriftId);
-        Map<Ansatt,byte[]> lonnsslippMap = new HashMap<>();
-
-        ansatte.forEach(ansatt -> {
+        return ansatte.stream().map(ansatt -> {
             try {
-                byte[] lonnsslipp = genererLonnsslippForAnsatt(ansatt,startDate,endDate,utbetalingsDato);
-                lonnsslippMap.put(ansatt,lonnsslipp);
+                return genererLonnsslippForAnsatt(ansatt, startDate, endDate,utbetalingsDato);
             } catch (IOException e) {
-                //TODO return error
-            }
-        });
-        return lonnsslippMap;
+                //todo return error
+            }return null;
+        }).collect(Collectors.toList());
     }
 
-    public byte[] genererLonnsslippForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
+    public SlippHistorikk genererLonnsslippForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
         PdfDocument pdfDoc = new PdfDocument(writer);
@@ -81,6 +82,7 @@ public class LonnService {
 
         this.ansatt = ansatt;
         tidsplanResult = tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate);
+        timer = tidsplanResult.getTimer();
 
         float[] columnWidths1 = {170, 170};
         Table slippInformasjonTabell = new Table(UnitValue.createPointArray(columnWidths1));
@@ -122,9 +124,9 @@ public class LonnService {
         //Rad3
         timelonn(endDate).forEach(lonnslippTabell::addCell);
         //Rad4
-        skattetrekk(endDate).forEach(lonnslippTabell::addCell);
-        //Rad5
         bruttolonn(endDate).forEach(lonnslippTabell::addCell);
+        //Rad5
+        skattetrekk(endDate).forEach(lonnslippTabell::addCell);
         //Rad6
         lagTomRad().forEach(lonnslippTabell::addCell);
         //Rad7
@@ -146,7 +148,7 @@ public class LonnService {
         //Rad12
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("")));
         lonnslippTabell.addCell(new Cell(1, 2).add(new Paragraph("Netto utbetalt").setFont(font)).setBorderRight(Border.NO_BORDER));
-        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(nettoskatt((timelonn)*tidsplanResult.getTimer())))).setBorderLeft(Border.NO_BORDER));
+        lonnslippTabell.addCell(new Cell().add(new Paragraph(String.valueOf(kalkulerNetto())).setBorderLeft(Border.NO_BORDER)));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("Utbetalt til").setFont(font)).setBorderRight(Border.NO_BORDER));
         lonnslippTabell.addCell(new Cell().add(new Paragraph("xxxx xx xxxxx")).setBorderLeft(Border.NO_BORDER));
 
@@ -160,7 +162,8 @@ public class LonnService {
 
         document.close();
         // check if document is ok - TODO tidsplanResult.getTidsplaner().forEach(t -> t.setCalced(true));
-        return baos.toByteArray();
+        byte[] array = baos.toByteArray();
+        return slippHistorikkService.lagreSlipp(ansatt, utbetalingsDato, brutto, (float) skatt, netto, array);
     }
 
     private Cell lagTomCelle() {
@@ -198,9 +201,8 @@ public class LonnService {
     }
 
     private List<Cell> skattetrekk(LocalDate endDate) {
-        float timer = tidsplanResult.getTimer();
-        float bruttolonn = timelonn * timer;
-        skatt = skattefratak(bruttolonn);
+
+        skatt = skattefratak(brutto);
 
         float totalTimer = (tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate));
 
@@ -216,8 +218,7 @@ public class LonnService {
     }
 
     private List<Cell> bruttolonn(LocalDate endDate) {
-        float timer = tidsplanResult.getTimer();
-        float bruttolonn = timelonn * timer;
+        brutto = timelonn * timer;
 
         float totalTimer = (tidsplanService.getTimerForAnsattHittilIAr(ansatt, endDate));
 
@@ -226,7 +227,7 @@ public class LonnService {
                 lagTomCelle(),
                 lagTomCelle(),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(formatDouble(bruttolonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(brutto))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
                 new Cell().add(new Paragraph(formatDouble(totalTimer*timelonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
@@ -237,8 +238,9 @@ public class LonnService {
         return (lonn - (70000.0/12)) * 0.3;
     }
 
-    private double nettoskatt(double lonn){
-        return (lonn - (70000.0/12)) * 0.7 + (70000.0/12);
+    private float kalkulerNetto(){
+        netto = (float) (brutto - skatt);
+        return netto;
     }
 
     private String formatDouble(double tall) {

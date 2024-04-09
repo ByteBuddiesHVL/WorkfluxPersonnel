@@ -24,6 +24,10 @@ public class SlippHistorikkService {
         return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,null,null,null,fileData));
     }
 
+    public SlippHistorikk lagreSlipp(Ansatt ansatt, LocalDate dato, Float brutto, Float skatt, Float netto, byte[] fileData) {
+        return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,brutto,skatt,netto,fileData));
+    }
+
     public SlippHistorikk hentSlipp(Ansatt ansatt, LocalDate date) {
         return slippHistorikkRepository.findSlippHistorikkByAnsattIdAndAndDato(ansatt, date).orElse(null);
     }

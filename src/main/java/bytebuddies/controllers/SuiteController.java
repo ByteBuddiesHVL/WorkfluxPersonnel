@@ -133,16 +133,13 @@ public class SuiteController {
             LocalDate today = LocalDate.now();
 
             if (type.equals("all")) {
-                Map<Ansatt,byte[]> lonnsslippMap = lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,today);
-                lonnsslippMap.forEach(((ansatt, bytes) -> {
-                    slippHistorikkService.lagreSlipp(ansatt,today,bytes);
-                }));
+                lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,today);
+
             } else if (type.equals("one")) {
                 Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
                 if (ansatt != null) {
                     try {
-                        byte[] lonnsslipp = lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,today);
-                        slippHistorikkService.lagreSlipp(ansatt,today,lonnsslipp);
+                        lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,today);
                     } catch (IOException e) {
                         // TODO return error
                     }
