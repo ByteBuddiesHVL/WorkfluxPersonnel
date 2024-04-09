@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Kontrollerklasse som håndterer utviklerverktøyene og utviklerfunksjonaliteten.
+ */
 @Controller
 public class DevController {
 
@@ -37,11 +40,23 @@ public class DevController {
     @Autowired
     StillingstypeService stillingstypeService;
 
+    /**
+     * Håndterer GET-forespørsler for /dev-tools-endepunktet og returnerer siden for utviklerverktøy.
+     *
+     * @return Navnet på HTML-siden som viser utviklerverktøy.
+     */
     @GetMapping("/dev-tools")
     public String hentDevTools() {
         return "dev-tools";
     }
 
+    /**
+     * Håndterer POST-forespørsler for å lagre en ny utviklerbruker.
+     *
+     * @param brukernavn Brukernavnet til den nye utvikleren.
+     * @param passord    Passordet til den nye utvikleren.
+     * @return Omdirigerer tilbake til utviklerverktøy-siden.
+     */
     @PostMapping("/largeDev")
     public String lagreDeveloper(
             @RequestParam("brukernavn") String brukernavn,
@@ -53,6 +68,13 @@ public class DevController {
         return "redirect:/dev-tools";
     }
 
+    /**
+     * Håndterer POST-forespørsler for å lagre en ny bedrift.
+     *
+     * @param navn        Navnet på den nye bedriften.
+     * @param forkortelse Forkortelsen til den nye bedriften.
+     * @return Omdirigerer tilbake til utviklerverktøy-siden.
+     */
     @PostMapping("/lagreBedrift")
     public String lagreBedrift(
             @RequestParam("navn") String navn,
@@ -62,6 +84,14 @@ public class DevController {
         return "redirect:/dev-tools";
     }
 
+    /**
+     * Håndterer POST-forespørsler for å lagre en ny administratorbruker.
+     *
+     * @param brukernavn Brukernavnet til den nye administratoren.
+     * @param bedriftF  Forkortelsen til bedriften administratoren tilhører.
+     * @param passord    Passordet til den nye administratoren.
+     * @return Omdirigerer tilbake til utviklerverktøy-siden.
+     */
     @PostMapping("/lagreAdmin")
     public String lagreAdmin(
             @RequestParam("brukernavn") String brukernavn,

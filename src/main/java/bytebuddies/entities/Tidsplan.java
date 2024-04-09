@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Locale;
 
+/**
+ * Representerer en tidsplan for en ansatt i Workflux-systemet.
+ * Inkluderer informasjon om start- og sluttidspunkt, typen aktivitet, og om tidsplanen er beregnet automatisk.
+ */
 @Entity
 @Table(schema = "Workflux")
 public class Tidsplan {
@@ -24,9 +28,21 @@ public class Tidsplan {
     @JoinColumn(name = "type_id")
     private Tidsplantype typeId;
 
+    /**
+     * Indikerer om tidsplanen er automatisk beregnet.
+     */
     @Column(name = "is_calced")
     private Boolean isCalced;
 
+    /**
+     * Oppretter en ny {@code Tidsplan} med tilknyttet ansatt, start- og sluttid, tidsplantype, og om den er beregnet.
+     *
+     * @param ansattId  Den ansatte tidsplanen tilhører.
+     * @param starttid  Starttidspunktet for tidsplanen.
+     * @param sluttid   Sluttidspunktet for tidsplanen.
+     * @param typeId    Typen av aktivitet i tidsplanen.
+     * @param isCalced  Om tidsplanen er automatisk beregnet.
+     */
     public Tidsplan(Ansatt ansattId, LocalDateTime starttid, LocalDateTime sluttid, Tidsplantype typeId, Boolean isCalced) {
         this.ansattId = ansattId;
         this.starttid = starttid;
@@ -35,7 +51,12 @@ public class Tidsplan {
         this.isCalced = isCalced;
     }
 
+    /**
+     * Standard tom konstruktør.
+     */
     public Tidsplan() {}
+
+    //Getter- og setter-metoder
 
     public int getTidsplanId() {
         return tidsplanId;
@@ -85,6 +106,12 @@ public class Tidsplan {
         isCalced = calced;
     }
 
+    /**
+     * Returnerer en strengrepresentasjon av tidsplanen.
+     * Formaterer viktig informasjon om tidsplanen for enkel visning.
+     *
+     * @return En streng som inneholder detaljer om tidsplanen.
+     */
     public String toString() {
         return "[" +
                 tidsplanId + ",\"" +

@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Tjenesteklasse til å utføre validerings operasjoner.
+ */
 @Service
 public class ValideringsService {
 
@@ -31,6 +34,23 @@ public class ValideringsService {
     @Autowired
     LonnService lonnService;
 
+    /**
+     * Oppretter og returnerer en ny Ansatt-entitet med angitt informasjon.
+     *
+     * @param bedrift          Bedriften ansatt tilhører.
+     * @param fornavn          Fornavnet til ansatt.
+     * @param etternavn        Etternavnet til ansatt.
+     * @param telefonnummer    Telefonnummeret til ansatt.
+     * @param epost            E-postadressen til ansatt.
+     * @param gatenavn         Gatenavnet til ansatt.
+     * @param gatenummer       Gatenummeret til ansatt.
+     * @param postnummer       Postnummeret til ansatt.
+     * @param timelonn         Timelønnen til ansatt.
+     * @param stillingsprosent Stillingsprosenten til ansatt.
+     * @param stillingstypeId  ID-en til stillingstypen til ansatt.
+     * @param passord          Passordet til ansatt.
+     * @return En ny Ansatt-entitet.
+     */
     public Ansatt lagAnsatt(
             Bedrift bedrift,
             String fornavn,
@@ -57,6 +77,14 @@ public class ValideringsService {
         return new Ansatt(bedrift, new Passord(hash, salt), fornavn, etternavn, telefonnummer, epost, adresse, true, lonnService.lagreLonn(timelonn,null), stillingsprosent, stillingstype);
     }
 
+    /**
+     * Validerer admin-innlogging og lagrer innloggingstilstanden i HttpSession-objektet.
+     *
+     * @param brukernavn Brukernavnet til admin.
+     * @param passord    Passordet til admin.
+     * @param session    HttpSession-objektet som skal lagre innloggingstilstanden.
+     * @return En feilmelding hvis innloggingen mislykkes, ellers null.
+     */
     public String validerAdmin(String brukernavn, String passord, HttpSession session) {
         Admin admin = adminService.getAdminByBrukernavn(brukernavn).orElse(null);
         if (admin == null) return "Feil brukernavn/passord";
@@ -67,6 +95,21 @@ public class ValideringsService {
         return null;
     }
 
+    /**
+     * Validerer informasjonen til en ny ansatt.
+     *
+     * @param fornavn          Fornavnet til ansatt.
+     * @param etternavn        Etternavnet til ansatt.
+     * @param telefonnummer    Telefonnummeret til ansatt.
+     * @param epost            E-postadressen til ansatt.
+     * @param gatenavn         Gatenavnet til ansatt.
+     * @param gatenummer       Gatenummeret til ansatt.
+     * @param postnummer       Postnummeret til ansatt.
+     * @param timelonn         Timelønnen til ansatt.
+     * @param stillingsprosent Stillingsprosenten til ansatt.
+     * @param stillingstype    ID-en til stillingstypen til ansatt.
+     * @return En feilmelding hvis valideringen mislykkes, ellers null.
+     */
     public String validerAnsatt(
             String fornavn,
             String etternavn,

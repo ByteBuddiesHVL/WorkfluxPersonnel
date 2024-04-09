@@ -6,6 +6,11 @@ import jakarta.persistence.*;
 
 import java.util.Locale;
 
+/**
+ * Representerer en ansatt innen Workflux-systemet.
+ * Inneholder informasjon som identifiserer en ansatt, samt deres kontaktinformasjon,
+ * arbeidsdetaljer og tilknytning til en spesifikk bedrift.
+ */
 @Entity
 @Table(schema = "Workflux")
 public class Ansatt {
@@ -36,8 +41,26 @@ public class Ansatt {
     @JoinColumn(name = "stillingstype_id")
     private Stillingstype stillingstypeId;
 
+    /**
+     * Standard tom konstruktør.
+     */
     public Ansatt(){}
 
+    /**
+     * Konstruerer en ny ansatt med detaljert informasjon.
+     *
+     * @param bedriftId         Bedriften ansatt tilhører.
+     * @param passord           Passord for ansattes brukerkonto.
+     * @param fornavn           Ansatte fornavn.
+     * @param etternavn         Ansatte etternavn.
+     * @param telefonnummer     Ansatte telefonnummer.
+     * @param epost             Ansatte epostadresse.
+     * @param adresseId         Adresseobjekt som representerer ansattes bosted.
+     * @param isActive          Status som indikerer om ansatte er aktiv.
+     * @param lonnId            Lønn objekt som representerer ansattes lønn.
+     * @param stillingsprosent  Prosentdel av en full stilling som ansatte innehar.
+     * @param stillingstypeId   Stillingstype objekt som representerer ansattes rolle i bedriften.
+     */
     public Ansatt(Bedrift bedriftId, Passord passord, String fornavn, String etternavn, String telefonnummer, String epost, Adresse adresseId, boolean isActive, Lonn lonnId, float stillingsprosent, Stillingstype stillingstypeId) {
         this.bedriftId = bedriftId;
         this.passord = passord;
@@ -156,6 +179,13 @@ public class Ansatt {
         this.stillingstypeId = stillingstypeId;
     }
 
+    /**
+     * Returnerer en strengrepresentasjon av ansatteinformasjonen.
+     * Formaterer viktig informasjon om ansatte for enkel visning.
+     *
+     * @return En streng som inneholder ansattes brukernavn, navn, kontaktinformasjon,
+     * adresse, lønn, stillingsprosent, og stillingstype.
+     */
     public String toString() {
         Postnummer post = adresseId.getPostnummer();
         return "[\"" +

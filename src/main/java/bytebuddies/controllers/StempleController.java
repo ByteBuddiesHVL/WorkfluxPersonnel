@@ -20,6 +20,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * Kontrollerklasse som håndterer stemplingsfunksjonalitet.
+ */
 @Controller
 public class StempleController {
 
@@ -32,11 +35,23 @@ public class StempleController {
     @Autowired
     TidsplantypeService tidsplantypeService;
 
+    /**
+     * Viser siden for stempling.
+     *
+     * @return Navnet på HTML-siden for stempling.
+     */
     @GetMapping("/")
     public String startStempling() {
         return "stemple";
     }
 
+    /**
+     * Henter stemplingsinformasjon for en bestemt ansatt.
+     *
+     * @param brukernavn          Brukernavnet til den ansatte.
+     * @param redirectAttributes Attributter for omdirigering.
+     * @return Omdirigerer tilbake til stemplingssiden med informasjon om brukeren.
+     */
     @GetMapping("/hentstempling")
     public String hentStempling(
             @RequestParam(name = "brukernavn") String brukernavn,
@@ -56,6 +71,14 @@ public class StempleController {
         return "redirect:/";
     }
 
+    /**
+     * Sender stemplingsinformasjon for en ansatt.
+     *
+     * @param time       Tidspunktet for stemplingen.
+     * @param brukernavn Brukernavnet til den ansatte.
+     * @param type       Typen av stempling (Inn, Ut, Lunsj).
+     * @return Omdirigerer tilbake til stemplingssiden.
+     */
     @PostMapping("/sendstempling")
     public String sendStempling(
             @RequestParam(name = "time") LocalDateTime time,
@@ -100,6 +123,12 @@ public class StempleController {
         return "redirect:/";
     }
 
+    /**
+     * Validerer brukernavnet til en ansatt.
+     *
+     * @param brukernavn Brukernavnet som skal valideres.
+     * @return En feilmelding hvis brukernavnet ikke er gyldig, ellers null.
+     */
     public String validerBruker(String brukernavn) {
         if (!Pattern.compile("([a-z]{2})(\\d{6})").matcher(brukernavn).find()) return "Ikke et gyldig brukernavn.";
         if (ansattService.getAnsattByBrukernavn(brukernavn) == null) return "Finner ingen ansatt på dette brukernavnet";

@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * Representerer skattetrekkopplysninger for en ansatt i Workflux-systemet.
+ * Inkluderer detaljer som skattetabell, prosenttrekk, og virkningsdato for skattetrekket.
+ */
 @Entity
 @Table(schema = "Workflux")
 public class Skatt {
@@ -18,13 +22,26 @@ public class Skatt {
     private float prosent; // om ansatt har prosenttrekk
     private LocalDate virkningsdato;
 
+    /**
+     * Oppretter en ny instans av Skatt med tilknyttet ansatt, skattetrekk informasjon og virkningsdato.
+     *
+     * @param ansattId        Den ansatte skattetrekket gjelder for.
+     * @param tabell          Skattetabellen som brukes, null hvis prosenttrekk er brukt.
+     * @param prosent         Prosentandelen som brukes for prosenttrekk, 0 hvis tabelltrekk er brukt.
+     * @param virkningsdato   Datoen skattetrekket trer i kraft.
+     */
     public Skatt(Ansatt ansattId, String tabell, float prosent, LocalDate virkningsdato) {
         this.ansattId = ansattId;
         this.tabell = tabell;
         this.prosent = prosent;
         this.virkningsdato = virkningsdato;
     }
+    /**
+     * Standard tom konstruktør.
+     */
     public Skatt() {}
+
+    //Getter- og setter-metoder
 
     public Integer getSkattId() {
         return skattId;

@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * Representerer et fravær for en ansatt i Workflux-systemet.
+ * Inneholder informasjon om den ansatte fraværet gjelder, typen fravær, forklaring, samt start- og sluttdato.
+ */
 @Entity
 @Table(schema = "Workflux")
 public class Fravaer {
@@ -21,6 +25,15 @@ public class Fravaer {
     private LocalDate startdato;
     private LocalDate sluttdato;
 
+    /**
+     * Oppretter en ny instans av {@code Fravaer}.
+     *
+     * @param ansattId    Den ansatte som fraværet gjelder.
+     * @param typeId      Typen fravær registrert.
+     * @param forklaring  Forklaring eller detaljer om fraværet.
+     * @param startdato   Startdatoen for fraværsperioden.
+     * @param sluttdato   Sluttdatoen for fraværsperioden.
+     */
     public Fravaer(Ansatt ansattId, Fravaerstype typeId, String forklaring, LocalDate startdato, LocalDate sluttdato) {
         this.ansattId = ansattId;
         this.typeId = typeId;
@@ -29,8 +42,12 @@ public class Fravaer {
         this.sluttdato = sluttdato;
     }
 
+    /**
+     * Standard tom konstruktør.
+     */
     public Fravaer() {}
 
+    //Getter- og setter-metoder
     public Integer getFravaerId() {
         return fravaerId;
     }

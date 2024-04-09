@@ -22,6 +22,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Kontrollerklasse som håndterer funksjonalitet for administrasjonssuiten.
+ */
 @Controller
 public class SuiteController {
 
@@ -63,6 +66,14 @@ public class SuiteController {
 
     private LocalDate currentDate = LocalDate.now();
 
+    /**
+     * Setter den valgte datoen for tidsplanen.
+     *
+     * @param year  Året.
+     * @param month Måneden.
+     * @param day   Dagen.
+     * @return Omdirigerer til kalendersiden.
+     */
     @GetMapping("/setDagTidsplan")
     public String setDagForTidsplan(
             @RequestParam("year") Integer year,
@@ -75,6 +86,16 @@ public class SuiteController {
         return "redirect:/suite/kalender";
     }
 
+    /**
+     * Endrer en tidsplan for en ansatt.
+     *
+     * @param tidsplanId  ID-en til tidsplanen.
+     * @param date        Datoen for tidsplanen.
+     * @param starttid    Starttidspunktet for tidsplanen.
+     * @param sluttid     Sluttidspunktet for tidsplanen.
+     * @param typeId      ID-en til tidsplantypen.
+     * @return En streng som representerer tidsplanen.
+     */
     @PostMapping(value = "/endreTime", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody()
     public String endreTime(
@@ -95,6 +116,16 @@ public class SuiteController {
         return getTidsplanString(date);
     }
 
+    /**
+     * Endrer en tidsplan for en ansatt.
+     *
+     * @param date          Datoen for tidsplanen.
+     * @param brukernavn    Brukernavnet til den ansatte.
+     * @param starttid      Starttidspunktet for tidsplanen.
+     * @param sluttid       Sluttidspunktet for tidsplanen.
+     * @param typeId        ID-en til tidsplantypen.
+     * @return En streng som representerer tidsplanen.
+     */
     @PostMapping(value = "/timeAnsatt", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody()
     public String endreTime(
@@ -114,6 +145,15 @@ public class SuiteController {
         return getTidsplanString(date);
     }
 
+    /**
+     * Genererer lønnsslipper.
+     *
+     * @param yearmonth     År og måned.
+     * @param type          Type av lønnsslipper (all eller one).
+     * @param brukernavn    Brukernavnet til den ansatte (hvis type er one).
+     * @param session       HttpSession-objektet.
+     * @return Omdirigerer til personaloversikten.
+     */
     @PostMapping("/genererLonnsslipper")
     public String genererLonnsslipper(
             @RequestParam("month") String yearmonth,
@@ -149,6 +189,13 @@ public class SuiteController {
         return "redirect:/suite/personal";
     }
 
+    /**
+     * Henter en lønnsslipp for en ansatt.
+     *
+     * @param filNavn       Filnavnet til lønnsslippen.
+     * @param response      HttpServletResponse-objektet.
+     * @return Omdirigerer til personaloversikten.
+     */
     @GetMapping("/getLonnsslipp")
     public String hentLonnsslipp(
             @RequestParam("filnavn") String filNavn,
@@ -170,6 +217,13 @@ public class SuiteController {
         return "redirect:/suite/personal";
     }
 
+    /**
+     * Viser startsiden for administrasjonssuiten.
+     *
+     * @param session HttpSession-objektet.
+     * @return Suite-siden hvis brukeren er logget inn, ellers logon-siden.
+     */
+
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
         Admin admin = getLoggedInAttr(session);
@@ -177,6 +231,15 @@ public class SuiteController {
         return "suite";
     }
 
+    /**
+     * Viser en delside av administrasjonssuiten.
+     *
+     * @param model         Model-objektet.
+     * @param session       HttpSession-objektet.
+     * @param delside       Deliden til administrasjonssuiten.
+     * @param attributes    RedirectAttributes-objektet.
+     * @return Suite-siden med den valgte delsiden.
+     */
     @GetMapping("/suite/{delside}")
     public String getSuiteDelide(
             Model model,
@@ -210,12 +273,27 @@ public class SuiteController {
         return "suite";
     }
 
+    /**
+     * Logger ut brukeren.
+     *
+     * @param session HttpSession-objektet.
+     * @return Omdirigerer til startsiden for administrasjonssuiten.
+     */
     @GetMapping("/logout")
     public String logOut(HttpSession session){
         session.invalidate();
         return "redirect:/suite";
     }
 
+    /**
+     * Logger inn brukeren.
+     *
+     * @param brukernavn    Brukernavnet til brukeren.
+     * @param passord       Passordet til brukeren.
+     * @param attributes    RedirectAttributes-objektet.
+     * @param session       HttpSession-objektet.
+     * @return Omdirigerer til startsiden for administrasjonssuiten.
+     */
     @PostMapping("/login")
     public String logIn(
             @RequestParam(name = "brukernavn") String brukernavn,
@@ -228,6 +306,23 @@ public class SuiteController {
         return "redirect:/suite";
     }
 
+    /**
+     * Oppretter en ny ansatt.
+     *
+     * @param fornavn           Fornavnet til den ansatte.
+     * @param etternavn         Etternavnet til den ansatte.
+     * @param telefonnummer     Telefonnummeret til den ansatte.
+     * @param epost             E-postadressen til den ansatte.
+     * @param gatenavn          Gatenavnet til den ansatte.
+     * @param gatenummer        Gatenummeret til den ansatte.
+     * @param postnummer        Postnummeret til den ansatte.
+     * @param timelonn          Timelønnen til den ansatte.
+     * @param stillingsprosent  Stillingsprosenten til den ansatte.
+     * @param stillingstype     ID-en til stillingstypen.
+     * @param session           HttpSession-objektet.
+     * @param attributes        RedirectAttributes-objektet.
+     * @return Omdirigerer til personalsiden i Suiten.
+     */
     @PostMapping("/nyAnsatt")
     public String nyAnsatt(
             @RequestParam("fornavn") String fornavn,
@@ -259,6 +354,25 @@ public class SuiteController {
         return "redirect:/suite/personal";
     }
 
+    /**
+     * Redigerer en eksisterende ansatt.
+     *
+     * @param brukernavn        Brukernavnet til den ansatte som skal redigeres.
+     * @param fornavn           Det nye fornavnet til den ansatte.
+     * @param etternavn         Det nye etternavnet til den ansatte.
+     * @param telefonnummer     Det nye telefonnummeret til den ansatte.
+     * @param epost             Den nye e-postadressen til den ansatte.
+     * @param gatenavn          Det nye gatenavnet til den ansatte.
+     * @param gatenummer        Det nye gatenummeret til den ansatte.
+     * @param postnummer        Det nye postnummeret til den ansatte.
+     * @param timelonn          Den nye timelønnen til den ansatte.
+     * @param stillingsprosent  Den nye stillingsprosenten til den ansatte.
+     * @param stillingstypeId   Den nye ID-en til stillingstypen.
+     * @param slettAnsatt       Angir om ansatte skal slettes.
+     * @param session           HttpSession-objektet.
+     * @param attributes        RedirectAttributes-objektet.
+     * @return Omdirigerer til personalsiden i Suiten hvis ansatte er slettet, ellers omdirigerer til ansatt-siden i Suiten.
+     */
     @PostMapping("/redigerAnsatt")
     public String redigerAnsatt(
             @RequestParam("brukernavn") String brukernavn,
@@ -309,6 +423,12 @@ public class SuiteController {
         return "redirect:/suite/ansatt";
     }
 
+    /**
+     * Henter timeplanen for en spesifikk dato.
+     *
+     * @param dag Dagen for hvilken timeplanen blir forespurt.
+     * @return JSON-representasjon av timeplanen for den spesifiserte datoen.
+     */
     @GetMapping(value = "/tidsplan", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody()
     public String hentTidsplan(
@@ -318,16 +438,33 @@ public class SuiteController {
         return getTidsplanString(dag);
     }
 
+    /**
+     * Henter pålogget admin fra økten.
+     *
+     * @param session HttpSession-objektet.
+     * @return Den påloggede adminen, eller null hvis ingen admin er pålogget.
+     */
     public Admin getLoggedInAttr(HttpSession session) {
         return (Admin) session.getAttribute("loggedin");
     }
 
+    /**
+     * Henter en strengrepresentasjon av alle ansatte.
+     *
+     * @return En JSON-streng som representerer alle ansatte.
+     */
     public String getAnsattString() {
         return ansattService.getAllAnsatte().stream()
                 .map(Ansatt::toString)
                 .collect(Collectors.joining(",", "[", "]"));
     }
 
+    /**
+     * Henter en strengrepresentasjon av timeplanen for en spesifikk dato.
+     *
+     * @param dato Datoen for hvilken timeplanen blir forespurt.
+     * @return En JSON-streng som representerer timeplanen for den spesifiserte datoen.
+     */
     public String getTidsplanString(LocalDate dato) {
         if (dato == null) dato = currentDate;
         return tidsplanService.getTidsplanByDate(dato).stream()

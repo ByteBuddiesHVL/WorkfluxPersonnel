@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * Representerer historikken til lønnsslipper for en ansatt i Workflux-systemet.
+ * Inkluderer detaljer om lønnsslippen som dato, bruttoinntekt, skattetrekk, nettoinntekt, arbeidstimer, timelønn, og den faktiske lønnsslippfilen.
+ */
 @Entity
 @Table(schema = "Workflux",name = "slipphistorikk")
 public class SlippHistorikk {
@@ -21,9 +25,24 @@ public class SlippHistorikk {
     private Float netto;
     private Float timer;
     private Float timelonn;
+    /**
+     * Binærdata for den faktiske lønnsslippfilen.
+     */
     @Column(name = "file_data")
     private byte[] fileData;
 
+    /**
+     * Oppretter en ny instans av {@code SlippHistorikk} med detaljert informasjon om lønnsslippen.
+     *
+     * @param ansattId   Den ansatte lønnsslippen tilhører.
+     * @param dato       Datoen lønnsslippen gjelder for.
+     * @param brutto     Bruttoinntekt for lønnsslippen.
+     * @param skatt      Skattetrekk for lønnsslippen.
+     * @param netto      Nettoinntekt etter skatt.
+     * @param timer      Antall timer arbeidet.
+     * @param timelonn   Timelønnen ansatt mottar.
+     * @param fileData   Binærdata for den genererte lønnsslippfilen.
+     */
     public SlippHistorikk(Ansatt ansattId, LocalDate dato, Float brutto, Float skatt, Float netto, Float timer, Float timelonn, byte[] fileData) {
         this.ansattId = ansattId;
         this.dato = dato;
@@ -35,10 +54,12 @@ public class SlippHistorikk {
         this.fileData = fileData;
     }
 
-
-
+    /**
+     * Standard tom konstruktør.
+     */
     public SlippHistorikk() {}
 
+    //Getter- og setter-metoder
     public Integer getLonnsslippId() {
         return lonnsslippId;
     }

@@ -14,12 +14,28 @@ import java.io.OutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Tjenesteklasse for å utføre operasjoner knyttet til lønnsslipphistorikk.
+ */
 @Service
 public class SlippHistorikkService {
 
     @Autowired
     private SlippHistorikkRepository slippHistorikkRepository;
 
+    /**
+     * Lagrer en lønnsslipp i databasen eller oppdaterer den hvis den allerede eksisterer.
+     *
+     * @param ansatt   Ansatt som lønnsslippen tilhører.
+     * @param dato     Dato for lønnsslippen.
+     * @param brutto   Bruttolønn for lønnsslippen.
+     * @param skatt    Skattetrekk for lønnsslippen.
+     * @param netto    Netto utbetalt for lønnsslippen.
+     * @param timer    Antall arbeidstimer for lønnsslippen.
+     * @param timelonn Timelønn for lønnsslippen.
+     * @param fileData Data for den genererte PDF-filen av lønnsslippen.
+     * @return Den lagrede eller oppdaterte lønnsslippen.
+     */
     public SlippHistorikk lagreSlipp(Ansatt ansatt, LocalDate dato, Float brutto, Float skatt, Float netto, Float timer, Float timelonn, byte[] fileData) {
         SlippHistorikk slipp = slippHistorikkRepository.findSlippHistorikkByAnsattIdAndAndDato(ansatt,dato).orElse(null);
         if (slipp == null) return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,brutto,skatt,netto,timer,timelonn,fileData));
@@ -32,14 +48,34 @@ public class SlippHistorikkService {
         return slippHistorikkRepository.save(slipp);
     }
 
+    /**
+     * Henter lønnsslippen for en spesifisert ansatt og dato.
+     *
+     * @param ansatt Ansatt som lønnsslippen tilhører.
+     * @param date   Dato for lønnsslippen.
+     * @return Lønnsslippen hvis den finnes, ellers null.
+     */
     public SlippHistorikk hentSlipp(Ansatt ansatt, LocalDate date) {
         return slippHistorikkRepository.findSlippHistorikkByAnsattIdAndAndDato(ansatt, date).orElse(null);
     }
 
+    /**
+     * Henter alle lønnsslippene som er lagret i databasen.
+     *
+     * @return Liste over alle lønnsslippene.
+     */
     public List<SlippHistorikk> hentAlleSlipper() {
         return slippHistorikkRepository.findAll();
     }
 
+    /**
+     * Konverterer en byte-array til en PDF-fil og sender den som respons til en HTTP-servlet.
+     *
+     * @param bytes     Byte-array som inneholder PDF-dataene.
+     * @param response  HTTP-servletrespons.
+     * @param fileName  Filnavn for den genererte PDF-filen.
+     * @throws IOException hvis det oppstår en feil under konverteringen eller responsbehandlingen.
+     */
     public void convertToPDF(byte[] bytes, HttpServletResponse response, String fileName) throws IOException {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
@@ -54,6 +90,13 @@ public class SlippHistorikkService {
         }
     }
 
+    /**
+     * Henter alle lønnsslippene for en spesifisert ansatt i inneværende år fram til en spesifisert dato.
+     *
+     * @param ansatt Ansatt som lønnsslippene tilhører.
+     * @param date   Datoen som grensen for søket.
+     * @return Liste over alle lønnsslippene for den angitte ansatte i inneværende år fram til datoen.
+     */
     public List<SlippHistorikk> hentAlleSlipperThisYear(Ansatt ansatt, LocalDate date) {
         if (date.getMonthValue() == 1) return List.of(null);
         return slippHistorikkRepository.findSlippHistorikksByAnsattIdAndDatoBetween(ansatt,date.withDayOfYear(1),date.withMonth(date.getMonthValue() - 1).withDayOfMonth(1).minusDays(1));

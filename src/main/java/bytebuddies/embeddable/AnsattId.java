@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 
+/**
+ * Embeddable klasse som representerer den sammensatte nøkkelen for en Ansatt-entitet.
+ */
 @Embeddable
 public class AnsattId implements Serializable {
 
@@ -15,13 +18,22 @@ public class AnsattId implements Serializable {
     @Column(name = "ansatt_id")
     private Integer ansattId;
 
+    /**
+     * Konstruktør som oppretter en ny AnsattId-instans med angitt bedriftsobjekt.
+     *
+     * @param bedriftId Bedriftsobjektet til den ansatte.
+     */
     public AnsattId(Bedrift bedriftId) {
         this.bedriftId = bedriftId;
     }
 
+    /**
+     * Tom konstruktør for AnsattId.
+     */
     public AnsattId() {
     }
 
+    //Getter- og setter-metoder
     public Bedrift getBedriftId() {
         return bedriftId;
     }

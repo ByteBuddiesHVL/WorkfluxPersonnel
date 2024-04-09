@@ -2,6 +2,10 @@ package bytebuddies.entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Representerer en adresse i Workflux-systemet.
+ * Inkluderer informasjon om gatenavn, gatenummer, postnummer og en aktivitetsstatus.
+ */
 @Entity
 @Table(schema = "Workflux")
 public class Adresse {
@@ -18,14 +22,26 @@ public class Adresse {
     @Column(name = "is_active")
     private boolean isActive;
 
+    /**
+     * Konstruerer en Adresse med gitt gatenavn, gatenummer, postnummer og aktivitetsstatus.
+     *
+     * @param gatenavn    Gatenavnet til adressen.
+     * @param gatenummer  Gatenummeret til adressen.
+     * @param postnummer  Postnummeret til adressen.
+     * @param isActive    Angir om adressen er aktiv.
+     */
     public Adresse(String gatenavn, String gatenummer, Postnummer postnummer, boolean isActive) {
         this.gatenavn = gatenavn;
         this.gatenummer = gatenummer;
         this.postnummer = postnummer;
         this.isActive = isActive;
     }
+    /**
+     * Standard tom konstruktør.
+     */
     public Adresse() {}
 
+    //Getter- og setter-metoder
     public Integer getAdresseId() {
         return adresseId;
     }
@@ -66,6 +82,11 @@ public class Adresse {
         isActive = active;
     }
 
+    /**
+     * Returnerer en strengrepresentasjon av adressen.
+     *
+     * @return En streng som representerer adressen.
+     */
     @Override
     public String toString() {
         return gatenavn + " " + gatenummer + ", " + postnummer.getPostnummer() + " " + postnummer.getPoststed();

@@ -9,9 +9,18 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * Tjenesteklasse for å hashe og salte passord,
+ * i tillegg til å sjekke om passord er korrekt eller ikke.
+ */
 @Service
 public class PassordService {
 
+    /**
+     * Genererer et tilfeldig salt ved hjelp av SHA1PRNG SecureRandom-algoritmen.
+     *
+     * @return En tekststreng som representerer det tilfeldige saltet i heksadesimalformat.
+     */
     public String genererTilfeldigSalt() {
         SecureRandom sr;
         byte[] salt = new byte[16];
@@ -24,6 +33,13 @@ public class PassordService {
         return DatatypeConverter.printHexBinary(salt);
     }
 
+    /**
+     * Hasher et passord med et gitt salt ved hjelp av PBKDF2WithHmacSHA1 algoritmen.
+     *
+     * @param passord Passordet som skal hashes.
+     * @param salt    Saltet som skal brukes i hashing-prosessen.
+     * @return En tekststreng som representerer det hashede passordet i heksadesimalformat.
+     */
     public String hashMedSalt(String passord, String salt) {
 
         if (passord == null || salt == null) {
@@ -45,6 +61,14 @@ public class PassordService {
         return DatatypeConverter.printHexBinary(keyhash);
     }
 
+    /**
+     * Sjekker om et gitt passord matcher hashen som er laget med det gitt saltet.
+     *
+     * @param passord Passordet som skal sjekkes.
+     * @param salt    Saltet som ble brukt til å lage hashen.
+     * @param hash    Hashen som passordet skal matches mot.
+     * @return True hvis passordet matcher hashen, ellers false.
+     */
     public boolean erKorrektPassord(String passord, String salt, String hash) {
 
         if (passord == null || salt == null || hash == null) {

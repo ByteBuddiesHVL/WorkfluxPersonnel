@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Tjenesteklasse for å generere lønnsslipper og utføre operasjoner knyttet til lønn.
+ */
 @Service
 public class LonnService {
 
@@ -48,6 +51,13 @@ public class LonnService {
     @Autowired
     private SlippHistorikkService slippHistorikkService;
 
+    /**
+     * Lagrer en lønnsregistrering i databasen.
+     *
+     * @param timelonn Timelønn for den ansatte
+     * @param arslonn  Årslønn for den ansatte
+     * @return Den lagrede lønnsregistreringen
+     */
     public Lonn lagreLonn(Float timelonn, Float arslonn) {
         return lonnRepository.save(new Lonn(timelonn,arslonn,LocalDate.now()));
     }
@@ -67,8 +77,14 @@ public class LonnService {
     Float totalTimer = 0.0F;
     Float totalLonnFraTimelonn = 0.0F;
 
-
-
+    /**
+     * Genererer lønnsslipper for alle ansatte i en bedrift i en bestemt tidsperiode.
+     * @param bedriftId Bedriftens ID
+     * @param startDate Startdato for perioden
+     * @param endDate Sluttdato for perioden
+     * @param utbetalingsDato Dato for utbetaling av lønnsslippene
+     * @return Liste over genererte lønnsslipper
+     */
     public List<SlippHistorikk> genererLonnsslippForAlleAnsatte(Bedrift bedriftId, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) {
         List<Ansatt> ansatte = ansattRepository.findAllByBedriftId(bedriftId);
         return ansatte.stream().map(ansatt -> {
@@ -80,6 +96,15 @@ public class LonnService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Genererer en lønnsslipp for en spesifikk ansatt i en bestemt tidsperiode.
+     * @param ansatt Ansatt som lønnsslippen skal genereres for
+     * @param startDate Startdato for perioden
+     * @param endDate Sluttdato for perioden
+     * @param utbetalingsDato Dato for utbetaling av lønnsslippen
+     * @return Den genererte lønnsslippen
+     * @throws IOException Dersom det oppstår en feil ved behandling av PDF-dokumentet
+     */
     public SlippHistorikk genererLonnsslippForAnsatt(Ansatt ansatt, LocalDate startDate, LocalDate endDate, LocalDate utbetalingsDato) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(baos);
@@ -183,12 +208,23 @@ public class LonnService {
         return slippHistorikkService.lagreSlipp(ansatt, utbetalingsDato, brutto, skatt, netto, timer, timelonn, array);
     }
 
+    /**
+     * Oppretter en tom celle til bruk i PDF-tabeller.
+     *
+     * @return En tom celle uten rammer.
+     */
+
     private Cell lagTomCelle() {
         return new Cell().add(new Paragraph("\n"))
                 .setBorderBottom(Border.NO_BORDER)
                 .setBorderTop(Border.NO_BORDER);
     }
 
+    /**
+     * Oppretter en liste med tomme celler for å representere en rad i en PDF-tabell.
+     *
+     * @return En liste med tomme celler, hver uten rammer.
+     */
     private List<Cell> lagTomRad() {
         return Arrays.asList(
                 lagTomCelle(),
@@ -201,6 +237,11 @@ public class LonnService {
         );
     }
 
+    /**
+     * Genererer informasjon om timelønn basert på angitt timer og timelønn.
+     *
+     * @return En liste med celler som inneholder informasjon om timelønn.
+     */
     private List<Cell> timelonn() {
         float lonn = timer * timelonn;
 
@@ -215,6 +256,11 @@ public class LonnService {
         );
     }
 
+    /**
+     * Genererer informasjon om skattetrekk basert på bruttolønn.
+     *
+     * @return En liste med celler som inneholder informasjon om skattetrekk.
+     */
     private List<Cell> skattetrekk() {
         skatt = skattefratak(brutto);
 
@@ -228,6 +274,12 @@ public class LonnService {
                 new Cell().add(new Paragraph(formatDouble(skatt + totalSkatt))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
     }
+
+    /**
+     * Beregner bruttolønn basert på antall timer og timelønn.
+     *
+     * @return En liste med celler som inneholder informasjon om bruttolønn.
+     */
 
     private List<Cell> bruttolonn() {
         brutto = timelonn * timer;
@@ -243,17 +295,34 @@ public class LonnService {
         );
     }
 
+    /**
+     * Beregner skattefradrag basert på bruttolønn.
+     *
+     * @param lonn Bruttolønn som skal brukes til å beregne skattefradrag.
+     * @return Skattefradraget basert på bruttolønn.
+     */
     private float skattefratak(double lonn){
         if (70000.0/12 > lonn) skatt = 0.0F;
         else skatt = ((float) lonn - (70000.0F/12)) * 0.3F;
         return skatt;
     }
 
+    /**
+     * Beregner nettolønn basert på bruttolønn og skattetrekk.
+     *
+     * @return Nettolønn basert på bruttolønn og skattetrekk.
+     */
     private float kalkulerNetto(){
         netto = (float) (brutto - skatt);
         return netto;
     }
 
+    /**
+     * Formaterer et desimaltall til en tekststreng med to desimaler.
+     *
+     * @param tall Desimaltallet som skal formateres.
+     * @return Tekststreng som representerer det desimale tallet med to desimaler.
+     */
     private String formatDouble(double tall) {
         return String.format("%.2f",tall);
     }
