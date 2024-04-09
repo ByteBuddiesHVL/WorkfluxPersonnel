@@ -88,16 +88,16 @@ public class LonnService {
         slippInformasjonTabell.addCell(new Cell(1, 2).add(new Paragraph("Lønnsslipp Informasjon").setFont(font)).setTextAlignment(TextAlignment.CENTER));
         //Rad2
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Lønnsmottaker").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getFornavn() + ansatt.getEtternavn())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getFornavn() + " " + ansatt.getEtternavn())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad3
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Adresse").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getAdresseId()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getAdresseId().toString()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad4
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("AnsattId").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getAnsattId().toString())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Ansatt ID").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(ansatt.getBrukernavn())).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad6
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("Firmanavn / Avsender").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
-        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getBedriftId()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
+        slippInformasjonTabell.addCell(new Cell().add(new Paragraph(String.valueOf(ansatt.getBedriftId().getNavn()))).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
         //Rad7
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("LønnsslippId").setFont(font)).setBorder(Border.NO_BORDER).setBorderLeft(new SolidBorder(1)));
         slippInformasjonTabell.addCell(new Cell().add(new Paragraph("")).setBorder(Border.NO_BORDER).setBorderRight(new SolidBorder(1)));
@@ -189,11 +189,11 @@ public class LonnService {
         return Arrays.asList(
                 new Cell().add(new Paragraph("Timelønn")).setBorderBottom(Border.NO_BORDER),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(String.valueOf(timer))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(timelonn))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(timer * timelonn))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(totalTimer))).setBorderBottom(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(totalTimer * timelonn))).setBorderBottom(Border.NO_BORDER)
+                new Cell().add(new Paragraph(formatDouble(timer))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(timelonn))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(timer * timelonn))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(totalTimer))).setBorderBottom(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(totalTimer * timelonn))).setBorderBottom(Border.NO_BORDER)
         );
     }
 
@@ -206,12 +206,12 @@ public class LonnService {
 
         return Arrays.asList(
                 new Cell().add(new Paragraph("Skattetrekk")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
-                new Cell().add(new Paragraph(String.valueOf(30))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(30 + "")).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(String.valueOf(skatt))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(skatt))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(String.valueOf(skattefratak(totalTimer*timelonn)))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
+                new Cell().add(new Paragraph(formatDouble(skattefratak(totalTimer*timelonn)))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
     }
 
@@ -226,18 +226,22 @@ public class LonnService {
                 lagTomCelle(),
                 lagTomCelle(),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(String.valueOf(bruttolonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
+                new Cell().add(new Paragraph(formatDouble(bruttolonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER),
                 lagTomCelle(),
-                new Cell().add(new Paragraph(String.valueOf(totalTimer*timelonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
+                new Cell().add(new Paragraph(formatDouble(totalTimer*timelonn))).setBorderBottom(Border.NO_BORDER).setBorderTop(Border.NO_BORDER)
         );
     }
 
     private double skattefratak(double lonn){
-        return -(lonn - ((double) 70000/12) * 0.3);
+        if (70000.0/12 > lonn) return 0.0;
+        return (lonn - (70000.0/12)) * 0.3;
     }
 
     private double nettoskatt(double lonn){
-        return (lonn - ((double) 70000/12)) * 0.7 + ((double) 70000/12);
+        return (lonn - (70000.0/12)) * 0.7 + (70000.0/12);
     }
 
+    private String formatDouble(double tall) {
+        return String.format("%.2f",tall);
+    }
 }

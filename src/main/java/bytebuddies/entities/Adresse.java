@@ -65,4 +65,9 @@ public class Adresse {
     public void setActive(boolean active) {
         isActive = active;
     }
+
+    @Override
+    public String toString() {
+        return gatenavn + " " + gatenummer + ", " + postnummer.getPostnummer() + " " + postnummer.getPoststed();
+    }
 }
