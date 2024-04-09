@@ -20,12 +20,16 @@ public class SlippHistorikkService {
     @Autowired
     private SlippHistorikkRepository slippHistorikkRepository;
 
-    public SlippHistorikk lagreSlipp(Ansatt ansatt, LocalDate dato, byte[] fileData) {
-        return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,null,null,null,fileData));
-    }
-
-    public SlippHistorikk lagreSlipp(Ansatt ansatt, LocalDate dato, Float brutto, Float skatt, Float netto, byte[] fileData) {
-        return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,brutto,skatt,netto,fileData));
+    public SlippHistorikk lagreSlipp(Ansatt ansatt, LocalDate dato, Float brutto, Float skatt, Float netto, Float timer, Float timelonn, byte[] fileData) {
+        SlippHistorikk slipp = slippHistorikkRepository.findSlippHistorikkByAnsattIdAndAndDato(ansatt,dato).orElse(null);
+        if (slipp == null) return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,brutto,skatt,netto,timer,timelonn,fileData));
+        slipp.setBrutto(brutto);
+        slipp.setSkatt(skatt);
+        slipp.setNetto(netto);
+        slipp.setFileData(fileData);
+        slipp.setTimer(timer);
+        slipp.setTimelonn(timelonn);
+        return slippHistorikkRepository.save(slipp);
     }
 
     public SlippHistorikk hentSlipp(Ansatt ansatt, LocalDate date) {
@@ -48,5 +52,10 @@ public class SlippHistorikkService {
                 out.write(buffer,0,bytesRead);
             }
         }
+    }
+
+    public List<SlippHistorikk> hentAlleSlipperThisYear(Ansatt ansatt, LocalDate date) {
+        if (date.getMonthValue() == 1) return List.of(null);
+        return slippHistorikkRepository.findSlippHistorikksByAnsattIdAndDatoBetween(ansatt,date.withDayOfYear(1),date.withMonth(date.getMonthValue() - 1).withDayOfMonth(1).minusDays(1));
     }
 }

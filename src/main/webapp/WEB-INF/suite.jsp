@@ -39,7 +39,7 @@
             <c:if test="${delside eq 'personal'}">
             <div id="personal">
                 <section>
-                    <a href="/getLonnsslipp?filnavn=2024-04-08_wf000002">2024-04-08_wf000002.pdf</a>
+                    <a href="/getLonnsslipp?filnavn=2024-04-30_wf000002">2024-04-30_wf000002.pdf</a>
                     <div id="lonnslippDiv">
                         <button type="button" id="lagLonnsslipper">Lag Lønnsslipper</button>
                         <dialog id="lonnsslippWindow">

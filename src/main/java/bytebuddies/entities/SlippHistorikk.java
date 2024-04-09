@@ -19,15 +19,19 @@ public class SlippHistorikk {
     private Float brutto;
     private Float skatt;
     private Float netto;
+    private Float timer;
+    private Float timelonn;
     @Column(name = "file_data")
     private byte[] fileData;
 
-    public SlippHistorikk(Ansatt ansattId, LocalDate dato, Float brutto, Float skatt, Float netto, byte[] fileData) {
+    public SlippHistorikk(Ansatt ansattId, LocalDate dato, Float brutto, Float skatt, Float netto, Float timer, Float timelonn, byte[] fileData) {
         this.ansattId = ansattId;
         this.dato = dato;
         this.brutto = brutto;
         this.skatt = skatt;
         this.netto = netto;
+        this.timer = timer;
+        this.timelonn = timelonn;
         this.fileData = fileData;
     }
 
@@ -81,6 +85,22 @@ public class SlippHistorikk {
 
     public void setNetto(Float netto) {
         this.netto = netto;
+    }
+
+    public Float getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Float timer) {
+        this.timer = timer;
+    }
+
+    public Float getTimelonn() {
+        return timelonn;
+    }
+
+    public void setTimelonn(Float timelonn) {
+        this.timelonn = timelonn;
     }
 
     public byte[] getFileData() {

@@ -130,16 +130,16 @@ public class SuiteController {
 
         if (admin != null) {
             Bedrift bedrift = admin.getBedriftId();
-            LocalDate today = LocalDate.now();
+            LocalDate payDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
 
             if (type.equals("all")) {
-                lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,today);
+                lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,payDate);
 
             } else if (type.equals("one")) {
                 Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
                 if (ansatt != null) {
                     try {
-                        lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,today);
+                        lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,payDate);
                     } catch (IOException e) {
                         // TODO return error
                     }
