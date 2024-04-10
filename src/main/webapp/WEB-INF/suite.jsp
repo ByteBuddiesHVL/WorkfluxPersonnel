@@ -74,66 +74,6 @@
                             </div>
                         </dialog>
                     </div>
-                    <div id="nyAnsattDiv">
-                        <button type="button" id="nyAnsatt">Ny Ansatt</button>
-                        <dialog id="nyAnsattWindow">
-                            <h2>Lag ansatt</h2>
-                            <form id="navn" method="post" action="/nyAnsatt">
-                                <label>
-                                    Fornavn:
-                                    <input name="fornavn">
-                                </label>
-                                <label>
-                                    Etternavn:
-                                    <input name="etternavn">
-                                </label>
-                                <label>
-                                    Telefonnummer:
-                                    <input name="telefonnummer">
-                                </label>
-                                <label>
-                                    Epost:
-                                    <input type="email" name="epost">
-                                </label>
-                                <label>
-                                    Gatenavn:
-                                    <input name="gatenavn">
-                                </label>
-                                <label>
-                                    Gatenummer:
-                                    <input name="gatenummer">
-                                </label>
-                                <label>
-                                    Postnummer:
-                                    <input name="postnummer">
-                                </label>
-                                <label>
-                                    Timelønn:
-                                    <input type="number" step=".01" min="0.00" name="timelonn">
-                                </label>
-                                <label>
-                                    Stillingsprosent:
-                                    <input type="number" step=".01" min="0.00" name="stillingsprosent">
-                                </label>
-                                <label>
-                                    Stillingstype:
-                                    <div class="select">
-                                        <select name="stillingstype">
-                                            <c:forEach items="${stillingstyper}" var="s">
-                                                <option value="${s.stillingstypeId}">${s.stillingstype}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </label>
-                            </form>
-                            <div>
-                                <input type="submit" id="lag" value="Lag ansatt" form="navn">
-                                <form method="dialog">
-                                    <button class="button">Lukk</button>
-                                </form>
-                            </div>
-                        </dialog>
-                    </div>
                 </section>
             </div>
             </c:if>
@@ -255,6 +195,7 @@
                         <input placeholder="Search..">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="13" cy="13" r="11"></circle><path d="m22 22l8 8"></path></svg>
                     </div>
+                    <button type="button">Ny Ansatt</button>
                 </div>
                 <div class="table">
                     <table>
@@ -274,9 +215,10 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <dialog id="ansattInfo">
-                    <form id="redigerAnsattForm" method="post" action="/redigerAnsatt">
-                        <input type="hidden" id="Rbrukernavn" name="brukernavn">
+                <dialog>
+                    <h2></h2>
+                    <form id="ansattForm" method="post">
+                        <input type="hidden" name="brukernavn">
 
                         <label>
                             Fornavn:
@@ -326,9 +268,9 @@
                         </label>
                     </form>
                     <div>
-                        <input type="submit" value="Lagre" form="redigerAnsattForm">
+                        <input type="submit" value="Lagre" form="ansattForm">
                         <label>
-                            <input type="checkbox" name="slettAnsatt" form="redigerAnsattForm">
+                            <input type="checkbox" name="slettAnsatt" form="ansattForm">
                             SLETT
                         </label>
                         <form method="dialog">

@@ -11,15 +11,11 @@
 }
 
 #ansattSok {
-    display: contents;
-}
-
-#ansattSok > form {
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
 }
 
-#ansattInfo {
+dialog {
     border: 1px solid;
     border-radius: 0.6em;
 }

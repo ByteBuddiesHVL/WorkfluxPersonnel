@@ -102,34 +102,33 @@ searchInput.oninput = () => {
     updateTable();
 }
 
-const dialog = document.querySelector("dialog")!
-const [
-    Rbrukernavn,
-    Rfornavn,
-    Retternavn,
-    Rtelefonnummer,
-    Repost,
-    Rgatenavn,
-    Rgatenummer,
-    Rpostnummer,
-    Rtimelonn,
-    Rstillingsprosent,
-    Rstillingstype,
-] = <HTMLInputElement[]><any>document.querySelector("form")
+document.querySelector('button')!.onclick = () => setAnsatt();
 
-const setAnsatt = (ansatt: Ansatt) => {
+const dialog = document.querySelector("dialog")!;
+const [heading, form, div] = dialog.children as any as [HTMLHeadingElement, HTMLFormElement, HTMLDivElement];
+const inputs = [...form] as (HTMLInputElement | HTMLSelectElement)[];
+const deleteLabel = div.querySelector('label')!;
+
+const setAnsatt = (ansatt?: Ansatt) => {
+    heading.textContent = ansatt ? "Rediger ansatt" : "Ny ansatt";
+    form.action = ansatt ? "/redigerAnsatt" : "/nyAnsatt";
+    deleteLabel.style.display = ansatt ? "" : "none";
+
+    (ansatt ? [
+        ansatt[0],
+        ...ansatt[1].split(', '),
+        ansatt[2], ansatt[3],
+        ...ansatt[4].split(/ (?=\w+$)/),
+        ansatt[5].split(' ')[0],
+        ansatt[8] as any,
+        ansatt[6] as any,
+        // @ts-expect-error
+        [].find.call(inputs[10].children, option => option.textContent == ansatt[7]).value
+    ] : Array(10).fill('')).forEach((value, i) => {
+        inputs[i].value = value;
+    });
+
     dialog.showModal();
-
-    Rbrukernavn.value = ansatt[0];
-    [Rfornavn.value, Retternavn.value] = ansatt[1].split(', ');
-    Rtelefonnummer.value = ansatt[2];
-    Repost.value = ansatt[3];
-    ;[Rgatenavn.value, Rgatenummer.value] = ansatt[4].split(/ (?=\w+$)/ as any);
-    Rpostnummer.value = ansatt[5].split(' ')[0];
-    Rtimelonn.value = <any>ansatt[8];
-    Rstillingsprosent.value = <any>ansatt[6];
-    // @ts-expect-error
-    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.textContent == ansatt[7]).value;
 }
 
 sort();
