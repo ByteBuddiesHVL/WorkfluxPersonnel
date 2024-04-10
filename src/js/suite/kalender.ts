@@ -13,19 +13,27 @@ const endringInputs = timeEndringDialog.querySelectorAll('input')!;
 const endringSelect = timeEndringDialog.querySelector('select')!;
 
 const rows = new Map<string, number>();
+const cacheMap = new Map<string, Tidsplan[]>();
 
 const updateDate = () => {
-    controller?.abort();
-    controller = new AbortController();
-    fetch("/tidsplan?dag=" + date.toISOString().slice(0, 10), {
-        signal: controller.signal
-    }).then(res => res.json().then(json => {
-        tidsplanListe = json;
+    const newDate = dateInput.value;
+    const cache = cacheMap.get(newDate);
+    if (cache) {
+        tidsplanListe = cache;
         updateTidsplan(true);
-    })).catch(e => {
-        console.error(e);
-    })
+    } else {
+        controller?.abort();
+        controller = new AbortController();
+        fetch("/tidsplan?dag=" + newDate, {
+            signal: controller.signal
+        }).then(res => res.json().then(json => {
+            cacheMap.set(newDate, tidsplanListe = json);
+            updateTidsplan(true);
+        })).catch(() => {});
+    }
 }
+
+cacheMap.set(dateInput.value, tidsplanListe);
 
 dateInput.oninput = () => {
     date = dateInput.valueAsDate || date;
@@ -95,7 +103,7 @@ document.getElementById('avbrytTimeEndring')!.addEventListener('click', () => {
 const timeAnsattDialog = document.querySelector('.raskInfo')!.querySelector('dialog')!;
 const leggTilInputs = timeAnsattDialog.querySelectorAll('input')!;
 document.getElementById('leggTilAnsatt')!.addEventListener('click', () => {
-    leggTilInputs[0].value = date.toISOString().slice(0, 10);
+    leggTilInputs[0].value = dateInput.value;
     timeAnsattDialog.showModal();
 })
 
@@ -114,10 +122,10 @@ const submitForm = (e: Event) => {
             signal: controller.signal,
             body: new FormData(form)
         }).then(res => res.json().then(json => {
-            tidsplanListe = json;
+            cacheMap.set(dateInput.value, tidsplanListe = json);
             (form.parentElement as HTMLDialogElement).close();
             updateTidsplan();
-        })).catch(e => console.error(e));
+        })).catch(() => {});
     }
 }
 
