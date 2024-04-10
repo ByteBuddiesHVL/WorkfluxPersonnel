@@ -63,7 +63,6 @@ public class LonnService {
     }
 
     private TidsplanResult tidsplanResult;
-    private Ansatt ansatt;
 
     private float skatt = 0.0F;
     private float timelonn = 0.0F;
@@ -113,7 +112,6 @@ public class LonnService {
         Document document = new Document(pdfDoc);
         PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
 
-        this.ansatt = ansatt;
         tidsplanResult = tidsplanService.getTimerForAnsatt(ansatt, startDate, endDate);
         timer = tidsplanResult.getTimer();
         timelonn = ansatt.getLonnId().getTimelonn();
@@ -301,9 +299,9 @@ public class LonnService {
      * @param lonn Bruttolønn som skal brukes til å beregne skattefradrag.
      * @return Skattefradraget basert på bruttolønn.
      */
-    private float skattefratak(double lonn){
+    private float skattefratak(float lonn){
         if (70000.0/12 > lonn) skatt = 0.0F;
-        else skatt = ((float) lonn - (70000.0F/12)) * 0.3F;
+        else skatt = (lonn - (70000.0F/12)) * 0.3F;
         return skatt;
     }
 
@@ -313,7 +311,7 @@ public class LonnService {
      * @return Nettolønn basert på bruttolønn og skattetrekk.
      */
     private float kalkulerNetto(){
-        netto = (float) (brutto - skatt);
+        netto = brutto - skatt;
         return netto;
     }
 
