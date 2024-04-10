@@ -56,7 +56,7 @@ for (let i = 0; i < numAnsatte; i++) {
     let update: Row = ansatt => {
         if (ansatt) {
             if (old != ansatt) {
-                for (let i = 0; i < 9; i++) {
+                for (let i = 0; i < 8; i++) {
                     if (!old || old[i] != ansatt[i]) {
                         textNodes[i].data = ansatt[i] as string;
                     }
@@ -69,15 +69,15 @@ for (let i = 0; i < numAnsatte; i++) {
             tr.style.display = hidden ? "none" : "";
         }
     }
-    let lowerCase = lowerCased[i] = Array(9) as Ansatt;
+    let lowerCase = lowerCased[i] = Array(8) as Ansatt;
 
     (cells[8].firstChild as HTMLButtonElement).onclick = () => {
         setAnsatt(old)
     }
 
-    for (let j = 0; j < 9; j++) {
+    for (let j = 0; j < 8; j++) {
         textNodes[j] = cells[j].firstChild as Text;
-        lowerCase[j] = j == 6 || j == 7 ? ansattListe[i][j] : (ansattListe[i][j] as string).toLowerCase();
+        lowerCase[j] = j == 6 || j == 8 ? ansattListe[i][j] : (ansattListe[i][j] as string).toLowerCase();
     }
 
     rows[i] = update;
@@ -126,10 +126,10 @@ const setAnsatt = (ansatt: Ansatt) => {
     Repost.value = ansatt[3];
     ;[Rgatenavn.value, Rgatenummer.value] = ansatt[4].split(/ (?=\w+$)/ as any);
     Rpostnummer.value = ansatt[5].split(' ')[0];
-    Rtimelonn.value = <any>ansatt[6];
-    Rstillingsprosent.value = <any>ansatt[7];
+    Rtimelonn.value = <any>ansatt[8];
+    Rstillingsprosent.value = <any>ansatt[6];
     // @ts-expect-error
-    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.textContent == ansatt[8]).value;
+    Rstillingstype.value = [].find.call(Rstillingstype.children, option => option.textContent == ansatt[7]).value;
 }
 
 sort();

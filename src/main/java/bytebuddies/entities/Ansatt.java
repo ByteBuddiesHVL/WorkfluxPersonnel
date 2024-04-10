@@ -197,8 +197,8 @@ public class Ansatt {
                 adresseId.getGatenummer() + "\",\"" +
                 post.getPostnummer() + " " +
                 post.getPoststed() + "\"," +
-                lonnId.getTimelonn() + "," +
                 String.format(Locale.US,"%.2f", stillingsprosent) + ",\"" +
-                stillingstypeId.getStillingstype() + "\"]";
+                stillingstypeId.getStillingstype() + "\"," +
+                lonnId.getTimelonn() + "]";
     }
 }
