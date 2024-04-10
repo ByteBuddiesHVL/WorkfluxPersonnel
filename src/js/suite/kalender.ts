@@ -98,19 +98,11 @@ const updateTidsplan = (clear?: boolean) => {
 
 updateTidsplan();
 
-document.getElementById('avbrytTimeEndring')!.addEventListener('click', () => {
-    timeEndringDialog.close();
-})
-
 const timeAnsattDialog = document.querySelector('.raskInfo')!.querySelector('dialog')!;
 const leggTilInputs = timeAnsattDialog.querySelectorAll('input')!;
 document.getElementById('leggTilAnsatt')!.addEventListener('click', () => {
     leggTilInputs[0].value = dateInput.value;
     timeAnsattDialog.showModal();
-})
-
-document.getElementById('avbrytTimeAnsatt')!.addEventListener('click', () => {
-    timeAnsattDialog.close();
 })
 
 const submitForm = (e: Event) => {
@@ -133,4 +125,4 @@ const submitForm = (e: Event) => {
 
 const forms = document.forms;
 
-forms[0].onsubmit = forms[1].onsubmit = submitForm;
+forms[0].onsubmit = forms[2].onsubmit = submitForm;

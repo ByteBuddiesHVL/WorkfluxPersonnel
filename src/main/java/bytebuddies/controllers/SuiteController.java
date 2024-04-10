@@ -72,11 +72,14 @@ public class SuiteController {
      * Viser startsiden for administrasjonssuiten.
      *
      * @param session       HttpSession-objektet.
+     * @param model         Model-objektet.
      * @return Suite-siden hvis brukeren er logget inn, ellers logon-siden.
      */
     @GetMapping("/suite")
-    public String getSuiteSite(HttpSession session) {
+    public String getSuiteSite(HttpSession session, Model model) {
         if (getLoggedInAttr(session) == null) return logOut(session);
+        model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+        model.addAttribute("delside", "hjem");
         return "suite";
     }
 
@@ -85,8 +88,8 @@ public class SuiteController {
      *
      * @param model         Model-objektet.
      * @param session       HttpSession-objektet.
+     * @param dag           Dato for kalenderen
      * @param delside       Deliden til administrasjonssuiten.
-     * @param attributes    RedirectAttributes-objektet.
      * @return Suite-siden med den valgte delsiden.
      */
     @GetMapping("/suite/{delside}")
@@ -94,34 +97,26 @@ public class SuiteController {
             Model model,
             HttpSession session,
             @RequestParam(name = "dag", required = false) LocalDate dag,
-            @PathVariable("delside") String delside,
-            RedirectAttributes attributes
+            @PathVariable("delside") String delside
     ) {
         Admin admin = getLoggedInAttr(session);
         if (admin == null) return logOut(session);
-        if (delside != null) {
-            attributes.addFlashAttribute("delside", delside);
-            switch (delside) {
-                case "personal" -> {
-                    model.addAttribute("ansatte", getAnsattString());
-                    model.addAttribute("ansattListe", ansattService.getAllAnsatte());
-                    model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
-                }
-                case "ansatt" -> {
-                    model.addAttribute("ansatte", getAnsattString());
-                    model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
-                }
-                case "kalender" -> {
-                    if (dag == null) dag = currentDate;
-                    model.addAttribute("ansatte", getAnsattString());
-                    model.addAttribute("ansattListe", ansattService.getAllAnsatte());
-                    model.addAttribute("dag", dag.toString());
-                    model.addAttribute("tidsplan", getTidsplanString(dag));
-                    model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
-                }
-                case "rapporter" -> {
-                    model.addAttribute("lonnsslipper", slippHistorikkService.hentAlleSlipper());
-                }
+        model.addAttribute("delside", delside);
+        switch (delside) {
+            case "ansatt" -> {
+                model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
+            }
+            case "kalender" -> {
+                if (dag == null) dag = currentDate;
+                model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+                model.addAttribute("dag", dag.toString());
+                model.addAttribute("tidsplan", getTidsplanString(dag));
+                model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
+            }
+            case "rapporter" -> {
+                model.addAttribute("lonnsslipper", slippHistorikkService.hentAlleSlipper());
             }
         }
         return "suite";

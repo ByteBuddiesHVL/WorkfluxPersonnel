@@ -8,8 +8,8 @@
     <title>Workflux Suite</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/suite/style.css">
-    <link rel="stylesheet" href="../css/suite/${delside == null ? "hjem" : delside}.css">
-    <script type="module" src="../js/suite/${delside == null ? "hjem" : delside}.js"></script>
+    <link rel="stylesheet" href="../css/suite/${delside}.css">
+    <script type="module" src="../js/suite/${delside}.js"></script>
 </head>
 <body>
     <header class="header">
@@ -26,55 +26,47 @@
     </c:if>
     <section class="suiteWrapper">
         <div class="suiteChooser">
-            <a href="/suite" class="button${delside == null ? " active" : ""}" style="margin-right: 1em;">Hjem</a>
-            <a href="/suite/personal" class="button${delside eq "personal" ? " active" : ""}">Personal</a>
+            <a href="/suite" class="button${delside eq "hjem" ? " active" : ""}" style="margin-right: 1em;">Hjem</a>
             <a href="/suite/kalender" class="button${delside eq "kalender" ? " active" : ""}">Kalender</a>
             <a href="/suite/ansatt" class="button${delside eq "ansatt" ? " active" : ""}">Ansatt</a>
             <a href="/suite/rapporter" class="button${delside eq "rapporter" ? " active" : ""}">Rapporter</a>
         </div>
         <div class="suite">
-            <c:if test="${empty delside}">
-                <div id="hjem"></div>
-            </c:if>
-            <c:if test="${delside eq 'personal'}">
-            <div id="personal">
-                <section>
-                    <div id="lonnslippDiv">
-                        <button type="button" id="lagLonnsslipper">Lag Lønnsslipper</button>
-                        <dialog id="lonnsslippWindow">
-                            <h2>Generer lønnsslipper</h2>
-                            <form id="lonnsslippForm" method="post" action="/genererLonnsslipper">
-                                <label>
-                                    Måned for generering:
-                                    <input type="month" name="month" required>
-                                </label>
-                                <div>
-                                    <input type="radio" id="radio1" name="for" value="all" required checked>
-                                    <label for="radio1">Alle</label>
+            <c:if test="${delside eq 'hjem'}">
+            <div id="hjem">
+                <button class="button">Lag Lønnsslipper</button>
+                <dialog>
+                    <h2>Generer lønnsslipper</h2>
+                    <form id="lonnsslipp" method="post" action="/genererLonnsslipper">
+                        <label>
+                            Måned for generering:
+                            <input type="month" name="month" required>
+                        </label>
+                        <div>
+                            <input type="radio" id="radio1" name="for" value="all" required checked>
+                            <label for="radio1">Alle</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="radio2" name="for" value="one" required>
+                            <label for="radio2">
+                                Enkel:
+                                <div class="select">
+                                    <select name="brukernavn">
+                                        <c:forEach items="${ansattListe}" var="a">
+                                            <option value="${a.brukernavn}">${a.brukernavn} - ${a.fornavn} ${a.etternavn}</option>
+                                        </c:forEach>
+                                    </select>
                                 </div>
-                                <div>
-                                    <input type="radio" id="radio2" name="for" value="one" required>
-                                    <label for="radio2">
-                                        Enkel:
-                                        <div class="select">
-                                            <select name="brukernavn">
-                                                <c:forEach items="${ansattListe}" var="a">
-                                                    <option value="${a.brukernavn}">${a.brukernavn} - ${a.fornavn} ${a.etternavn}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </label>
-                                </div>
-                            </form>
-                            <div>
-                                <input type="submit" id="lagSlipper" value="Generer" form="lonnsslippForm">
-                                <form method="dialog">
-                                    <button class="button">Lukk</button>
-                                </form>
-                            </div>
-                        </dialog>
+                            </label>
+                        </div>
+                    </form>
+                    <div>
+                        <input type="submit" value="Generer" form="lonnsslipp">
+                        <form method="dialog">
+                            <button class="button">Lukk</button>
+                        </form>
                     </div>
-                </section>
+                </dialog>
             </div>
             </c:if>
             <c:if test="${delside eq 'kalender'}">
@@ -90,7 +82,7 @@
                 <section class="raskInfo">
                     <button id="leggTilAnsatt">Legg til nytt skift</button>
                     <dialog id="timeAnsatt">
-                        <form action="/timeAnsatt">
+                        <form id="form1" action="/timeAnsatt">
                             <input type="hidden" name="date">
 
                             <label>
@@ -121,9 +113,13 @@
                                     </select>
                                 </div>
                             </label>
-                            <button id="avbrytTimeAnsatt" type="button">Avbryt</button>
-                            <input type="submit" value="Legg til">
                         </form>
+                        <div>
+                            <input type="submit" value="Legg til" form="form1">
+                            <form method="dialog">
+                                <button class="button">Lukk</button>
+                            </form>
+                        </div>
                     </dialog>
                 </section>
                 <section class="tidsRedigering">
@@ -158,7 +154,7 @@
                         <div id="ansatte"></div>
                         <div id="tidsplan"></div>
                         <dialog id="timeEndring">
-                            <form action="/endreTime">
+                            <form id="form2" action="/endreTime">
                                 <input type="hidden" name="tidsplanId">
                                 <input type="hidden" name="date">
 
@@ -180,9 +176,13 @@
                                         </select>
                                     </div>
                                 </label>
-                                <button id="avbrytTimeEndring" type="button">Avbryt</button>
-                                <input type="submit" value="Lagre">
                             </form>
+                            <div>
+                                <input type="submit" value="Lagre" form="form2">
+                                <form method="dialog">
+                                    <button class="button">Lukk</button>
+                                </form>
+                            </div>
                         </dialog>
                     </div>
                 </section>

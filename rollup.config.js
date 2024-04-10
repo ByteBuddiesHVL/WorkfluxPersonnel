@@ -7,7 +7,6 @@ export default {
     input: {
         "suite/hjem": 'src/js/suite/hjem.ts',
         "suite/ansatt": 'src/js/suite/ansatt.ts',
-        "suite/personal": 'src/js/suite/personal.ts',
         "suite/kalender": 'src/js/suite/kalender.ts',
         "suite/rapporter": 'src/js/suite/rapporter.ts',
     },
