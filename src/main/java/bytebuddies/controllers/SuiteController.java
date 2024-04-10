@@ -268,6 +268,9 @@ public class SuiteController {
                     model.addAttribute("tidsplan", getTidsplanString(currentDate));
                     model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
                 }
+                case "rapporter" -> {
+                    model.addAttribute("lonnsslipper", slippHistorikkService.hentAlleSlipper());
+                }
             }
         }
         return "suite";

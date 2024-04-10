@@ -39,7 +39,6 @@
             <c:if test="${delside eq 'personal'}">
             <div id="personal">
                 <section>
-                    <a href="/getLonnsslipp?filnavn=2024-04-30_wf000002">2024-04-30_wf000002.pdf</a>
                     <div id="lonnslippDiv">
                         <button type="button" id="lagLonnsslipper">Lag Lønnsslipper</button>
                         <dialog id="lonnsslippWindow">
@@ -340,7 +339,22 @@
             </div>
             </c:if>
             <c:if test="${delside eq 'rapporter'}">
-            <div id="rapporter"></div>
+            <div id="rapporter">
+                <section class="lonnsRapporter">
+                    <div id="lonnHeader"></div>
+                    <div id="lonnBody">
+                        <c:forEach items="${lonnsslipper}" var="slipp">
+                            <div class="resourceDiv">
+                                <div class="rapportAnsattinfo">
+                                    <p>${slipp.ansattId.brukernavn}</p>
+                                    <p>${slipp.ansattId.fornavn} ${slipp.ansattId.etternavn} : Lønnsslipp ${slipp.dato}</p>
+                                </div>
+                                <a class="rapportLastned" href="/getLonnsslipp?filnavn=${slipp.dato}_${slipp.ansattId.brukernavn}">Last ned</a>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </section>
+            </div>
             </c:if>
         </div>
     </section>

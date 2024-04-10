@@ -82,11 +82,12 @@ public class SlippHistorikkService {
 
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
              OutputStream out = response.getOutputStream()) {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = bis.read(buffer)) != -1) {
                 out.write(buffer,0,bytesRead);
             }
+            out.flush();
         }
     }
 
