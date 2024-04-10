@@ -1,8 +1,9 @@
 package bytebuddies.controllers;
 
-import bytebuddies.embeddable.AnsattId;
 import bytebuddies.embeddable.Passord;
-import bytebuddies.entities.*;
+import bytebuddies.entities.Admin;
+import bytebuddies.entities.Bedrift;
+import bytebuddies.entities.Dev;
 import bytebuddies.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

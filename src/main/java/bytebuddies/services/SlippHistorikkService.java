@@ -2,7 +2,6 @@ package bytebuddies.services;
 
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.SlippHistorikk;
-import bytebuddies.repositories.SkattRepository;
 import bytebuddies.repositories.SlippHistorikkRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;

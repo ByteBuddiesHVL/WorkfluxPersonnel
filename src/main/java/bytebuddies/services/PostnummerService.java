@@ -1,7 +1,6 @@
 package bytebuddies.services;
 
 import bytebuddies.entities.Postnummer;
-import bytebuddies.repositories.LonnRepository;
 import bytebuddies.repositories.PostnummerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

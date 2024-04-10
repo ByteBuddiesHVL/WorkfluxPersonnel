@@ -1,6 +1,5 @@
 package bytebuddies.repositories;
 
-import bytebuddies.embeddable.AnsattId;
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Bedrift;
 import org.springframework.data.jpa.repository.JpaRepository;

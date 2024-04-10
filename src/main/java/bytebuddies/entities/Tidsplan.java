@@ -3,7 +3,6 @@ package bytebuddies.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 /**
  * Representerer en tidsplan for en ansatt i Workflux-systemet.

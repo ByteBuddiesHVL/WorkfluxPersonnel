@@ -1,7 +1,10 @@
 package bytebuddies.embeddable;
 
 import bytebuddies.entities.Bedrift;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 import java.io.Serializable;
 

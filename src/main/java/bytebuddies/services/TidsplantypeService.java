@@ -2,7 +2,6 @@ package bytebuddies.services;
 
 import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Tidsplantype;
-import bytebuddies.repositories.SlippHistorikkRepository;
 import bytebuddies.repositories.TidsplantypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

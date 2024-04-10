@@ -1,6 +1,5 @@
 package bytebuddies.entities;
 
-import bytebuddies.embeddable.AnsattId;
 import bytebuddies.embeddable.Passord;
 import jakarta.persistence.*;
 

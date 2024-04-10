@@ -1,9 +1,7 @@
 package bytebuddies.services;
 
-import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Stillingstype;
-import bytebuddies.repositories.AnsattRepository;
 import bytebuddies.repositories.StillingstypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

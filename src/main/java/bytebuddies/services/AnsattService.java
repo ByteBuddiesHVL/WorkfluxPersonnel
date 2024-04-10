@@ -3,12 +3,10 @@ package bytebuddies.services;
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Bedrift;
 import bytebuddies.repositories.AnsattRepository;
-import bytebuddies.repositories.BedriftRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Tjenesteklasse som gir metoder for å samhandle med Ansatt-entiteter.
