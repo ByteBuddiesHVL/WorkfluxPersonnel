@@ -7,12 +7,9 @@ import bytebuddies.repositories.TidsplanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,12 +155,13 @@ public class TidsplanService {
     /**
      * Henter tidsplan innen to tidspunkter
      *
-     * @param ansatt    ansatt for søk
-     * @param start     starttidspunkt for søk
-     * @param end       sluttidspunkt for søk
+     * @param ansatt        ansatt for søk
+     * @param start         starttidspunkt for søk
+     * @param end           sluttidspunkt for søk
+     * @param tidsplanId    tidsplanId hvis man redigerer på tidsplan
      * @return Tidsplan
      */
-    public Tidsplan sjekkOmTidsplanEksisterer(Ansatt ansatt, LocalDateTime start, LocalDateTime end) {
-        return tidsplanRepository.getTidsplanByAnsattIdAndStarttidBetweenOrStarttidBetween(ansatt,start,end,start,end).orElse(null);
+    public List<Tidsplan> sjekkOmTidsplanEksisterer(Ansatt ansatt, LocalDateTime start, LocalDateTime end, int tidsplanId) {
+        return tidsplanRepository.findConflictingShifts(ansatt,tidsplanId,start,end);
     }
 }

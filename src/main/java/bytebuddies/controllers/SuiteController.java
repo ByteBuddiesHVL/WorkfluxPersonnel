@@ -1,12 +1,10 @@
 package bytebuddies.controllers;
 
-import bytebuddies.embeddable.Passord;
 import bytebuddies.entities.*;
 import bytebuddies.services.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +15,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -77,7 +71,7 @@ public class SuiteController {
      */
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session, Model model) {
-        if (getLoggedInAttr(session) == null) return logOut(session);
+        if (getLoggedInAttr(session) == null) return "suite-logon";
         model.addAttribute("ansattListe", ansattService.getAllAnsatte());
         model.addAttribute("delside", "hjem");
         return "suite";
@@ -162,7 +156,7 @@ public class SuiteController {
      */
     public String logOut(HttpSession session) {
         session.invalidate();
-        return "suite-logon";
+        return "redirect:/suite";
     }
 
 
@@ -207,15 +201,24 @@ public class SuiteController {
             @RequestParam("tidsplantype") Integer typeId,
             HttpSession session
     ) {
-        if (getLoggedInAttr(session) == null) getLogOut(session);
+        if (getLoggedInAttr(session) == null) return logOut(session);
 
         Tidsplan tidsplan = tidsplanService.getTidsplan(tidsplanId);
         Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
 
-        tidsplan.setStarttid(starttid.atDate(date).withSecond(0).withNano(0));
-        tidsplan.setSluttid(sluttid.atDate(date).withSecond(0).withNano(0));
-        tidsplan.setTypeId(type);
-        tidsplanService.saveTidsplan(tidsplan);
+        if (sluttid.isAfter(starttid)) {
+            LocalDateTime startDate = starttid.atDate(date).withSecond(0).withNano(0);
+            LocalDateTime sluttDate = sluttid.atDate(date).withSecond(0).withNano(0);
+
+            if (tidsplanService.sjekkOmTidsplanEksisterer(tidsplan.getAnsattId(), startDate, sluttDate, tidsplanId).isEmpty()) {
+                tidsplan.setStarttid(startDate);
+                tidsplan.setSluttid(sluttDate);
+                tidsplan.setTypeId(type);
+                tidsplanService.saveTidsplan(tidsplan);
+            }
+        } else {
+            //todo return error
+        }
 
         return getTidsplanString(date);
     }
@@ -241,17 +244,21 @@ public class SuiteController {
             @RequestParam("tidsplantype") Integer typeId,
             HttpSession session
     ) {
-        if (getLoggedInAttr(session) == null) getLogOut(session);
+        if (getLoggedInAttr(session) == null) return logOut(session);
 
         Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
         if (ansatt != null) {
-            LocalDateTime startDate = starttid.atDate(date).withSecond(0).withNano(0);
-            LocalDateTime sluttDate = sluttid.atDate(date).withSecond(0).withNano(0);
+            if (sluttid.isAfter(starttid)) {
+                LocalDateTime startDate = starttid.atDate(date).withSecond(0).withNano(0);
+                LocalDateTime sluttDate = sluttid.atDate(date).withSecond(0).withNano(0);
 
-            if (tidsplanService.sjekkOmTidsplanEksisterer(ansatt,startDate,sluttDate) == null) {
-                Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
-                Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0).withNano(0),sluttid.atDate(date).withSecond(0).withNano(0),type,false);
-                tidsplanService.saveTidsplan(tidsplan);
+                if (tidsplanService.sjekkOmTidsplanEksisterer(ansatt, startDate, sluttDate,0).isEmpty()) {
+                    Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
+                    Tidsplan tidsplan = new Tidsplan(ansatt, startDate, sluttDate, type, false);
+                    tidsplanService.saveTidsplan(tidsplan);
+                }
+            } else {
+                //todo return error
             }
         }
         return getTidsplanString(date);
@@ -269,8 +276,7 @@ public class SuiteController {
             @RequestParam(name = "dag", required = false) LocalDate dag,
             HttpSession session
     ) {
-        if (getLoggedInAttr(session) == null) getLogOut(session);
-
+        if (getLoggedInAttr(session) == null) return logOut(session);;
         return getTidsplanString(dag);
     }
 

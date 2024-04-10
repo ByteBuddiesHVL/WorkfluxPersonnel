@@ -3,6 +3,8 @@ package bytebuddies.repositories;
 import bytebuddies.entities.Ansatt;
 import bytebuddies.entities.Tidsplan;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -45,15 +47,14 @@ public interface TidsplanRepository extends JpaRepository<Tidsplan, Integer> {
     List<Tidsplan> getTidsplansByStarttidBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
 
     /**
-     * Finner tidsplan mellom flere LocalDateTime objekter
+     * Finner tidsplaner mellom flere LocalDateTime objekter
      *
-     * @param ansatt    ansatt for tidsplan
-     * @param startS    start søk for starttid
-     * @param endS      slutt søk for starttid
-     * @param startE    start søk for sluttid
-     * @param endE      slutt søk for sluttid
-     * @return optional<Tidsplan>
+     * @param ansattId      ansatt ID for søk
+     * @param starttid      starttid for søk
+     * @param sluttid       sluttid for søk
+     * @param tidsplanId    tidsplan ID ved endring av tidsplan
+     * @return List<Tidsplan>
      */
-    Optional<Tidsplan> getTidsplanByAnsattIdAndStarttidBetweenOrStarttidBetween(Ansatt ansatt, LocalDateTime startS, LocalDateTime endS, LocalDateTime startE, LocalDateTime endE);
-
+    @Query("SELECT t FROM Tidsplan t WHERE t.ansattId = :ansattId AND t.tidsplanId <> :tidsplanId AND ((t.starttid <= :starttid AND t.sluttid > :starttid) OR (t.starttid < :sluttid AND t.sluttid >= :sluttid) OR (t.starttid >= :starttid AND t.sluttid <= :sluttid))")
+    List<Tidsplan> findConflictingShifts(@Param("ansattId") Ansatt ansattId, @Param("tidsplanId") int tidsplanId, @Param("starttid") LocalDateTime starttid, @Param("sluttid") LocalDateTime sluttid);
 }
