@@ -92,6 +92,8 @@ const updateTidsplan = (clear?: boolean) => {
             timeEndringDialog.showModal();
         })
     }
+
+    history.replaceState({}, '', '?dag=' + dateInput.value);
 }
 
 updateTidsplan();

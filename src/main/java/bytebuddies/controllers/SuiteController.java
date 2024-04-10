@@ -93,6 +93,7 @@ public class SuiteController {
     public String getSuiteDelide(
             Model model,
             HttpSession session,
+            @RequestParam(name = "dag", required = false) LocalDate dag,
             @PathVariable("delside") String delside,
             RedirectAttributes attributes
     ) {
@@ -111,10 +112,11 @@ public class SuiteController {
                     model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
                 }
                 case "kalender" -> {
+                    if (dag == null) dag = currentDate;
                     model.addAttribute("ansatte", getAnsattString());
                     model.addAttribute("ansattListe", ansattService.getAllAnsatte());
-                    model.addAttribute("dag", currentDate.toString());
-                    model.addAttribute("tidsplan", getTidsplanString(currentDate));
+                    model.addAttribute("dag", dag.toString());
+                    model.addAttribute("tidsplan", getTidsplanString(dag));
                     model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
                 }
                 case "rapporter" -> {
