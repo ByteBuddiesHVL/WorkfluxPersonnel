@@ -154,4 +154,16 @@ public class TidsplanService {
     public List<Tidsplan> getTidsplanByDate(LocalDate date) {
         return tidsplanRepository.getTidsplansByStarttidBetween(date.atStartOfDay(),date.plusDays(1).atStartOfDay().minusNanos(1));
     }
+
+    /**
+     * Henter tidsplan innen to tidspunkter
+     *
+     * @param ansatt    ansatt for søk
+     * @param start     starttidspunkt for søk
+     * @param end       sluttidspunkt for søk
+     * @return Tidsplan
+     */
+    public Tidsplan sjekkOmTidsplanEksisterer(Ansatt ansatt, LocalDateTime start, LocalDateTime end) {
+        return tidsplanRepository.getTidsplanByAnsattIdAndStarttidBetweenOrStarttidBetween(ansatt,start,end,start,end).orElse(null);
+    }
 }

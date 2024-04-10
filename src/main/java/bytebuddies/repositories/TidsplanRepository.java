@@ -44,4 +44,16 @@ public interface TidsplanRepository extends JpaRepository<Tidsplan, Integer> {
      */
     List<Tidsplan> getTidsplansByStarttidBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
 
+    /**
+     * Finner tidsplan mellom flere LocalDateTime objekter
+     *
+     * @param ansatt    ansatt for tidsplan
+     * @param startS    start søk for starttid
+     * @param endS      slutt søk for starttid
+     * @param startE    start søk for sluttid
+     * @param endE      slutt søk for sluttid
+     * @return optional<Tidsplan>
+     */
+    Optional<Tidsplan> getTidsplanByAnsattIdAndStarttidBetweenOrStarttidBetween(Ansatt ansatt, LocalDateTime startS, LocalDateTime endS, LocalDateTime startE, LocalDateTime endE);
+
 }

@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
@@ -66,168 +67,16 @@ public class SuiteController {
 
     private LocalDate currentDate = LocalDate.now();
 
-    /**
-     * Setter den valgte datoen for tidsplanen.
-     *
-     * @param year  Året.
-     * @param month Måneden.
-     * @param day   Dagen.
-     * @return Omdirigerer til kalendersiden.
-     */
-    @GetMapping("/setDagTidsplan")
-    public String setDagForTidsplan(
-            @RequestParam("year") Integer year,
-            @RequestParam("month") Integer month,
-            @RequestParam("day") Integer day
-    ) {
-        if (year != null && month != null && day != null) {
-            currentDate = LocalDate.of(year, month, day);
-        }
-        return "redirect:/suite/kalender";
-    }
-
-    /**
-     * Endrer en tidsplan for en ansatt.
-     *
-     * @param tidsplanId  ID-en til tidsplanen.
-     * @param date        Datoen for tidsplanen.
-     * @param starttid    Starttidspunktet for tidsplanen.
-     * @param sluttid     Sluttidspunktet for tidsplanen.
-     * @param typeId      ID-en til tidsplantypen.
-     * @return En streng som representerer tidsplanen.
-     */
-    @PostMapping(value = "/endreTime", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody()
-    public String endreTime(
-            @RequestParam("tidsplanId") Integer tidsplanId,
-            @RequestParam("date") LocalDate date,
-            @RequestParam("starttid") LocalTime starttid,
-            @RequestParam("sluttid") LocalTime sluttid,
-            @RequestParam("tidsplantype") Integer typeId
-    ) {
-        Tidsplan tidsplan = tidsplanService.getTidsplan(tidsplanId);
-        Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
-
-        tidsplan.setStarttid(starttid.atDate(date).withSecond(0).withNano(0));
-        tidsplan.setSluttid(sluttid.atDate(date).withSecond(0).withNano(0));
-        tidsplan.setTypeId(type);
-        tidsplanService.saveTidsplan(tidsplan);
-
-        return getTidsplanString(date);
-    }
-
-    /**
-     * Endrer en tidsplan for en ansatt.
-     *
-     * @param date          Datoen for tidsplanen.
-     * @param brukernavn    Brukernavnet til den ansatte.
-     * @param starttid      Starttidspunktet for tidsplanen.
-     * @param sluttid       Sluttidspunktet for tidsplanen.
-     * @param typeId        ID-en til tidsplantypen.
-     * @return En streng som representerer tidsplanen.
-     */
-    @PostMapping(value = "/timeAnsatt", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody()
-    public String endreTime(
-            @RequestParam("date") LocalDate date,
-            @RequestParam("brukernavn") String brukernavn,
-            @RequestParam("starttid") LocalTime starttid,
-            @RequestParam("sluttid") LocalTime sluttid,
-            @RequestParam("tidsplantype") Integer typeId
-    ) {
-        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
-        if (ansatt != null) {
-            //todo - check if there is already a tidsplan between the starttid and sluttid
-            Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
-            Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0).withNano(0),sluttid.atDate(date).withSecond(0).withNano(0),type,false);
-            tidsplanService.saveTidsplan(tidsplan);
-        }
-        return getTidsplanString(date);
-    }
-
-    /**
-     * Genererer lønnsslipper.
-     *
-     * @param yearmonth     År og måned.
-     * @param type          Type av lønnsslipper (all eller one).
-     * @param brukernavn    Brukernavnet til den ansatte (hvis type er one).
-     * @param session       HttpSession-objektet.
-     * @return Omdirigerer til personaloversikten.
-     */
-    @PostMapping("/genererLonnsslipper")
-    public String genererLonnsslipper(
-            @RequestParam("month") String yearmonth,
-            @RequestParam("for") String type,
-            @RequestParam("brukernavn") String brukernavn,
-            HttpSession session
-    ) {
-        int year = Integer.parseInt(yearmonth.split("-")[0]);
-        int month = Integer.parseInt(yearmonth.split("-")[1]);
-        LocalDate startDate = LocalDate.of(year,month,1);
-        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
-
-        Admin admin = getLoggedInAttr(session);
-
-        if (admin != null) {
-            Bedrift bedrift = admin.getBedriftId();
-            LocalDate payDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
-
-            if (type.equals("all")) {
-                lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,payDate);
-
-            } else if (type.equals("one")) {
-                Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
-                if (ansatt != null) {
-                    try {
-                        lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,payDate);
-                    } catch (IOException e) {
-                        // TODO return error
-                    }
-                }
-            }
-        }
-        return "redirect:/suite/personal";
-    }
-
-    /**
-     * Henter en lønnsslipp for en ansatt.
-     *
-     * @param filNavn       Filnavnet til lønnsslippen.
-     * @param response      HttpServletResponse-objektet.
-     * @return Omdirigerer til personaloversikten.
-     */
-    @GetMapping("/getLonnsslipp")
-    public String hentLonnsslipp(
-            @RequestParam("filnavn") String filNavn,
-            HttpServletResponse response
-    ) {
-        String[] navn = filNavn.split("_");
-        String[] dateS = navn[0].split("-");
-        LocalDate date = LocalDate.of(Integer.parseInt(dateS[0]),Integer.parseInt(dateS[1]),Integer.parseInt(dateS[2]));
-        String brukernavn = navn[1];
-        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
-        if (ansatt != null) {
-            try {
-                slippHistorikkService.convertToPDF(slippHistorikkService.hentSlipp(ansatt,date).getFileData(),response,filNavn + ".pdf");
-            } catch (IOException e) {
-                //TODO return error
-            }
-        }
-
-        return "redirect:/suite/personal";
-    }
 
     /**
      * Viser startsiden for administrasjonssuiten.
      *
-     * @param session HttpSession-objektet.
+     * @param session       HttpSession-objektet.
      * @return Suite-siden hvis brukeren er logget inn, ellers logon-siden.
      */
-
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session) {
-        Admin admin = getLoggedInAttr(session);
-        if (admin == null) return "suite-logon";
+        if (getLoggedInAttr(session) == null) return logOut(session);
         return "suite";
     }
 
@@ -248,7 +97,7 @@ public class SuiteController {
             RedirectAttributes attributes
     ) {
         Admin admin = getLoggedInAttr(session);
-        if (admin == null) return "redirect:/suite";
+        if (admin == null) return logOut(session);
         if (delside != null) {
             attributes.addFlashAttribute("delside", delside);
             switch (delside) {
@@ -277,18 +126,6 @@ public class SuiteController {
     }
 
     /**
-     * Logger ut brukeren.
-     *
-     * @param session HttpSession-objektet.
-     * @return Omdirigerer til startsiden for administrasjonssuiten.
-     */
-    @GetMapping("/logout")
-    public String logOut(HttpSession session){
-        session.invalidate();
-        return "redirect:/suite";
-    }
-
-    /**
      * Logger inn brukeren.
      *
      * @param brukernavn    Brukernavnet til brukeren.
@@ -307,6 +144,213 @@ public class SuiteController {
         String errorMessage = valServ.validerAdmin(brukernavn,passord,session);
         if (errorMessage != null) attributes.addFlashAttribute("error",errorMessage);
         return "redirect:/suite";
+    }
+
+    /**
+     * Logger ut brukeren.
+     *
+     * @param session HttpSession-objektet.
+     * @return Omdirigerer til startsiden for administrasjonssuiten.
+     */
+    @GetMapping("/logout")
+    public String getLogOut(HttpSession session){
+        return logOut(session);
+    }
+
+    /**
+     * Invaliderer session objektet og returnerer logon siden for suite
+     *
+     * @param session       HttpSession-objektet.
+     * @return logon side
+     */
+    public String logOut(HttpSession session) {
+        session.invalidate();
+        return "suite-logon";
+    }
+
+
+    /**
+     * Setter den valgte datoen for tidsplanen.
+     *
+     * @param year  Året.
+     * @param month Måneden.
+     * @param day   Dagen.
+     * @return Omdirigerer til kalendersiden.
+     */
+    @GetMapping("/setDagTidsplan")
+    public String setDagForTidsplan(
+            @RequestParam("year") Integer year,
+            @RequestParam("month") Integer month,
+            @RequestParam("day") Integer day
+    ) {
+        if (year != null && month != null && day != null) {
+            currentDate = LocalDate.of(year, month, day);
+        }
+        return "redirect:/suite/kalender";
+    }
+
+    /**
+     * Endrer en tidsplan for en ansatt.
+     *
+     * @param tidsplanId  ID-en til tidsplanen.
+     * @param date        Datoen for tidsplanen.
+     * @param starttid    Starttidspunktet for tidsplanen.
+     * @param sluttid     Sluttidspunktet for tidsplanen.
+     * @param typeId      ID-en til tidsplantypen.
+     * @param session       HttpSession-objektet.
+     * @return En streng som representerer tidsplanen.
+     */
+    @PostMapping(value = "/endreTime", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody()
+    public String endreTime(
+            @RequestParam("tidsplanId") Integer tidsplanId,
+            @RequestParam("date") LocalDate date,
+            @RequestParam("starttid") LocalTime starttid,
+            @RequestParam("sluttid") LocalTime sluttid,
+            @RequestParam("tidsplantype") Integer typeId,
+            HttpSession session
+    ) {
+        if (getLoggedInAttr(session) == null) getLogOut(session);
+
+        Tidsplan tidsplan = tidsplanService.getTidsplan(tidsplanId);
+        Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
+
+        tidsplan.setStarttid(starttid.atDate(date).withSecond(0).withNano(0));
+        tidsplan.setSluttid(sluttid.atDate(date).withSecond(0).withNano(0));
+        tidsplan.setTypeId(type);
+        tidsplanService.saveTidsplan(tidsplan);
+
+        return getTidsplanString(date);
+    }
+
+    /**
+     * Endrer en tidsplan for en ansatt.
+     *
+     * @param date          Datoen for tidsplanen.
+     * @param brukernavn    Brukernavnet til den ansatte.
+     * @param starttid      Starttidspunktet for tidsplanen.
+     * @param sluttid       Sluttidspunktet for tidsplanen.
+     * @param typeId        ID-en til tidsplantypen.
+     * @param session       HttpSession-objektet.
+     * @return En streng som representerer tidsplanen.
+     */
+    @PostMapping(value = "/timeAnsatt", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody()
+    public String timeAnsatt(
+            @RequestParam("date") LocalDate date,
+            @RequestParam("brukernavn") String brukernavn,
+            @RequestParam("starttid") LocalTime starttid,
+            @RequestParam("sluttid") LocalTime sluttid,
+            @RequestParam("tidsplantype") Integer typeId,
+            HttpSession session
+    ) {
+        if (getLoggedInAttr(session) == null) getLogOut(session);
+
+        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        if (ansatt != null) {
+            LocalDateTime startDate = starttid.atDate(date).withSecond(0).withNano(0);
+            LocalDateTime sluttDate = sluttid.atDate(date).withSecond(0).withNano(0);
+
+            if (tidsplanService.sjekkOmTidsplanEksisterer(ansatt,startDate,sluttDate) == null) {
+                Tidsplantype type = tidsplantypeService.getTidsplantypeById(typeId);
+                Tidsplan tidsplan = new Tidsplan(ansatt,starttid.atDate(date).withSecond(0).withNano(0),sluttid.atDate(date).withSecond(0).withNano(0),type,false);
+                tidsplanService.saveTidsplan(tidsplan);
+            }
+        }
+        return getTidsplanString(date);
+    }
+
+    /**
+     * Henter timeplanen for en spesifikk dato.
+     *
+     * @param dag Dagen for hvilken timeplanen blir forespurt.
+     * @return JSON-representasjon av timeplanen for den spesifiserte datoen.
+     */
+    @GetMapping(value = "/tidsplan", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody()
+    public String hentTidsplan(
+            @RequestParam(name = "dag", required = false) LocalDate dag,
+            HttpSession session
+    ) {
+        if (getLoggedInAttr(session) == null) getLogOut(session);
+
+        return getTidsplanString(dag);
+    }
+
+    /**
+     * Genererer lønnsslipper.
+     *
+     * @param yearmonth     År og måned.
+     * @param type          Type av lønnsslipper (all eller one).
+     * @param brukernavn    Brukernavnet til den ansatte (hvis type er one).
+     * @param session       HttpSession-objektet.
+     * @return Omdirigerer til personaloversikten.
+     */
+    @PostMapping("/genererLonnsslipper")
+    public String genererLonnsslipper(
+            @RequestParam("month") String yearmonth,
+            @RequestParam("for") String type,
+            @RequestParam("brukernavn") String brukernavn,
+            HttpSession session
+    ) {
+        Admin admin = getLoggedInAttr(session);
+        if (admin == null) return logOut(session);
+
+        int year = Integer.parseInt(yearmonth.split("-")[0]);
+        int month = Integer.parseInt(yearmonth.split("-")[1]);
+        LocalDate startDate = LocalDate.of(year,month,1);
+        LocalDate endDate = startDate.plusMonths(1).minusDays(1);
+
+        Bedrift bedrift = admin.getBedriftId();
+        LocalDate payDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
+
+        if (type.equals("all")) {
+            lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,payDate);
+
+        } else if (type.equals("one")) {
+            Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+            if (ansatt != null) {
+                try {
+                    lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,payDate);
+                } catch (IOException e) {
+                    // TODO return error
+                }
+            }
+        }
+
+        return "redirect:/suite/personal";
+    }
+
+    /**
+     * Henter en lønnsslipp for en ansatt.
+     *
+     * @param filNavn       Filnavnet til lønnsslippen.
+     * @param response      HttpServletResponse-objektet.
+     * @param session       HttpSession-objektet.
+     * @return Omdirigerer til personaloversikten.
+     */
+    @GetMapping("/getLonnsslipp")
+    public String hentLonnsslipp(
+            @RequestParam("filnavn") String filNavn,
+            HttpServletResponse response,
+            HttpSession session
+    ) {
+        if (getLoggedInAttr(session) == null) return logOut(session);
+
+        String[] navn = filNavn.split("_");
+        String[] dateS = navn[0].split("-");
+        LocalDate date = LocalDate.of(Integer.parseInt(dateS[0]),Integer.parseInt(dateS[1]),Integer.parseInt(dateS[2]));
+        String brukernavn = navn[1];
+        Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        if (ansatt != null) {
+            try {
+                slippHistorikkService.convertToPDF(slippHistorikkService.hentSlipp(ansatt,date).getFileData(),response,filNavn + ".pdf");
+            } catch (IOException e) {
+                //TODO return error
+            }
+        }
+
+        return "redirect:/suite/personal";
     }
 
     /**
@@ -341,14 +385,12 @@ public class SuiteController {
             HttpSession session,
             RedirectAttributes attributes
     ) {
+        Admin admin = getLoggedInAttr(session);
+        if (admin == null) return logOut(session);
+
         String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,timelonn,stillingsprosent,stillingstype);
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
-            Admin admin = getLoggedInAttr(session);
-            if (admin == null) {
-                attributes.addFlashAttribute("error", "Du er ikke logget inn!");
-                return "redirect:/suite";
-            }
             Bedrift bedrift = admin.getBedriftId();
             Ansatt ansatt = valServ.lagAnsatt(bedrift,fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,timelonn,stillingsprosent,stillingstype,etternavn);
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
@@ -393,6 +435,8 @@ public class SuiteController {
             HttpSession session,
             RedirectAttributes attributes
     ) {
+        Admin admin = getLoggedInAttr(session);
+        if (admin == null) return logOut(session);
 
         if (slettAnsatt) {
             ansattService.deleteAnsattByBrukernavn(brukernavn);
@@ -401,11 +445,6 @@ public class SuiteController {
         String errorMessage = valServ.validerAnsatt(fornavn,etternavn,telefonnummer,epost,gatenavn,gatenummer,postnummer,timelonn,stillingsprosent,stillingstypeId);
         if (errorMessage != null) attributes.addFlashAttribute("error", errorMessage);
         else {
-            Admin admin = getLoggedInAttr(session);
-            if (admin == null) {
-                attributes.addFlashAttribute("error", "Du er ikke logget inn!");
-                return "redirect:/suite";
-            }
             Bedrift bedrift = admin.getBedriftId();
             Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
             Stillingstype stillingstype = stillingstypeService.getStillingstype(stillingstypeId);
@@ -427,29 +466,14 @@ public class SuiteController {
     }
 
     /**
-     * Henter timeplanen for en spesifikk dato.
-     *
-     * @param dag Dagen for hvilken timeplanen blir forespurt.
-     * @return JSON-representasjon av timeplanen for den spesifiserte datoen.
-     */
-    @GetMapping(value = "/tidsplan", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody()
-    public String hentTidsplan(
-            @RequestParam(name = "dag", required = false) LocalDate dag
-    ) {
-        // TODO beskytt med admin
-        return getTidsplanString(dag);
-    }
-
-    /**
      * Henter pålogget admin fra økten.
      *
-     * @param session HttpSession-objektet.
      * @return Den påloggede adminen, eller null hvis ingen admin er pålogget.
      */
     public Admin getLoggedInAttr(HttpSession session) {
         return (Admin) session.getAttribute("loggedin");
     }
+
 
     /**
      * Henter en strengrepresentasjon av alle ansatte.
