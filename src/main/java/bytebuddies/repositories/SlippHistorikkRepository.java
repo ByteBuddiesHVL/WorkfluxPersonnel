@@ -21,7 +21,7 @@ public interface SlippHistorikkRepository extends JpaRepository<SlippHistorikk, 
      * @param date   Datoen for lønnsslippet.
      * @return En valgfri {@link SlippHistorikk} hvis den finnes.
      */
-    Optional<SlippHistorikk> findSlippHistorikkByAnsattIdAndAndDato(Ansatt ansatt, LocalDate date);
+    Optional<SlippHistorikk> findSlippHistorikkByAnsattIdAndDato(Ansatt ansatt, LocalDate date);
 
     /**
      * Finn lønnsslippene for en gitt ansatt innenfor et gitt tidsintervall.

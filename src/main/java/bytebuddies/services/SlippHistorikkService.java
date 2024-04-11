@@ -36,7 +36,7 @@ public class SlippHistorikkService {
      * @return Den lagrede eller oppdaterte lønnsslippen.
      */
     public SlippHistorikk lagreSlipp(Ansatt ansatt, LocalDate dato, Float brutto, Float skatt, Float netto, Float timer, Float timelonn, byte[] fileData) {
-        SlippHistorikk slipp = slippHistorikkRepository.findSlippHistorikkByAnsattIdAndAndDato(ansatt,dato).orElse(null);
+        SlippHistorikk slipp = slippHistorikkRepository.findSlippHistorikkByAnsattIdAndDato(ansatt,dato).orElse(null);
         if (slipp == null) return slippHistorikkRepository.save(new SlippHistorikk(ansatt,dato,brutto,skatt,netto,timer,timelonn,fileData));
         slipp.setBrutto(brutto);
         slipp.setSkatt(skatt);
@@ -55,7 +55,7 @@ public class SlippHistorikkService {
      * @return Lønnsslippen hvis den finnes, ellers null.
      */
     public SlippHistorikk hentSlipp(Ansatt ansatt, LocalDate date) {
-        return slippHistorikkRepository.findSlippHistorikkByAnsattIdAndAndDato(ansatt, date).orElse(null);
+        return slippHistorikkRepository.findSlippHistorikkByAnsattIdAndDato(ansatt, date).orElse(null);
     }
 
     /**

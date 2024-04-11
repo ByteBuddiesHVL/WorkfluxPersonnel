@@ -305,23 +305,22 @@ public class SuiteController {
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
         Bedrift bedrift = admin.getBedriftId();
-        LocalDate payDate = LocalDate.now().plusMonths(1).withDayOfMonth(1).minusDays(1);
 
         if (type.equals("all")) {
-            lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,payDate);
+            lonnService.genererLonnsslippForAlleAnsatte(bedrift,startDate,endDate,endDate);
 
         } else if (type.equals("one")) {
             Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
             if (ansatt != null) {
                 try {
-                    lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,payDate);
+                    lonnService.genererLonnsslippForAnsatt(ansatt,startDate,endDate,endDate);
                 } catch (IOException e) {
                     // TODO return error
                 }
             }
         }
 
-        return "redirect:/suite/hjem";
+        return "redirect:/suite";
     }
 
     /**
