@@ -287,7 +287,7 @@ public class SuiteController {
      * @param type          Type av lønnsslipper (all eller one).
      * @param brukernavn    Brukernavnet til den ansatte (hvis type er one).
      * @param session       HttpSession-objektet.
-     * @return Omdirigerer til personaloversikten.
+     * @return Omdirigerer til hjemoversikten.
      */
     @PostMapping("/genererLonnsslipper")
     public String genererLonnsslipper(
@@ -321,7 +321,7 @@ public class SuiteController {
             }
         }
 
-        return "redirect:/suite/personal";
+        return "redirect:/suite/hjem";
     }
 
     /**
@@ -330,7 +330,7 @@ public class SuiteController {
      * @param filNavn       Filnavnet til lønnsslippen.
      * @param response      HttpServletResponse-objektet.
      * @param session       HttpSession-objektet.
-     * @return Omdirigerer til personaloversikten.
+     * @return Omdirigerer til rapportoversikten.
      */
     @GetMapping("/getLonnsslipp")
     public String hentLonnsslipp(
@@ -353,7 +353,7 @@ public class SuiteController {
             }
         }
 
-        return "redirect:/suite/personal";
+        return "redirect:/suite/rapporter";
     }
 
     /**
@@ -371,7 +371,7 @@ public class SuiteController {
      * @param stillingstype     ID-en til stillingstypen.
      * @param session           HttpSession-objektet.
      * @param attributes        RedirectAttributes-objektet.
-     * @return Omdirigerer til personalsiden i Suiten.
+     * @return Omdirigerer til ansattsiden i Suiten.
      */
     @PostMapping("/nyAnsatt")
     public String nyAnsatt(
@@ -399,7 +399,7 @@ public class SuiteController {
             ansattService.saveAnsatt(ansatt,bedrift.getForkortelse());
             lonnService.lagreLonn(timelonn,null);
         }
-        return "redirect:/suite/personal";
+        return "redirect:/suite/ansatt";
     }
 
     /**
@@ -419,7 +419,7 @@ public class SuiteController {
      * @param slettAnsatt       Angir om ansatte skal slettes.
      * @param session           HttpSession-objektet.
      * @param attributes        RedirectAttributes-objektet.
-     * @return Omdirigerer til personalsiden i Suiten hvis ansatte er slettet, ellers omdirigerer til ansatt-siden i Suiten.
+     * @return Omdirigerer til ansattsiden.
      */
     @PostMapping("/redigerAnsatt")
     public String redigerAnsatt(
