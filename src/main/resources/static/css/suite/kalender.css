@@ -38,7 +38,8 @@
 
 #skiftVisning {
     grid-column-start: 2;
-    grid-row-start: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
 
     display: grid;
     grid-template-columns: 10em auto;

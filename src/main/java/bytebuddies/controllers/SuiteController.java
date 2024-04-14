@@ -72,7 +72,8 @@ public class SuiteController {
     @GetMapping("/suite")
     public String getSuiteSite(HttpSession session, Model model) {
         if (getLoggedInAttr(session) == null) return "suite-logon";
-        model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+        Admin admin = getLoggedInAttr(session);
+        model.addAttribute("ansattListe", ansattService.getAllAnsatteByBedrift(admin.getBedriftId()));
         model.addAttribute("delside", "hjem");
         return "suite";
     }
@@ -98,19 +99,19 @@ public class SuiteController {
         model.addAttribute("delside", delside);
         switch (delside) {
             case "ansatt" -> {
-                model.addAttribute("ansatte", getAnsattString());
+                model.addAttribute("ansatte", getAnsattString(session));
                 model.addAttribute("stillingstyper", stillingstypeService.getAlleTyper(admin.getBedriftId()));
             }
             case "kalender" -> {
                 if (dag == null) dag = currentDate;
-                model.addAttribute("ansatte", getAnsattString());
-                model.addAttribute("ansattListe", ansattService.getAllAnsatte());
+                model.addAttribute("ansatte", getAnsattString(session));
+                model.addAttribute("ansattListe", ansattService.getAllAnsatteByBedrift(admin.getBedriftId()));
                 model.addAttribute("dag", dag.toString());
-                model.addAttribute("tidsplan", getTidsplanString(dag));
+                model.addAttribute("tidsplan", getTidsplanString(dag,session));
                 model.addAttribute("tidsplantyper", tidsplantypeService.getTidsplantyperByBedrift(admin.getBedriftId()));
             }
             case "rapporter" -> {
-                model.addAttribute("lonnsslipper", slippHistorikkService.hentAlleSlipper());
+                model.addAttribute("lonnsslipper", slippHistorikkService.hentAlleSlipper(admin.getBedriftId()));
             }
         }
         return "suite";
@@ -220,7 +221,7 @@ public class SuiteController {
             //todo return error
         }
 
-        return getTidsplanString(date);
+        return getTidsplanString(date,session);
     }
 
     /**
@@ -261,7 +262,7 @@ public class SuiteController {
                 //todo return error
             }
         }
-        return getTidsplanString(date);
+        return getTidsplanString(date,session);
     }
 
     /**
@@ -277,7 +278,7 @@ public class SuiteController {
             HttpSession session
     ) {
         if (getLoggedInAttr(session) == null) return logOut(session);;
-        return getTidsplanString(dag);
+        return getTidsplanString(dag,session);
     }
 
     /**
@@ -476,14 +477,14 @@ public class SuiteController {
         return (Admin) session.getAttribute("loggedin");
     }
 
-
     /**
      * Henter en strengrepresentasjon av alle ansatte.
      *
      * @return En JSON-streng som representerer alle ansatte.
      */
-    public String getAnsattString() {
-        return ansattService.getAllAnsatte().stream()
+    public String getAnsattString(HttpSession session) {
+        Admin admin = getLoggedInAttr(session);
+        return ansattService.getAllAnsatteByBedrift(admin.getBedriftId()).stream()
                 .map(Ansatt::toString)
                 .collect(Collectors.joining(",", "[", "]"));
     }
@@ -494,9 +495,10 @@ public class SuiteController {
      * @param dato Datoen for hvilken timeplanen blir forespurt.
      * @return En JSON-streng som representerer timeplanen for den spesifiserte datoen.
      */
-    public String getTidsplanString(LocalDate dato) {
+    public String getTidsplanString(LocalDate dato, HttpSession session) {
         if (dato == null) dato = currentDate;
-        return tidsplanService.getTidsplanByDate(dato).stream()
+        Admin admin = getLoggedInAttr(session);
+        return tidsplanService.getTidsplanByDate(dato,admin.getBedriftId()).stream()
                 .map(Tidsplan::toString)
                 .collect(Collectors.joining(",", "[", "]"));
     }

@@ -47,4 +47,8 @@ public class TidsplantypeService {
         return tidsplantypeRepository.getTidsplantypesByBedriftId(b);
     }
 
+    public Tidsplantype getTidsplantyperByBedriftOgType(Bedrift b, String type) {
+        return tidsplantypeRepository.getTidsplantypeByBedriftIdAndType(b,type).orElse(null);
+    }
+
 }

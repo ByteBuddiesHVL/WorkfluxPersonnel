@@ -1,6 +1,7 @@
 package bytebuddies.repositories;
 
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.SlippHistorikk;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -32,4 +33,12 @@ public interface SlippHistorikkRepository extends JpaRepository<SlippHistorikk, 
      * @return En liste med {@link SlippHistorikk} hvis de finnes.
      */
     List<SlippHistorikk> findSlippHistorikksByAnsattIdAndDatoBetween(Ansatt ansatt, LocalDate startOfYear, LocalDate until);
+
+    /**
+     * Finner alle lønnsslipper innen en bedrift
+     *
+     * @param bedriftId     Bedriften for søket
+     * @return              liste av lønnsslipper
+     */
+    List<SlippHistorikk> getSlippHistorikksByAnsattId_BedriftId(Bedrift bedriftId);
 }

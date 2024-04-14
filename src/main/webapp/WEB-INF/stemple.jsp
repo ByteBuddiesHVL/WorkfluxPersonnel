@@ -33,10 +33,14 @@
                 <input type="hidden" name="time" value="${time}">
                 <input type="hidden" name="brukernavn" value="${brukernavn}">
 
-                <input name="type" type="submit" value="Inn">
-                <input name="type" type="submit" value="Ut">
-                <input name="type" type="submit" value="Lunsj">
-                <input name="type" type="submit" value="Tilbake">
+                <div style="flex-direction: column">
+                    <input name="type" type="submit" value="Inn">
+                    <input name="type" type="submit" value="Ut">
+                </div>
+                <div style="flex-direction: row">
+                    <input name="type" type="submit" value="Lunsj" style="background-color: rgb(255 0 0 / 35%);">
+                    <input name="type" type="submit" value="Tilbake">
+                </div>
             </form>
         </div>
     </section>

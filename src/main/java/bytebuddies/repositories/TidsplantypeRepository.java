@@ -28,4 +28,6 @@ public interface TidsplantypeRepository extends JpaRepository<Tidsplantype, Inte
      * @return En liste med tidsplantyper som tilhører den angitte bedriften.
      */
     List<Tidsplantype> getTidsplantypesByBedriftId(Bedrift bedriftId);
+
+    Optional<Tidsplantype> getTidsplantypeByBedriftIdAndType(Bedrift bedriftId, String type);
 }

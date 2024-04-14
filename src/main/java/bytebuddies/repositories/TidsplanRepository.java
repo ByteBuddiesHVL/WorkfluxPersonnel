@@ -1,6 +1,7 @@
 package bytebuddies.repositories;
 
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Tidsplan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -35,16 +36,17 @@ public interface TidsplanRepository extends JpaRepository<Tidsplan, Integer> {
      * @param end    Sluttidspunkt for tidsintervallet.
      * @return En liste med tidsplaner som matcher kriteriene.
      */
-    List<Tidsplan> getTidsplansByAnsattIdAndStarttidBetweenAndIsCalcedIsFalse(Ansatt ansatt, LocalDateTime start, LocalDateTime end);
+    List<Tidsplan> getTidsplansByAnsattIdAndStarttidBetweenAndIsCalcedIsFalseOrderByStarttidAsc(Ansatt ansatt, LocalDateTime start, LocalDateTime end);
 
     /**
      * Hent tidsplaner som starter og slutter innenfor et gitt daglig tidsintervall.
      *
+     * @param bedriftId  spesisfiserer bedriften for søk
      * @param startOfDay Starttidspunkt for dagen.
      * @param endOfDay   Sluttidspunkt for dagen.
      * @return En liste med tidsplaner som matcher kriteriene.
      */
-    List<Tidsplan> getTidsplansByStarttidBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
+    List<Tidsplan> getTidsplansByAnsattId_BedriftIdAndStarttidBetween(Bedrift bedriftId,LocalDateTime startOfDay, LocalDateTime endOfDay);
 
     /**
      * Finner tidsplaner mellom flere LocalDateTime objekter

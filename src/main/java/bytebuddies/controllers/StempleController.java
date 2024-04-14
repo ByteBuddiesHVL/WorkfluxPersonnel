@@ -1,6 +1,7 @@
 package bytebuddies.controllers;
 
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Tidsplan;
 import bytebuddies.entities.Tidsplantype;
 import bytebuddies.services.AnsattService;
@@ -85,10 +86,10 @@ public class StempleController {
     ) {
 
         Ansatt ansatt = ansattService.getAnsattByBrukernavn(brukernavn);
+        Bedrift bedrift = ansatt.getBedriftId();
         Tidsplan tidsplan = tidsplanService.getCurrentTidsplan(ansatt);
-        Tidsplantype typeSalg = tidsplantypeService.getTidsplantypeById(1);
-        Tidsplantype typeKasse = tidsplantypeService.getTidsplantypeById(2);
-        Tidsplantype typeLunsj = tidsplantypeService.getTidsplantypeById(3);
+        Tidsplantype typeSalg = tidsplantypeService.getTidsplantyperByBedriftOgType(bedrift,"Salg");
+        Tidsplantype typeLunsj = tidsplantypeService.getTidsplantyperByBedriftOgType(bedrift,"Lunsj");
 
         switch(type) {
             case "Inn":

@@ -2,6 +2,7 @@ package bytebuddies.services;
 
 import bytebuddies.TidsplanResult;
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.Tidsplan;
 import bytebuddies.repositories.TidsplanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,7 @@ public class TidsplanService {
      * @return En liste over tidsplaner for den angitte ansatte innenfor den angitte tidsperioden.
      */
     public List<Tidsplan> getTidsplaner(Ansatt ansatt, LocalDate start, LocalDate end) {
-        return tidsplanRepository.getTidsplansByAnsattIdAndStarttidBetweenAndIsCalcedIsFalse(ansatt,start.atStartOfDay(),end.plusDays(1).atStartOfDay().minusMinutes(1));
+        return tidsplanRepository.getTidsplansByAnsattIdAndStarttidBetweenAndIsCalcedIsFalseOrderByStarttidAsc(ansatt,start.atStartOfDay(),end.plusDays(1).atStartOfDay().minusMinutes(1));
     }
 
     /**
@@ -119,12 +120,13 @@ public class TidsplanService {
         float duration = 0.00F;
 
         for (Tidsplan tidsplan : tidsplanList) {
-            //check if type == lunsj etc...
-            LocalDateTime shiftStart = tidsplan.getStarttid().withSecond(0);
-            LocalDateTime shiftEnd = tidsplan.getSluttid().withSecond(0);
+            if (!tidsplan.getTypeId().getType().equals("Lunsj")) {
+                LocalDateTime shiftStart = tidsplan.getStarttid().withSecond(0).withNano(0);
+                LocalDateTime shiftEnd = tidsplan.getSluttid().withSecond(0).withNano(0);
 
-            duration += ChronoUnit.HOURS.between(shiftStart,shiftEnd) + ChronoUnit.MINUTES.between(shiftStart,shiftEnd)/60F;
-            //check if everything goes well ...
+                duration += ChronoUnit.MINUTES.between(shiftStart, shiftEnd) / 60F;
+                //check if everything goes well ...
+            }
         }
 
         //check if list is ok
@@ -148,8 +150,8 @@ public class TidsplanService {
      * @param date Datoen som tidsplanene skal hentes for.
      * @return En liste over tidsplaner som starter på den angitte datoen.
      */
-    public List<Tidsplan> getTidsplanByDate(LocalDate date) {
-        return tidsplanRepository.getTidsplansByStarttidBetween(date.atStartOfDay(),date.plusDays(1).atStartOfDay().minusNanos(1));
+    public List<Tidsplan> getTidsplanByDate(LocalDate date, Bedrift bedrift) {
+        return tidsplanRepository.getTidsplansByAnsattId_BedriftIdAndStarttidBetween(bedrift,date.atStartOfDay(),date.plusDays(1).atStartOfDay().minusNanos(1));
     }
 
     /**

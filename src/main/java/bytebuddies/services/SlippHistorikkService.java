@@ -1,6 +1,7 @@
 package bytebuddies.services;
 
 import bytebuddies.entities.Ansatt;
+import bytebuddies.entities.Bedrift;
 import bytebuddies.entities.SlippHistorikk;
 import bytebuddies.repositories.SlippHistorikkRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -61,10 +62,11 @@ public class SlippHistorikkService {
     /**
      * Henter alle lønnsslippene som er lagret i databasen.
      *
-     * @return Liste over alle lønnsslippene.
+     * @param bedriftId     bedriften for søket
+     * @return              Liste over alle lønnsslippene.
      */
-    public List<SlippHistorikk> hentAlleSlipper() {
-        return slippHistorikkRepository.findAll();
+    public List<SlippHistorikk> hentAlleSlipper(Bedrift bedriftId) {
+        return slippHistorikkRepository.getSlippHistorikksByAnsattId_BedriftId(bedriftId);
     }
 
     /**
