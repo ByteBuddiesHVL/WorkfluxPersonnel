@@ -45,7 +45,7 @@ headerRow.onclick = e => {
     }
 };
 
-rowTemplate.innerHTML = "<td> </td>".repeat(8) + "<td><button>Endre</button></td>";
+rowTemplate.innerHTML = "<td> </td>".repeat(8) + "<td><button class='button'>Endre</button></td>";
 
 for (let i = 0; i < numAnsatte; i++) {
     let hidden = false

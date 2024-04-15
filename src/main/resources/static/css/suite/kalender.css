@@ -10,41 +10,29 @@
 
 #kalender {
     display: grid;
-    grid-template-columns: 2em auto 2em;
-    grid-template-rows: 2em 4em 0.5em 4em 0.5em auto 2em;
-    height: 100%;
+    padding: 1em;
+    grid-template: auto 1fr / auto;
+    gap: 1em;
+    height: calc(100% - 2em);
 }
 
 .datoVelger {
-    grid-column-start: 2;
-    grid-row-start: 2;
     align-items: center;
     display: flex;
 }
 
+.datoVelger .button {
+    margin-left: auto;
+}
+
 .raskInfo {
-    grid-column-start: 2;
-    grid-row-start: 4;
+
 }
 
 .tidsRedigering {
-    grid-column-start: 2;
-    grid-row-start: 6;
-
     display: grid;
-    grid-template-columns: 2em auto 2em;
-    grid-template-rows: 8em auto 2em;
-}
-
-#skiftVisning {
-    grid-column-start: 2;
-    grid-row-start: 1;
-    grid-row-end: 3;
-
-    display: grid;
-    grid-template-columns: 10em auto;
-    grid-template-rows: 3em auto;
-    background: #ededed;
+    grid-template: 3em auto / 10em auto;
+    background: #f2f3f5;
     border-radius: 0.5em;
     padding: 0.5em;
 }
@@ -55,14 +43,11 @@
 }
 
 #timer {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 1;
-    grid-row-end: 2;
+    grid-column: 2;
+    grid-row: 1;
 
     display: grid;
-    grid-template-columns: repeat(24,1fr);
-    grid-template-rows: auto;
+    grid-template: auto / repeat(24, 1fr);
     align-items: center;
 }
 
@@ -94,17 +79,28 @@
     background-image:
         repeating-linear-gradient(90deg, #ccc, #ccc 1px, #0000 0, #0000 calc((100% - 1px) / 24)),
         repeating-linear-gradient(0deg, #ccc, #ccc 1px, #0000 0, #0000 calc((100% - 1px) / 8)),
-        repeating-linear-gradient(0deg, #ededed, #ededed 4px, #0000 0, #0000 8px),
+        repeating-linear-gradient(0deg, #f2f3f5, #f2f3f5 4px, #0000 0, #0000 8px),
         repeating-linear-gradient(90deg, #ccc calc((100% - 1px) / 48), #ccc calc((100% - 1px) / 48 + 1px), #0000 0, #0000 calc((100% - 1px) / 24));
 }
 
 .skift {
     z-index: 2;
-    background: red;
+    background: #ddd;
     border-radius: .5em;
-    box-shadow: 4px 4px 6px #00000059;
-    margin: 2px;
-    height: calc(12.5% - 4px);
+    border: 1px solid #999;
+    box-sizing: border-box;
+    margin: 3px 0;
+    height: calc(12.5% - 5px);
     position: absolute;
     cursor: pointer;
+}
+
+@media (max-width: 50em) {
+    #timer {
+        grid-template: auto / repeat(12, 1fr);
+    }
+
+    #timer > :nth-child(2n) {
+        display: none;
+    }
 }

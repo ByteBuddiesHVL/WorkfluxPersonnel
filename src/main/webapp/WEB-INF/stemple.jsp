@@ -11,7 +11,7 @@
 </head>
 <body>
     <header class="header">
-        <img src="images/white_transparent_small_ns.png" alt="">
+        <img src="images/blue_transparent_small_ns.png" alt="">
     </header>
     <section class="inputSection">
         <c:if test="${error != null}">

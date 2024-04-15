@@ -14,8 +14,8 @@
 <body>
     <header class="header">
         <div class="headerLeftSide">
-            <img src="../images/white_transparent_small_ns.png" alt="">
-            <h3>- Suite</h3>
+            <img src="../images/blue_transparent_small_ns.png" alt="">
+            <span>- Suite</span>
         </div>
         <div class="headerRightSide">
             <a href="/logout" class="logout">Logg ut</a>
@@ -78,23 +78,43 @@
                     </label>
                     <button class="chevron"></button>
                     <button class="chevron right"></button>
+                    <button class="button">Legg til skift</button>
                 </section>
-                <section class="raskInfo">
-                    <button id="leggTilAnsatt">Legg til nytt skift</button>
-                    <dialog id="timeAnsatt">
-                        <form id="form1" action="/timeAnsatt">
+                <section class="tidsRedigering">
+                    <div id="dato"></div>
+                    <div id="timer">
+                        <span style="justify-content: left">0</span>
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                        <span>6</span>
+                        <span>7</span>
+                        <span>8</span>
+                        <span>9</span>
+                        <span>10</span>
+                        <span>11</span>
+                        <span>12</span>
+                        <span>13</span>
+                        <span>14</span>
+                        <span>15</span>
+                        <span>16</span>
+                        <span>17</span>
+                        <span>18</span>
+                        <span>19</span>
+                        <span>20</span>
+                        <span>21</span>
+                        <span>22</span>
+                        <span>23</span>
+                    </div>
+                    <div id="ansatte"></div>
+                    <div id="tidsplan"></div>
+                    <dialog id="timeEndring">
+                        <form id="form2" action="/endreTime">
+                            <input type="hidden" name="tidsplanId">
                             <input type="hidden" name="date">
 
-                            <label>
-                                Ansatt:
-                                <div class="select">
-                                    <select name="brukernavn" required>
-                                        <c:forEach items="${ansattListe}" var="a">
-                                            <option value="${a.brukernavn}">${a.brukernavn} - ${a.fornavn} ${a.etternavn}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </label>
                             <label>
                                 Starttid:
                                 <input type="time" name="starttid" required>
@@ -115,77 +135,53 @@
                             </label>
                         </form>
                         <div>
-                            <input type="submit" value="Legg til" form="form1">
+                            <input type="submit" value="Lagre" form="form2">
                             <form method="dialog">
                                 <button class="button">Lukk</button>
                             </form>
                         </div>
                     </dialog>
                 </section>
-                <section class="tidsRedigering">
-                    <div id="skiftVisning">
-                        <div id="dato"></div>
-                        <div id="timer">
-                            <span style="justify-content: left">0</span>
-                            <span>1</span>
-                            <span>2</span>
-                            <span>3</span>
-                            <span>4</span>
-                            <span>5</span>
-                            <span>6</span>
-                            <span>7</span>
-                            <span>8</span>
-                            <span>9</span>
-                            <span>10</span>
-                            <span>11</span>
-                            <span>12</span>
-                            <span>13</span>
-                            <span>14</span>
-                            <span>15</span>
-                            <span>16</span>
-                            <span>17</span>
-                            <span>18</span>
-                            <span>19</span>
-                            <span>20</span>
-                            <span>21</span>
-                            <span>22</span>
-                            <span>23</span>
-                        </div>
-                        <div id="ansatte"></div>
-                        <div id="tidsplan"></div>
-                        <dialog id="timeEndring">
-                            <form id="form2" action="/endreTime">
-                                <input type="hidden" name="tidsplanId">
-                                <input type="hidden" name="date">
+                <dialog>
+                    <form id="form1" action="/timeAnsatt">
+                        <input type="hidden" name="date">
 
-                                <label>
-                                    Starttid:
-                                    <input type="time" name="starttid" required>
-                                </label>
-                                <label>
-                                    Sluttid:
-                                    <input type="time" name="sluttid" required>
-                                </label>
-                                <label>
-                                    Tidsplantype:
-                                    <div class="select">
-                                        <select name="tidsplantype" required>
-                                            <c:forEach items="${tidsplantyper}" var="t">
-                                                <option value="${t.tidsplantypeId}">${t.type}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </label>
-                            </form>
-                            <div>
-                                <input type="submit" value="Lagre" form="form2">
-                                <form method="dialog">
-                                    <button class="button">Lukk</button>
-                                </form>
+                        <label>
+                            Ansatt:
+                            <div class="select">
+                                <select name="brukernavn" required>
+                                    <c:forEach items="${ansattListe}" var="a">
+                                        <option value="${a.brukernavn}">${a.brukernavn} - ${a.fornavn} ${a.etternavn}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
-                        </dialog>
+                        </label>
+                        <label>
+                            Starttid:
+                            <input type="time" name="starttid" required>
+                        </label>
+                        <label>
+                            Sluttid:
+                            <input type="time" name="sluttid" required>
+                        </label>
+                        <label>
+                            Tidsplantype:
+                            <div class="select">
+                                <select name="tidsplantype" required>
+                                    <c:forEach items="${tidsplantyper}" var="t">
+                                        <option value="${t.tidsplantypeId}">${t.type}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </label>
+                    </form>
+                    <div>
+                        <input type="submit" value="Legg til" form="form1">
+                        <form method="dialog">
+                            <button class="button">Lukk</button>
+                        </form>
                     </div>
-                </section>
+                </dialog>
             </div>
             </c:if>
             <c:if test="${delside eq 'ansatt'}">
@@ -195,7 +191,7 @@
                         <input placeholder="Search..">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="13" cy="13" r="11"></circle><path d="m22 22l8 8"></path></svg>
                     </div>
-                    <button type="button">Ny Ansatt</button>
+                    <button class="button">Ny Ansatt</button>
                 </div>
                 <div class="table">
                     <table>
@@ -281,22 +277,17 @@
             </div>
             </c:if>
             <c:if test="${delside eq 'rapporter'}">
-            <div id="rapporter">
-                <section class="lonnsRapporter">
-                    <div id="lonnHeader"></div>
-                    <div id="lonnBody">
-                        <c:forEach items="${lonnsslipper}" var="slipp">
-                            <div class="resourceDiv">
-                                <div class="rapportAnsattinfo">
-                                    <p>${slipp.ansattId.brukernavn}</p>
-                                    <p>${slipp.ansattId.fornavn} ${slipp.ansattId.etternavn} : Lønnsslipp ${slipp.dato}</p>
-                                </div>
-                                <a class="rapportLastned" href="/getLonnsslipp?filnavn=${slipp.dato}_${slipp.ansattId.brukernavn}">Last ned</a>
-                            </div>
-                        </c:forEach>
+            <section class="lonnsRapporter">
+                <c:forEach items="${lonnsslipper}" var="slipp">
+                    <div class="resourceDiv">
+                        <div class="rapportAnsattinfo">
+                            <span>${slipp.ansattId.brukernavn}</span>
+                            <span>${slipp.ansattId.fornavn} ${slipp.ansattId.etternavn} : Lønnsslipp ${slipp.dato}</span>
+                        </div>
+                        <a class="button" href="/getLonnsslipp?filnavn=${slipp.dato}_${slipp.ansattId.brukernavn}">Last ned</a>
                     </div>
-                </section>
-            </div>
+                </c:forEach>
+            </section>
             </c:if>
         </div>
     </section>

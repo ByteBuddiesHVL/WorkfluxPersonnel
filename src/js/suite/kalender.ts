@@ -6,11 +6,10 @@ const dateInput = document.querySelector('input')!;
 
 const tidsplanDiv = document.getElementById('tidsplan')!;
 const ansattDiv = document.getElementById('ansatte')!;
+const dialogs = document.getElementsByTagName('dialog');
 
-const skiftVisning = document.getElementById('skiftVisning')!;
-const timeEndringDialog = skiftVisning.querySelector('dialog')!;
-const endringInputs = timeEndringDialog.querySelectorAll('input')!;
-const endringSelect = timeEndringDialog.querySelector('select')!;
+const endringInputs = dialogs[0].querySelectorAll('input')!;
+const endringSelect = dialogs[0].querySelector('select')!;
 
 const rows = new Map<string, number>();
 const cacheMap = new Map<string, Tidsplan[]>();
@@ -45,7 +44,7 @@ let date = dateInput.valueAsDate!;
 
 document.querySelector<HTMLElement>('.datoVelger')!.onclick = e => {
     const target = e.target as HTMLElement
-    if (target.tagName == 'BUTTON') {
+    if (target.matches('.chevron')) {
         date.setDate(date.getDate() + (target.matches('.right') ? 1 : -1));
         dateInput.valueAsDate = date;
         updateDate();
@@ -89,7 +88,7 @@ const updateTidsplan = (clear?: boolean) => {
             endringInputs[2].value = tidsplan[3].slice(11, 16);
             endringInputs[3].value = tidsplan[4].slice(11, 16);
             endringSelect.value = tidsplan[5] as any;
-            timeEndringDialog.showModal();
+            dialogs[0].showModal();
         })
     }
 
@@ -98,12 +97,7 @@ const updateTidsplan = (clear?: boolean) => {
 
 updateTidsplan();
 
-const timeAnsattDialog = document.querySelector('.raskInfo')!.querySelector('dialog')!;
-const leggTilInputs = timeAnsattDialog.querySelectorAll('input')!;
-document.getElementById('leggTilAnsatt')!.addEventListener('click', () => {
-    leggTilInputs[0].value = dateInput.value;
-    timeAnsattDialog.showModal();
-})
+const leggTilInputs = dialogs[1].querySelectorAll('input')!;
 
 const submitForm = (e: Event) => {
     const form = e.target as HTMLFormElement;
@@ -126,3 +120,8 @@ const submitForm = (e: Event) => {
 const forms = document.forms;
 
 forms[0].onsubmit = forms[2].onsubmit = submitForm;
+
+document.querySelector<HTMLButtonElement>('.suite .button')!.onclick = () => {
+    leggTilInputs[0].value = dateInput.value;
+    dialogs[1].showModal();
+}

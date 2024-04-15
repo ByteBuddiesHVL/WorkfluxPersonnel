@@ -15,23 +15,23 @@
     justify-content: space-between;
 }
 
-dialog {
-    border: 1px solid;
-    border-radius: 0.6em;
-}
-
 #ansattSok > div {
     position: relative;
     display: flex;
     width: max-content;
-    padding: 0.625em;
+    padding: 0.5em 0.625em;
     border-radius: 5em;
-    background: white;
+    border: 1px solid #888;
+}
+
+#ansattSok > div:focus-within {
+    outline: 2px solid #888;
+    outline-offset: -1px;
 }
 
 #ansattSok input {
     border: 0;
-    outline: none;
+    outline: 0;
     padding: 0 0.5em 0 0;
 }
 
@@ -77,6 +77,15 @@ td {
     background: white;
 }
 
+td:last-child {
+    padding: 0.15em 0.25em;
+}
+
+td:last-child button {
+    padding: 0.2em 0.5em;
+    border-radius: 0.5em;
+}
+
 th {
     background: whitesmoke;
     position: sticky;
@@ -98,6 +107,7 @@ th:empty {
 
 tr > :last-child {
     border-right: 1px solid #888;
+    width: 0;
 }
 
 th > * {

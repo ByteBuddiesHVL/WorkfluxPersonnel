@@ -10,7 +10,7 @@
 </head>
 <body>
 <header class="header">
-    <img src="images/white_transparent_small_ns.png" alt="">
+    <img src="images/blue_transparent_small_ns.png" alt="">
 </header>
 <section style="text-align: center">
     <h2>Lagre ny dev</h2>

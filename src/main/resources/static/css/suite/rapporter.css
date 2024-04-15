@@ -3,59 +3,34 @@
     grid-template-columns: 2em auto 2em;
     grid-template-rows: 2em auto 2em;
     width: 100%;
-    height: 100%;
 }
 
 .lonnsRapporter {
-    grid-column-start: 2;
-    grid-row-start: 2;
-
     display: flex;
     flex-direction: column;
-    border-radius: .5em;
-    background-color: #333333;
-}
-
-#lonnHeader {
-    min-height: 4em;
-}
-
-#lonnBody {
     height: 100%;
-    padding: 2em;
-    background-color: white;
+    padding: 1em;
+}
+
+.lonnsRapporter::before {
+    content: '';
+    min-height: 3em;
+    border-radius: 0.5em 0.5em 0 0;
+    background: #e6e8ea;
 }
 
 .resourceDiv {
-    width: calc(100% - 2em);
-    height: 3em;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0 2em;
-}
-
-.resourceDiv:nth-child(odd) {
-    background-color: #ededed;
+    align-items: center;
+    padding: 0.5em 1em;
 }
 
 .resourceDiv:nth-child(even) {
-    background-color: #d9d9d9;
-}
-
-.rapportLastned {
-    padding: 0.5em;
-    text-align: center;
-    align-items: center;
-    align-self: center;
-    background-color: #727272;
-    text-decoration: none;
-    color: white;
-    border-radius: 0.5em;
+    background-color: #f2f3f5;
 }
 
 .rapportAnsattinfo {
     display: flex;
     gap: 3em;
-    line-height: 1.3;
+    margin-right: auto;
 }
