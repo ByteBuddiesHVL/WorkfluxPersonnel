@@ -27,22 +27,20 @@
             </div>
         </div>
     </section>
-    <section class="stempleSection" <c:choose><c:when test="${popup eq true}">style="display: flex;"</c:when></c:choose>>
-        <div class="stemple-pop_up">
-            <form action="/sendstempling" method="post">
-                <input type="hidden" name="time" value="${time}">
-                <input type="hidden" name="brukernavn" value="${brukernavn}">
+    <section class="stempleSection" <c:choose><c:when test="${popup eq true}">style="display: grid"</c:when></c:choose>>
+        <form action="/sendstempling" method="post">
+            <input type="hidden" name="time" value="${time}">
+            <input type="hidden" name="brukernavn" value="${brukernavn}">
 
-                <div style="flex-direction: column">
-                    <input name="type" type="submit" value="Inn">
-                    <input name="type" type="submit" value="Ut">
-                </div>
-                <div style="flex-direction: row">
-                    <input name="type" type="submit" value="Lunsj" style="background-color: #ff000059;">
-                    <input name="type" type="submit" value="Tilbake" style="background-color: #75757559;">
-                </div>
-            </form>
-        </div>
+            <div style="flex-direction: column">
+                <input name="type" type="submit" value="Inn">
+                <input name="type" type="submit" value="Ut">
+            </div>
+            <div>
+                <input name="type" type="submit" value="Lunsj" style="background-color: #ff000059;">
+                <input name="type" type="submit" value="Tilbake" style="background-color: #75757559;">
+            </div>
+        </form>
     </section>
 </body>
 </html>
