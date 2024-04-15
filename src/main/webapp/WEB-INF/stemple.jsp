@@ -38,8 +38,8 @@
                     <input name="type" type="submit" value="Ut">
                 </div>
                 <div style="flex-direction: row">
-                    <input name="type" type="submit" value="Lunsj" style="background-color: rgb(255 0 0 / 35%);">
-                    <input name="type" type="submit" value="Tilbake">
+                    <input name="type" type="submit" value="Lunsj" style="background-color: #ff000059;">
+                    <input name="type" type="submit" value="Tilbake" style="background-color: #75757559;">
                 </div>
             </form>
         </div>
